@@ -80,7 +80,7 @@ A material decision changes the visitor's task, section order, the primary actio
 
 ## Standards
 
-- One primary action per viewport: join the WhatsApp. Everything else is secondary.
+- One primary action per viewport: follow the Luma calendar; join the WhatsApp is the secondary.
 - Blue (`color.primary`) only on the mark, the primary action, hover underline and focus ring.
 - Geist for all text; Geist Mono only for short identifiers (dates, counts in eyebrows).
 - Hairlines separate; shadows only on floating UI (nav).
