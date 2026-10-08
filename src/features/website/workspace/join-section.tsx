@@ -5,7 +5,7 @@ import { joinStyles } from '@/features/website/workspace/join-section.stylex'
 import { LINKS } from '@/features/website/workspace/content'
 
 const JOIN_ROWS = [
-  { label: 'WhatsApp', value: 'chat.whatsapp.com/EWCPnquUzXD9uppsSuQFVk', href: LINKS.whatsapp },
+  { label: 'WhatsApp', value: 'Join the group chat', href: LINKS.whatsapp },
   { label: 'Luma', value: 'luma.com/thehackcollective', href: LINKS.luma },
   { label: 'Submit an event', value: 'luma.com/thehackcollective', href: LINKS.luma },
   { label: 'Partner with us', value: 'lelouis.lnv@gmail.com', href: LINKS.email },
