@@ -1,6 +1,7 @@
 import * as stylex from '@stylexjs/stylex'
 
 import { CountUp } from '@/components/ui/count-up'
+import { DiaHeading } from '@/components/ui/dia-text'
 import { Reveal } from '@/components/ui/reveal'
 import { statsStyles } from '@/features/website/workspace/stats-section.stylex'
 import { STATS } from '@/features/website/workspace/content'
@@ -8,9 +9,11 @@ import { STATS } from '@/features/website/workspace/content'
 export function StatsSection() {
   return (
     <section id="numbers" {...stylex.props(statsStyles.section)}>
-      <Reveal>
-        <h2 {...stylex.props(statsStyles.heading)}>By the numbers.</h2>
-      </Reveal>
+      <DiaHeading
+        className={stylex.props(statsStyles.heading).className}
+      >
+        By the numbers.
+      </DiaHeading>
 
       <div {...stylex.props(statsStyles.grid)}>
         {STATS.map((stat, i) => (

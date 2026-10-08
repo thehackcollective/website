@@ -1,8 +1,13 @@
 import { animate } from "motion";
-import { splitText } from "motion-plus";
 import * as stylex from "@stylexjs/stylex";
+import {
+  DIA_FOLLOWER_DELAY,
+  armDiaSweep,
+  finishDia,
+  playDiaSweep,
+  splitDiaHeadline,
+} from "@/components/ui/dia-text";
 import { useMountEffect } from "@/lib/use-mount-effect";
-import { color, dia } from "@/tokens/token-consts.stylex";
 
 import {
   createElement,
@@ -12,9 +17,6 @@ import {
   type RefObject,
 } from "react";
 
-const LINE_CLASS = "stagger-line";
-const WORD_CLASS = "stagger-word";
-const CHAR_CLASS = "stagger-char";
 const HEADLINE_ATTR = "data-stagger-headline";
 const ITEM_ATTR = "data-stagger-item";
 
@@ -24,44 +26,10 @@ const ENTER_BLUR_TO = "blur(0px)";
 const UI_TRANSITION = { stiffness: 305, damping: 33 };
 const STAGGER_BASE = 0.08;
 const TRAVEL_ENTER = 24;
-const DIA_SWEEP_DURATION = 2.2;
-const DIA_FOLLOWER_DELAY = 1.5;
-
-const diaSweepEase = (t: number) =>
-  t < 0.5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2;
 
 const styles = stylex.create({
   hidden: {
     visibility: "hidden",
-  },
-  diaChar: {
-    backgroundClip: "text",
-    backgroundImage: {
-      default: `linear-gradient(90deg, ${color.ink} 0%, ${color.ink} calc(var(--thc-dia-pos) - 17%), ${dia.c1} calc(var(--thc-dia-pos) - 17%), ${dia.c2} calc(var(--thc-dia-pos) - 8.5%), ${dia.c3} var(--thc-dia-pos), ${dia.c4} calc(var(--thc-dia-pos) + 8.5%), ${dia.c5} calc(var(--thc-dia-pos) + 17%), transparent calc(var(--thc-dia-pos) + 17%), transparent 100%)`,
-      ":hover": `linear-gradient(90deg, ${dia.c1} 0%, ${dia.c2} 25%, ${dia.c3} 50%, ${dia.c4} 75%, ${dia.c5} 100%)`,
-    },
-    backgroundPosition: {
-      default: "var(--thc-dia-x) 0",
-      ":hover": "0 0",
-    },
-    backgroundRepeat: "no-repeat",
-    backgroundSize: {
-      default: "var(--thc-dia-width) 100%",
-      ":hover": "100% 100%",
-    },
-    color: "transparent",
-    display: "inline-block",
-    WebkitBackgroundClip: "text",
-  },
-  diaCharDone: {
-    backgroundClip: "text",
-    backgroundImage: {
-      default: `linear-gradient(90deg, ${color.ink}, ${color.ink})`,
-      ":hover": `linear-gradient(90deg, ${dia.c1} 0%, ${dia.c2} 25%, ${dia.c3} 50%, ${dia.c4} 75%, ${dia.c5} 100%)`,
-    },
-    color: "transparent",
-    display: "inline-block",
-    WebkitBackgroundClip: "text",
   },
 });
 
@@ -98,28 +66,7 @@ export function useStaggerReveal(): {
         await document.fonts?.ready;
         if (cancelled || ref.current !== container) return;
 
-        const original =
-          headlineEl.getAttribute("aria-label") ?? headlineEl.textContent ?? "";
-        headlineEl.textContent = original;
-
-        const { lines } = splitText(headlineEl, {
-          lineClass: LINE_CLASS,
-          wordClass: WORD_CLASS,
-          charClass: CHAR_CLASS,
-        });
-
-        lines.forEach((line) => {
-          line.style.display = "block";
-          line
-            .querySelectorAll<HTMLElement>(`.${WORD_CLASS}`)
-            .forEach((word) => {
-              word.style.display = "inline-block";
-            });
-        });
-
-        const chars = Array.from(
-          headlineEl.querySelectorAll<HTMLElement>(`.${CHAR_CLASS}`),
-        );
+        const { lines, chars } = splitDiaHeadline(headlineEl);
 
         const followers = Array.from(
           container.querySelectorAll<HTMLElement>(`[${ITEM_ATTR}]`),
@@ -129,63 +76,13 @@ export function useStaggerReveal(): {
           "(prefers-reduced-motion: reduce)",
         ).matches;
 
-        const diaCharClasses = (
-          stylex.props(styles.diaChar)?.className ?? ""
-        )
-          .split(/\s+/)
-          .filter(Boolean);
-        const diaCharDoneClasses = (
-          stylex.props(styles.diaCharDone)?.className ?? ""
-        )
-          .split(/\s+/)
-          .filter(Boolean);
-
         if (reduceMotion) {
-          chars.forEach((char) => char.classList.add(...diaCharDoneClasses));
+          finishDia(chars);
           return;
         }
 
-        const charOffsets: Array<{ char: HTMLElement; x: number }> = [];
-        let stripWidth = 0;
-        lines.forEach((line) => {
-          const lineRect = line.getBoundingClientRect();
-          const lineOffset = stripWidth;
-          line
-            .querySelectorAll<HTMLElement>(`.${CHAR_CLASS}`)
-            .forEach((char) => {
-              charOffsets.push({
-                char,
-                x: -(
-                  lineOffset +
-                  (char.getBoundingClientRect().left - lineRect.left)
-                ),
-              });
-            });
-          stripWidth += lineRect.width;
-        });
-        headlineEl.style.setProperty("--thc-dia-width", `${stripWidth}px`);
-        headlineEl.style.setProperty("--thc-dia-pos", "-17%");
-        charOffsets.forEach(({ char, x }) => {
-          char.style.setProperty("--thc-dia-x", `${x}px`);
-          char.classList.add(...diaCharClasses);
-        });
-
-        animations.push(
-          animate(-17, 117, {
-            duration: DIA_SWEEP_DURATION,
-            ease: diaSweepEase,
-            onUpdate: (value) => {
-              headlineEl.style.setProperty("--thc-dia-pos", `${value}%`);
-            },
-            onComplete: () => {
-              if (cancelled || ref.current !== container) return;
-              chars.forEach((char) => {
-                char.classList.remove(...diaCharClasses);
-                char.classList.add(...diaCharDoneClasses);
-              });
-            },
-          }),
-        );
+        armDiaSweep(headlineEl, lines);
+        animations.push(playDiaSweep(headlineEl, chars));
 
         let delay = DIA_FOLLOWER_DELAY;
 

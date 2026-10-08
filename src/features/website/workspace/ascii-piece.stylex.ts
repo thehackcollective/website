@@ -4,22 +4,22 @@ import { color, text } from '@/tokens/token-consts.stylex'
 
 export const asciiPieceStyles = stylex.create({
   frame: {
+    alignItems: 'center',
+    backgroundColor: color.primary,
+    containerType: 'inline-size',
     display: 'flex',
+    height: '100%',
     justifyContent: 'center',
     width: '100%',
   },
   pre: {
-    color: color.primary,
+    color: color.onPrimary,
     display: 'block',
     fontFamily: text.fontMono,
-    fontSize: {
-      default: 5,
-      '@media (min-width: 768px)': 7,
-    },
+    fontSize: '1.6cqw',
     letterSpacing: 0,
     lineHeight: 1.2,
     margin: 0,
-    textAlign: 'center',
     userSelect: 'none',
     whiteSpace: 'pre',
   },

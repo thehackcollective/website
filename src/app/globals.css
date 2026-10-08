@@ -17,6 +17,13 @@
   font-display: swap;
 }
 
+[data-hairline] .alt {
+  --hl-plate: var(--thc-primary);
+  --hl-edge: var(--thc-primary-deep);
+  --hl-mid: var(--thc-primary-deep);
+  --hl-lo: var(--thc-primary-active);
+}
+
 @layer base, priority1, priority2, priority3, priority4;
 
 @stylex;

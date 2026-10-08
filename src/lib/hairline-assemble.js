@@ -75,6 +75,8 @@ function mount({ stage, svg, read }, value) {
     want: i === 0 ? 1 : 0, wait: 0, falling: false, key: "", k: 0,
   }));
   tiles[0].el.sil.classList.add("hi");
+  // every other piece of the solve is marked, so a host may plate it in a second colour; the kernel draws them alike
+  for (const i of [0, 2, 5, 7]) tiles[i].el.g.classList.add("alt");
 
   function pose(tl) {
     const s = tl.sp.x, [sx, sy, sa, x0, y0, a0, z0] = tl.t, w = clamp(s, 0, 1), hop = 28 * w * (1 - w);

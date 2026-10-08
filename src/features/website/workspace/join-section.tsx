@@ -1,7 +1,9 @@
 import * as stylex from "@stylexjs/stylex";
 
+import { DiaHeading } from "@/components/ui/dia-text";
 import { Reveal } from "@/components/ui/reveal";
 import { joinStyles } from "@/features/website/workspace/join-section.stylex";
+import { AsciiPiece } from "@/features/website/workspace/ascii-piece";
 import { LINKS } from "@/features/website/workspace/content";
 
 const JOIN_ROWS = [
@@ -25,22 +27,18 @@ export function JoinSection() {
       <div {...stylex.props(joinStyles.grid)}>
         <div {...stylex.props(joinStyles.imageCol)}>
           <div {...stylex.props(joinStyles.imageFrame)}>
-            <img
-              src="/brand/icon-on-blue.svg"
-              alt=""
-              loading="lazy"
-              decoding="async"
-              {...stylex.props(joinStyles.objectCover)}
-            />
+            <AsciiPiece />
           </div>
         </div>
 
         <div {...stylex.props(joinStyles.textCol)}>
-          <Reveal className={stylex.props(joinStyles.copy).className}>
-            <h2 {...stylex.props(joinStyles.heading)}>
-              Let&rsquo;s build together.
-            </h2>
-          </Reveal>
+          <div {...stylex.props(joinStyles.copy)}>
+            <DiaHeading
+              className={stylex.props(joinStyles.heading).className}
+            >
+              {"Let’s build together."}
+            </DiaHeading>
+          </div>
 
           <div {...stylex.props(joinStyles.contactList)}>
             {JOIN_ROWS.map((row, i) => (

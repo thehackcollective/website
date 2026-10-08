@@ -8,7 +8,7 @@ import { asciiPieceStyles } from "@/features/website/workspace/ascii-piece.style
 import { renderFrame } from "@/features/website/workspace/ascii-piece-render";
 
 const GRID_COLS = 100;
-const GRID_ROWS = 56;
+const GRID_ROWS = 50;
 const REST_ANGLE = 0.5;
 const SPIN_SPEED = 0.5;
 

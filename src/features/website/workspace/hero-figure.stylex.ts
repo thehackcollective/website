@@ -8,7 +8,7 @@ export const heroFigureStyles = stylex.create({
     "--hairline-hi": color.ink,
     "--hairline-lo": color.gray200,
     "--hairline-mid": color.gray300,
-    "--hairline-plate": color.canvas,
+    "--hairline-plate": color.surfaceCard,
     "--hairline-stroke": 1,
     aspectRatio: "5 / 4",
     width: "100%",

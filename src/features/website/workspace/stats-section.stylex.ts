@@ -20,7 +20,7 @@ export const statsStyles = stylex.create({
       default: text.sizeDisplayMd,
       '@media (min-width: 960px)': text.sizeDisplayXl,
     },
-    fontWeight: text.weightMedium,
+    fontWeight: text.weightSemibold,
     letterSpacing: {
       default: text.trackingDisplayMd,
       '@media (min-width: 960px)': text.trackingDisplayXl,

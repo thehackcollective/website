@@ -11,12 +11,12 @@ const MAX_STEPS = 48;
 const EPS = 0.004;
 const MAX_DIST = 6;
 const TILT = -0.55;
-const TWIST = Math.PI / 4;
+const TWIST = Math.PI / 9;
 const RAMP = ".,-~:;=!*#$@";
 const LIGHT_X = 0.35;
 const LIGHT_Y = 0.6;
 const LIGHT_Z = 0.72;
-const VIEW_FRACTION = 0.95;
+const VIEW_FRACTION = 0.92;
 const BOUND_RADIUS = 1.2;
 const CAM_DIST = 3;
 const BAYER = [
@@ -77,7 +77,7 @@ export function renderFrame(angle: number, cols: number, rows: number) {
   const dirZ = -m22;
 
   const step = (2 * BOUND_RADIUS) / VIEW_FRACTION / rows;
-  const xStep = step * 2;
+  const xStep = step / 2;
   const height = rows * step;
   const width = cols * xStep;
   const lines: string[] = new Array(rows);
