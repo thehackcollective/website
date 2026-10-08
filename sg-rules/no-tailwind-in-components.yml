@@ -1,0 +1,9 @@
+id: no-tailwind-in-components
+message: Do not use Tailwind utility classes in components/. Use StyleX.
+severity: error
+language: TypeScript
+rule:
+  regex: className="[^"]*"
+  inside:
+    path:
+      regex: src/components/

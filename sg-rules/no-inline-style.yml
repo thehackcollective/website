@@ -1,0 +1,9 @@
+id: no-inline-style
+message: Do not use inline style props. Use StyleX.
+severity: error
+language: TypeScript
+rule:
+  regex: style=\{\{
+  inside:
+    path:
+      regex: src/components/

@@ -1,0 +1,8 @@
+id: no-index-key
+message: Do not use array index as React key. Use a stable id.
+severity: warning
+language: TypeScript
+rule:
+  pattern: key={$INDEX}
+  inside:
+    kind: jsx_element

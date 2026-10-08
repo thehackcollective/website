@@ -1,0 +1,22 @@
+id: no-hardcoded-colors
+message: Do not hardcode hex or rgb colors. Use color.* tokens from @/tokens/token-consts.stylex.ts.
+severity: error
+language: TypeScript
+rule:
+  pattern:
+    selector: string
+    regex: "'#[0-9a-fA-F]{3,8}'"
+  inside:
+    any:
+      - kind: object
+        inside:
+          call_expression:
+            function:
+              identifier: stylex
+              field: create
+      - object_property
+        has:
+          call_expression:
+            function:
+              identifier: stylex
+              field: create

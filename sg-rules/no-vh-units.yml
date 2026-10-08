@@ -1,0 +1,16 @@
+id: no-vh-units
+message: Use dvh not vh. Mobile browser chrome makes vh taller than the visible viewport.
+severity: error
+language: TypeScript
+rule:
+  pattern:
+    selector: string
+    regex: "'[^']*vh'"
+  inside:
+    any:
+      - kind: object
+        inside:
+          call_expression:
+            function:
+              identifier: stylex
+              field: create

@@ -1,0 +1,6 @@
+# Bun 1.4 configuration — https://bun.com/blog/bun-v1.4
+# Isolated linker: packages are symlinked from Bun's global virtual store
+# instead of copied into node_modules on every install (up to 7x faster
+# warm installs, shared cache across projects).
+[install]
+linker = "isolated"

@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "hackcollective",
+  "account_id": "062a91f6e4ad306625307277f1fe668b",
+  "compatibility_date": "2026-10-08",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "single-page-application"
+  },
+  "build": {
+    "command": "bun run build",
+    "watch_dir": "./src"
+  }
+}
