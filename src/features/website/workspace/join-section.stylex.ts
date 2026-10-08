@@ -87,11 +87,6 @@ export const joinStyles = stylex.create({
     },
     textWrap: 'balance',
   },
-  body: {
-    color: color.body,
-    fontSize: text.sizeBodyMd,
-    lineHeight: text.leadingBodyMd,
-  },
   contactList: {
     display: 'flex',
     flexDirection: 'column',

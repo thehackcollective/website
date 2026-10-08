@@ -4,7 +4,7 @@ The public landing page for The Hack Collective at hackcollective.uk.
 
 ## Sub-features
 
-The landing page is one view: site nav, hero, stats, partners, and join sections.
+The landing page is one view: site nav, hero with an isometric figure, stats, and join sections.
 
 ## How to get to it
 

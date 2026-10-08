@@ -41,19 +41,10 @@ export const statsStyles = stylex.create({
     },
   },
   cell: {
-    borderTopColor: color.hairline,
-    borderTopStyle: 'solid',
-    borderTopWidth: '1px',
     display: 'flex',
     flexDirection: 'column',
     gap: space.xs,
     paddingBlock: space.xl,
-  },
-  cellDivider: {
-    borderLeftColor: color.hairline,
-    borderLeftStyle: 'solid',
-    borderLeftWidth: '1px',
-    paddingLeft: space.lg,
   },
   value: {
     color: color.ink,

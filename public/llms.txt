@@ -1,22 +1,18 @@
 # The Hack Collective
 
-> London's hackathon community. 1,000+ builders, one WhatsApp group, every London hackathon on one calendar.
+> London's hackathon community. 1,100+ builders, one WhatsApp group, every London hackathon on one calendar.
 
 Founded in London in September 2025 by UCL students, run on WhatsApp and Luma.
 
 ## Facts
 
-- 1,000+ members
-- 400+ Luma calendar subscribers
-- #2 on Google for London Hackathons
+- 1,100+ members
+- 450+ Luma calendar subscribers
+- #2 on Google when searching for Hackathons in London
 - 2026 UCL Campaign of the Year nominee
-
-## Partners
-
-- Kickstart Global, Hacker's Unity, HackEurope, FINEDA
 
 ## Links
 
 - [WhatsApp](https://chat.whatsapp.com/EWCPnquUzXD9uppsSuQFVk)
 - [Luma](https://luma.com/thehackcollective)
-- [Email](mailto:lelouis.lnv@gmail.com)
+- [Email](mailto:thehackcollective@gmail.com)

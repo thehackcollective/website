@@ -17,7 +17,7 @@ export function StatsSection() {
           <Reveal
             key={stat.label}
             delay={i * 0.06}
-            className={stylex.props(statsStyles.cell, i % 2 === 1 && statsStyles.cellDivider).className}
+            className={stylex.props(statsStyles.cell).className}
           >
             <CountUp
               value={stat.value}

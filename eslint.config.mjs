@@ -9,6 +9,7 @@ const eslintConfig = defineConfig([
     "dist/**",
     "node_modules/**",
     "vite.config.ts",
+    ".agents/**",
   ]),
   {
     rules: {

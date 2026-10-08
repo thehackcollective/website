@@ -14,7 +14,7 @@ const JOIN_ROWS = [
   },
   {
     label: "Partner with us",
-    value: "lelouis.lnv@gmail.com",
+    value: "thehackcollective@gmail.com",
     href: LINKS.email,
   },
 ];
@@ -40,10 +40,6 @@ export function JoinSection() {
             <h2 {...stylex.props(joinStyles.heading)}>
               Let&rsquo;s build together.
             </h2>
-            <p {...stylex.props(joinStyles.body)}>
-              Founded in London in September 2025 by UCL students, run on
-              WhatsApp and Luma.
-            </p>
           </Reveal>
 
           <div {...stylex.props(joinStyles.contactList)}>

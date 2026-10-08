@@ -42,12 +42,12 @@ export function SiteNav() {
 
           <div {...stylex.props(navStyles.actions)}>
             <a
-              href={LINKS.whatsapp}
+              href={LINKS.luma}
               target="_blank"
               rel="noopener noreferrer"
               {...stylex.props(buttonStyles.buttonBase, buttonStyles.buttonPrimary)}
             >
-              Join the WhatsApp
+              Follow our Luma calendar
             </a>
           </div>
         </div>
