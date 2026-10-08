@@ -2,12 +2,13 @@ import * as stylex from '@stylexjs/stylex'
 
 import { hackStyles } from '@/components/upcoming-hack-section.stylex'
 import { buttonStyles } from '@/components/button.stylex'
+import { Reveal } from '@/components/reveal'
 import { HACK, LINKS } from '@/content'
 
 export function UpcomingHackSection() {
   return (
     <section id="hack" {...stylex.props(hackStyles.section)}>
-      <div {...stylex.props(hackStyles.headingBlock)}>
+      <Reveal className={stylex.props(hackStyles.headingBlock).className}>
         <p {...stylex.props(hackStyles.eyebrow)}>{HACK.eyebrow}</p>
         <h2 {...stylex.props(hackStyles.heading)}>{HACK.title}</h2>
         <p {...stylex.props(hackStyles.body)}>
@@ -18,13 +19,14 @@ export function UpcomingHackSection() {
           Solo or teams of up to 3, the top 5 demo live for 3 minutes each,
           venue TBA.
         </p>
-      </div>
+      </Reveal>
 
       <div {...stylex.props(hackStyles.itemList)}>
         {HACK.tracks.map((track, i) => (
-          <div
+          <Reveal
             key={track.name}
-            {...stylex.props(hackStyles.item, i === 0 && hackStyles.itemFirst)}
+            delay={i * 0.06}
+            className={stylex.props(hackStyles.item, i === 0 && hackStyles.itemFirst).className}
           >
             <div {...stylex.props(hackStyles.itemHeader)}>
               <p {...stylex.props(hackStyles.itemBody)}>
@@ -35,7 +37,7 @@ export function UpcomingHackSection() {
                 {String(i + 1).padStart(2, '0')}
               </span>
             </div>
-          </div>
+          </Reveal>
         ))}
       </div>
 

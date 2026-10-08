@@ -1,5 +1,6 @@
 import * as stylex from '@stylexjs/stylex'
 
+import { Reveal } from '@/components/reveal'
 import { joinStyles } from '@/components/join-section.stylex'
 import { LINKS } from '@/content'
 
@@ -14,22 +15,25 @@ export function JoinSection() {
   return (
     <section id="join" {...stylex.props(joinStyles.section)}>
       <div {...stylex.props(joinStyles.content)}>
-        <div {...stylex.props(joinStyles.copy)}>
+        <Reveal className={stylex.props(joinStyles.copy).className}>
           <h2 {...stylex.props(joinStyles.heading)}>Join the collective.</h2>
           <p {...stylex.props(joinStyles.body)}>
             Founded in London in September 2025 by UCL students, run on WhatsApp
             and Luma.
           </p>
-        </div>
+        </Reveal>
 
         <div {...stylex.props(joinStyles.contactList)}>
           {JOIN_ROWS.map((row, i) => (
-            <div
+            <Reveal
               key={row.label}
-              {...stylex.props(
-                joinStyles.contactRow,
-                i === 0 && joinStyles.contactRowFirst,
-              )}
+              delay={i * 0.06}
+              className={
+                stylex.props(
+                  joinStyles.contactRow,
+                  i === 0 && joinStyles.contactRowFirst,
+                ).className
+              }
             >
               <span {...stylex.props(joinStyles.contactLabel)}>{row.label}</span>
               <a
@@ -40,7 +44,7 @@ export function JoinSection() {
               >
                 {row.value}
               </a>
-            </div>
+            </Reveal>
           ))}
         </div>
       </div>
