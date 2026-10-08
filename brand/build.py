@@ -28,13 +28,26 @@ def write(path, data):
     path.write_bytes(data if isinstance(data, bytes) else data.encode())
 
 
+def raster(path, png_bytes, webp=True):
+    """Write an optimised PNG and, by default, a lossless WebP twin next to it."""
+    im = Image.open(io.BytesIO(png_bytes))
+    out = io.BytesIO()
+    im.save(out, "PNG", optimize=True)
+    write(path, out.getvalue())
+    if not webp:
+        return
+    out = io.BytesIO()
+    im.save(out, "WEBP", lossless=True, quality=100, method=6)
+    write(path.with_suffix(".webp"), out.getvalue())
+
+
 def og(lockup_svg, bg):
     """1200x630 card: lockup centred, 56% of the width."""
     lock = Image.open(io.BytesIO(png(lockup_svg, int(OG_W * 0.56)))).convert("RGBA")
     card = Image.new("RGBA", (OG_W, OG_H), bg)
     card.alpha_composite(lock, ((OG_W - lock.width) // 2, (OG_H - lock.height) // 2))
     out = io.BytesIO()
-    card.convert("RGB").save(out, "PNG", optimize=True)
+    card.convert("RGB").save(out, "PNG")
     return out.getvalue()
 
 
@@ -56,10 +69,10 @@ def main():
     write(BRAND / "icon-on-blue.svg", icon_on_blue)
     write(BRAND / "icon-on-black.svg", icon_on_black)
     for s in ICON_SIZES:
-        write(BRAND / f"icon-{s}.png", png(icon, s))
-        write(BRAND / f"icon-white-{s}.png", png(icon_white, s))
-    write(BRAND / "icon-on-blue-512.png", png(icon_on_blue, 512))
-    write(BRAND / "icon-on-blue-1024.png", png(icon_on_blue, 1024))
+        raster(BRAND / f"icon-{s}.png", png(icon, s))
+        raster(BRAND / f"icon-white-{s}.png", png(icon_white, s))
+    raster(BRAND / "icon-on-blue-512.png", png(icon_on_blue, 512))
+    raster(BRAND / "icon-on-blue-1024.png", png(icon_on_blue, 1024))
 
     # Wordmark and lockups
     write(BRAND / "wordmark.svg", wordmark_only(INK))
@@ -69,12 +82,12 @@ def main():
     write(BRAND / "lockup-black.svg", horizontal("#000000"))
     write(BRAND / "lockup-stacked.svg", stacked(BLUE, INK))
     write(BRAND / "lockup-stacked-white.svg", stacked(WHITE))
-    write(BRAND / "lockup-1200.png", png(horizontal(BLUE, INK), 1200))
-    write(BRAND / "lockup-white-1200.png", png(horizontal(WHITE), 1200))
+    raster(BRAND / "lockup-1200.png", png(horizontal(BLUE, INK), 1200))
+    raster(BRAND / "lockup-white-1200.png", png(horizontal(WHITE), 1200))
 
     # Open Graph
-    write(BRAND / "og.png", og(horizontal(BLUE, INK), WHITE))
-    write(BRAND / "og-dark.png", og(horizontal(WHITE), BLACK))
+    raster(BRAND / "og.png", og(horizontal(BLUE, INK), WHITE))
+    raster(BRAND / "og-dark.png", og(horizontal(WHITE), BLACK))
 
     # Browser conventions at the root
     write(PUBLIC / "favicon.svg", favicon)
@@ -82,7 +95,7 @@ def main():
     ico = io.BytesIO()
     frames[0].save(ico, "ICO", sizes=[(f.width, f.height) for f in frames], append_images=frames[1:])
     write(PUBLIC / "favicon.ico", ico.getvalue())
-    write(PUBLIC / "apple-touch-icon.png", png(icon_on_blue, 180))
+    raster(PUBLIC / "apple-touch-icon.png", png(icon_on_blue, 180), webp=False)
     write(
         PUBLIC / "site.webmanifest",
         json.dumps(

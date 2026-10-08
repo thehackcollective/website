@@ -41,7 +41,7 @@ Values are not repeated here. Read `DESIGN.md` for the roles and `src/tokens/des
 - Entrance: `StaggerReveal` for the hero headline (waits for `document.fonts.ready`, fails open), `Reveal` (`whileInView`, once, 60 ms stagger) for section blocks.
 - Count-up on stats only; comma formatting preserved; never on a number the visitor could misread as live.
 - Durations from `--thc-duration-*`, easing from `--thc-ease-*`. No parallax, no ambient loops.
-- Lenis + ScrollTrigger wiring lives in `src/app/smooth-scroll.tsx`; sections do not create their own tickers.
+- Lenis lives in `src/app/smooth-scroll.tsx`; sections do not create their own scroll listeners, use `inView` from motion.
 - Under `prefers-reduced-motion`, every animated wrapper renders a plain element.
 
 ## Accessibility

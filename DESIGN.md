@@ -31,7 +31,7 @@ python3 brand/build.py   # needs python3 with cairosvg, fonttools, pillow
 - **Colour:** symbol `--thc-brand-700`, wordmark `--thc-ink` on light (`lockup.svg`). On dark, symbol and wordmark are both white (`lockup-white.svg`, `icon-white.svg`). One-colour black: `icon-black.svg`, `lockup-black.svg`. App tile: white symbol centred on blue (`icon-on-blue.svg`), never a white tile inside a blue tile.
 - **Centring:** square-canvas files centre the symbol on its centre of mass, not its bounding box, so the body does not read as pushed left by the knob.
 - **Clear space:** the knob radius (0.20 of the body side) on every side. **Minimum size:** 16 px symbol, 24 px for the horizontal lockup height.
-- **Files:** `public/brand/icon*.svg|png` (32 to 512, blue and white, plus `icon-on-blue-512/1024.png`), `wordmark*.svg`, `lockup*.svg|png`, `og.png` and `og-dark.png` (1200x630). Root: `favicon.svg`, `favicon.ico` (16/32/48), `apple-touch-icon.png` (180, on blue), `site.webmanifest`.
+- **Files:** `public/brand/icon*.svg|png` (32 to 512, blue and white, plus `icon-on-blue-512/1024.png`), `wordmark*.svg`, `lockup*.svg|png`, `og.png` and `og-dark.png` (1200x630); every PNG has a lossless `.webp` twin (about a third of the size) for use in the page, PNG stays for Open Graph and manifests. Root: `favicon.svg`, `favicon.ico` (16/32/48), `apple-touch-icon.png` (180, on blue), `site.webmanifest`.
 - **Site usage:** nav uses `/brand/icon.svg` at 24 px; `og:image` and `twitter:image` use `/brand/og.png`; JSON-LD `logo` uses `/brand/icon-512.png`.
 - **Misuse:** no rotation, no outline, no gradient, no drop shadow, no recolouring outside the four approved fills, no reintroducing the other three pieces.
 

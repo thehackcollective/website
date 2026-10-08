@@ -23,3 +23,4 @@ Accepted design decisions, newest first. Add one when Louis accepts a change tha
 ## 2026-10-07 — Sections fill the viewport; motion via Reveal and count-up
 
 - Hack, stats, partners and join sections are `100dvh` with centred content. `Reveal` on blocks, `CountUp` on stats, Lenis bridged to ScrollTrigger in `src/app/smooth-scroll.tsx`.
+- 2026-10-08: gsap removed; count-up uses motion `inView` + `animate`, Lenis runs its own rAF.

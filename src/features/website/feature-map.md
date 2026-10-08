@@ -14,7 +14,7 @@ The feature owns the public route `/` and is the catalog default.
 
 The hero headline uses motion-plus splitText, so fonts must load before the reveal runs.
 
-Smooth scroll and ScrollTrigger wiring live in `src/app/smooth-scroll.tsx`, not in the feature.
+Smooth scroll (Lenis) lives in `src/app/smooth-scroll.tsx`, not in the feature.
 
 Copy facts live in `workspace/content.ts`; do not invent claims.
 
