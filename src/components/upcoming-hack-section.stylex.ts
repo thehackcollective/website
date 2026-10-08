@@ -7,7 +7,9 @@ export const hackStyles = stylex.create({
     display: 'flex',
     flexDirection: 'column',
     gap: space.x3xl,
-    paddingBlock: space.x5xl,
+    justifyContent: 'center',
+    minHeight: '100dvh',
+    paddingBlock: space.x4xl,
     paddingInline: {
       default: space.lg,
       '@media (min-width: 1200px)': space.x4xl,

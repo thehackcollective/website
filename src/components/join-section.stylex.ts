@@ -6,12 +6,15 @@ export const joinStyles = stylex.create({
   section: {
     display: 'flex',
     flexDirection: 'column',
+    minHeight: '100dvh',
   },
   content: {
     display: 'flex',
+    flex: '1',
     flexDirection: 'column',
     gap: space.x2xl,
-    paddingBlock: space.x5xl,
+    justifyContent: 'center',
+    paddingBlock: space.x4xl,
     paddingInline: {
       default: space.lg,
       '@media (min-width: 1200px)': space.x4xl,
