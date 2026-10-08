@@ -1,0 +1,145 @@
+:root {
+  --thc-brand-50: #fef2f2;
+  --thc-brand-600: #dc2626;
+  --thc-brand-700: #ef4444;
+  --thc-brand-800: #b91c1c;
+  --thc-brand-900: #7f1d1d;
+
+  --thc-gray-50: #fafafa;
+  --thc-gray-100: #f4f4f5;
+  --thc-gray-200: #e4e4e7;
+  --thc-gray-300: #d4d4d8;
+  --thc-gray-400: #a1a1aa;
+  --thc-gray-500: #71717a;
+  --thc-gray-600: #52525b;
+  --thc-gray-700: #3f3f46;
+  --thc-gray-800: #27272a;
+  --thc-gray-900: #18181b;
+  --thc-gray-950: #09090b;
+
+  --thc-primary: var(--thc-brand-700);
+  --thc-primary-active: var(--thc-brand-600);
+  --thc-primary-tint: var(--thc-brand-50);
+  --thc-primary-deep: var(--thc-brand-900);
+  --thc-on-primary: #ffffff;
+
+  --thc-canvas: #f5f5f5;
+  --thc-surface-card: #ffffff;
+  --thc-surface-soft: #fafafa;
+  --thc-surface-hover: #f0f0f0;
+  --thc-surface-nav: rgba(24, 24, 27, 0.06);
+
+  --thc-overlay-scrim: rgba(17, 17, 17, 0.72);
+  --thc-overlay-ink: #ffffff;
+  --thc-overlay-muted: rgba(255, 255, 255, 0.7);
+  --thc-overlay-hover: rgba(255, 255, 255, 0.16);
+  --thc-overlay-track: rgba(255, 255, 255, 0.24);
+
+  --thc-ink: rgba(24, 24, 27, 0.96);
+  --thc-body-strong: rgba(24, 24, 27, 0.90);
+  --thc-body: rgba(24, 24, 27, 0.82);
+  --thc-meta: rgba(24, 24, 27, 0.68);
+  --thc-caption-ink: rgba(24, 24, 27, 0.62);
+
+  --thc-hairline: #e4e4e7;
+  --thc-hairline-strong: #d4d4d8;
+  --thc-input-border: #8a8a93;
+
+  --thc-positive: #10b981;
+  --thc-negative: #dc2626;
+  --thc-warning: #f59e0b;
+  --thc-neutral-flat: #9ca3af;
+
+  --thc-font-display: "Geist", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --thc-font-sans: "Geist", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --thc-font-mono: "Geist Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  --thc-size-display-xl: 44px;
+  --thc-size-display-lg: 40px;
+  --thc-size-display-md: 32px;
+  --thc-size-display-sm: 22px;
+  --thc-size-display-xs: 18px;
+  --thc-size-body-lg: 18px;
+  --thc-size-body-md: 16px;
+  --thc-size-body-sm: 14px;
+  --thc-size-caption: 12px;
+  --thc-size-micro: 11px;
+  --thc-size-code: 13px;
+
+  --thc-leading-display-xl: 48px;
+  --thc-leading-display-lg: 44px;
+  --thc-leading-display-md: 40px;
+  --thc-leading-display-sm: 28px;
+  --thc-leading-display-xs: 24px;
+  --thc-leading-body-lg: 28px;
+  --thc-leading-body-md: 24px;
+  --thc-leading-body-sm: 20px;
+  --thc-leading-caption: 16px;
+  --thc-leading-micro: 16px;
+  --thc-leading-code: 20px;
+
+  --thc-tracking-display-xl: -0.03em;
+  --thc-tracking-display-lg: -0.028em;
+  --thc-tracking-display-md: -0.025em;
+  --thc-tracking-display-sm: -0.02em;
+  --thc-tracking-display-xs: -0.015em;
+  --thc-tracking-body: 0em;
+  --thc-tracking-body-sm: -0.01em;
+  --thc-tracking-label: 0.04em;
+  --thc-tracking-eyebrow: 0.12em;
+  --thc-tracking-allcaps: 0.2em;
+
+  --thc-weight-regular: 400;
+  --thc-weight-medium: 500;
+  --thc-weight-semibold: 600;
+
+  --thc-space-xxs: 4px;
+  --thc-space-xs: 8px;
+  --thc-space-sm: 12px;
+  --thc-space-md: 16px;
+  --thc-space-lg: 24px;
+  --thc-space-xl: 32px;
+  --thc-space-2xl: 40px;
+  --thc-space-3xl: 48px;
+  --thc-space-4xl: 64px;
+  --thc-space-5xl: 96px;
+  --thc-space-6xl: 128px;
+  --thc-space-section: 192px;
+
+  --thc-radius-none: 0px;
+  --thc-radius-xs: 4px;
+  --thc-radius-sm: 6px;
+  --thc-radius-md: 8px;
+  --thc-radius-lg: 12px;
+  --thc-radius-xl: 16px;
+  --thc-radius-pill-sm: 64px;
+  --thc-radius-pill: 100px;
+  --thc-radius-full: 9999px;
+  --thc-radius-card: var(--thc-radius-md);
+  --thc-radius-input: var(--thc-radius-sm);
+  --thc-radius-action: var(--thc-radius-none);
+  --thc-radius-pulse: var(--thc-radius-full);
+
+  --thc-shadow-0: none;
+  --thc-shadow-1: 0 0 0 1px #00000014 inset;
+  --thc-shadow-2: 0 1px 1px #00000005, 0 2px 2px #0000000a, var(--thc-shadow-1);
+  --thc-shadow-3: 0 2px 2px #0000000a, 0 8px 8px -8px #0000000a, var(--thc-shadow-1);
+  --thc-shadow-4: 0 2px 2px #0000000a, 0 8px 16px -4px #0000000a, var(--thc-shadow-1);
+  --thc-shadow-5: 0 1px 1px #00000005, 0 8px 16px -4px #0000000a, 0 24px 32px -8px #0000000f, var(--thc-shadow-1);
+  --thc-shadow-float: var(--thc-shadow-4);
+  --thc-shadow-modal: var(--thc-shadow-5);
+
+  --thc-ease: cubic-bezier(0.175, 0.885, 0.32, 1.1);
+  --thc-ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --thc-ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --thc-duration-fast: 150ms;
+  --thc-duration-medium: 200ms;
+  --thc-duration-slow: 300ms;
+
+  --thc-container-max: 1200px;
+  --thc-container-wide: 1400px;
+  --thc-prose-max: 680px;
+  --thc-measure-prose: 65ch;
+  --thc-side-panel-max: 34rem;
+  --thc-focus-ring: 0 0 0 2px var(--thc-canvas), 0 0 0 4px var(--thc-primary);
+}

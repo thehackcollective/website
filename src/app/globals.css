@@ -1,0 +1,43 @@
+@import "../tokens/design-tokens.css";
+@import "lenis/dist/lenis.css";
+
+@layer base, priority1, priority2, priority3, priority4;
+
+@stylex;
+
+@layer base {
+  html {
+    font-family: var(--thc-font-sans);
+  }
+
+  body {
+    background-color: var(--thc-canvas);
+    color: var(--thc-ink);
+    font-family: var(--thc-font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--thc-font-display);
+  }
+
+  code, pre, kbd, samp {
+    font-family: var(--thc-font-mono);
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button {
+    appearance: none;
+    backgroundColor: transparent;
+    border: 0;
+    color: inherit;
+    font: inherit;
+    padding: 0;
+  }
+}
