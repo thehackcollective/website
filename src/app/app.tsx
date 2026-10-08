@@ -3,6 +3,7 @@ import { LazyMotion, domAnimation } from "motion/react";
 
 import { color, layout } from "@/tokens/token-consts.stylex";
 import { AgentationToolbar } from "@/components/agentation";
+import { GsapProvider } from "@/components/gsap-provider";
 import { LenisProvider } from "@/components/lenis-provider";
 import { SiteNav } from "@/components/site-nav";
 import { HeroSection } from "@/components/hero-section";
@@ -40,6 +41,7 @@ export function App() {
   return (
     <LazyMotion features={domAnimation} strict>
       <LenisProvider>
+        <GsapProvider>
         <div {...stylex.props(pageStyles.page)}>
           <SiteNav />
           <HeroSection />
@@ -59,6 +61,7 @@ export function App() {
           </div>
           <AgentationToolbar />
         </div>
+        </GsapProvider>
       </LenisProvider>
     </LazyMotion>
   );
