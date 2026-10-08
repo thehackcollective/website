@@ -30,6 +30,13 @@ export function SiteNav() {
       <div {...stylex.props(navStyles.navBody)}>
         <div {...stylex.props(navStyles.bar)}>
           <a href="/" {...stylex.props(navStyles.wordmark)} aria-label="The Hack Collective home">
+            <img
+              src="/thc-logo.png"
+              alt=""
+              width={24}
+              height={24}
+              {...stylex.props(navStyles.wordmarkLogo)}
+            />
             The Hack Collective
           </a>
 

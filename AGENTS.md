@@ -10,8 +10,9 @@ community. Deployed on Cloudflare Workers (assets-only) via Wrangler.
 - Geist / Geist Mono via Google Fonts <link> tags in index.html
 - motion + motion-plus for the hero stagger reveal; lenis for smooth scroll
 - Bun 1.4 (packageManager field), isolated linker (bunfig.toml)
-- Light mode only. Red accent #ef4444, near-white canvas, rail layout with
-  1px hairline borders.
+- Light mode only. Purple accent #bc3fff (brand ramp in design-tokens.css),
+  logo public/thc-logo.png, near-white canvas, rail layout with 1px hairline
+  borders.
 
 ## Commands
 
