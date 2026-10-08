@@ -21,9 +21,9 @@ export function HeroSection() {
           <StaggerRevealHeadline
             id="hero-heading"
             className={stylex.props(heroStyles.heading).className}
-            ariaLabel="London's hackathon community."
+            ariaLabel="The home of hackathon enthusiasts."
           >
-            {"London's hackathon community."}
+            {"The home of hackathon enthusiasts."}
           </StaggerRevealHeadline>
 
           <StaggerRevealItem

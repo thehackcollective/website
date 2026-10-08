@@ -12,7 +12,7 @@ import { HL } from "@/lib/hairline-kernel.js";
  * The pattern: a field, read as a count. The pointer sets a distance on the
  * ground plane, which never moves; each piece has its own threshold on it.
  */
-const { Cam, clamp, facing, fit, lerp, mk, poly, prism, proj, put, rad, reducedMotion, register, rings, ringAt, solid, spring, stepS, pointer, disposer, unproj } = HL;
+const { Cam, clamp, facing, fit, lerp, mk, open, poly, prism, proj, put, rad, reducedMotion, register, rings, ringAt, solid, spring, stepS, pointer, disposer, unproj } = HL;
 
 const TH = 3.4, PL = 3, PX = 66, PY = 46;
 // the piece as a ring of samples [u, v, nu, nv] about its body centre, and its crease ring, inset 1.3
@@ -44,7 +44,16 @@ function pieceSolid(P, front, ring, inner, z0, z1, hideKnob, hideSocket) {
     const was = f[(i + n - 1) % n];
     if (f[i]) { if (!was) side.push(top[i]); side.push(bot[i]); } else { if (was) side.push(bot[i]); side.push(top[i]); }
   }
-  return { sil: poly(side) + poly(top), crease: poly(ringAt(P, inner, z1)) };
+  // the crease keeps off the joined sides too, or it doubles every seam; a corner left between two joined sides is too short to draw
+  const keep = ring.map((q, i) => !(hideKnob && KNOB[i]) && !(hideSocket && SOCKET[i])), lip = ringAt(P, inner, z1);
+  if (keep.every(Boolean)) return { sil: poly(side) + poly(top), crease: poly(lip) };
+  let crease = "", start = keep.findIndex((k, i) => k && !keep[(i + n - 1) % n]);
+  for (let j = 0, run = []; j <= n; j++) {
+    const i = (start + j) % n;
+    if (j < n && keep[i]) run.push(lip[i]);
+    else if (run.length > 6) { crease += open(run); run = []; } else run = [];
+  }
+  return { sil: poly(side) + poly(top), crease };
 }
 
 function mount({ stage, svg, read }, value) {

@@ -24,8 +24,8 @@ const ENTER_BLUR_TO = "blur(0px)";
 const UI_TRANSITION = { stiffness: 305, damping: 33 };
 const STAGGER_BASE = 0.08;
 const TRAVEL_ENTER = 24;
-const DIA_SWEEP_DURATION = 1.5;
-const DIA_FOLLOWER_DELAY = 0.9;
+const DIA_SWEEP_DURATION = 2.2;
+const DIA_FOLLOWER_DELAY = 1.5;
 
 const diaSweepEase = (t: number) =>
   t < 0.5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2;
@@ -145,14 +145,28 @@ export function useStaggerReveal(): {
           return;
         }
 
-        const headRect = headlineEl.getBoundingClientRect();
-        const charOffsets = chars.map(
-          (char) => headRect.left - char.getBoundingClientRect().left,
-        );
-        headlineEl.style.setProperty("--thc-dia-width", `${headRect.width}px`);
+        const charOffsets: Array<{ char: HTMLElement; x: number }> = [];
+        let stripWidth = 0;
+        lines.forEach((line) => {
+          const lineRect = line.getBoundingClientRect();
+          const lineOffset = stripWidth;
+          line
+            .querySelectorAll<HTMLElement>(`.${CHAR_CLASS}`)
+            .forEach((char) => {
+              charOffsets.push({
+                char,
+                x: -(
+                  lineOffset +
+                  (char.getBoundingClientRect().left - lineRect.left)
+                ),
+              });
+            });
+          stripWidth += lineRect.width;
+        });
+        headlineEl.style.setProperty("--thc-dia-width", `${stripWidth}px`);
         headlineEl.style.setProperty("--thc-dia-pos", "-17%");
-        chars.forEach((char, index) => {
-          char.style.setProperty("--thc-dia-x", `${charOffsets[index]}px`);
+        charOffsets.forEach(({ char, x }) => {
+          char.style.setProperty("--thc-dia-x", `${x}px`);
           char.classList.add(...diaCharClasses);
         });
 
