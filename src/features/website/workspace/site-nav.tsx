@@ -31,7 +31,7 @@ export function SiteNav() {
         <div {...stylex.props(navStyles.bar)}>
           <a href="/" {...stylex.props(navStyles.wordmark)} aria-label="The Hack Collective home">
             <img
-              src="/thc-logo.png"
+              src="/brand/icon.svg"
               alt=""
               width={24}
               height={24}
