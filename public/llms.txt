@@ -11,13 +11,9 @@ Founded in London in September 2025 by UCL students, run on WhatsApp and Luma.
 - #2 on Google for London Hackathons
 - 2026 UCL Campaign of the Year nominee
 
-## Next event
-
-- Grok Bot Community Engineering London Hackathon, Thu 22 Oct 2026, London, 6:00 PM to 10:30 PM. Presented by SpaceXAI with Cursor.
-
 ## Partners
 
-- Kickstart Global, Hacker's Unity, HackEurope, FINEDA, SpaceXAI, Cursor
+- Kickstart Global, Hacker's Unity, HackEurope, FINEDA
 
 ## Links
 

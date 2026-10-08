@@ -52,11 +52,9 @@ Facts (use verbatim, do not invent claims):
   Luma.
 - Stats: 1,000+ members; 400+ Luma calendar subscribers; #2 on Google for
   London Hackathons; 2026 UCL Campaign of the Year nominee.
-- Next event: Grok Bot Community Engineering London Hackathon, Thu 22 Oct
-  2026, London, 6:00 PM to 10:30 PM, presented by SpaceXAI with Cursor.
-  Solo or teams of up to 3, top 5 demo live for 3 minutes each, venue TBA.
-- Partners: Kickstart Global; Hacker's Unity; HackEurope; FINEDA; SpaceXAI;
-  Cursor.
+- Partners: Kickstart Global; Hacker's Unity; HackEurope; FINEDA.
+- Grok Bot hackathon section (22 Oct 2026, luma.com/eveur09a) removed on
+  2026-10-08, restore from git history when it is time to announce.
 - Links live in `src/content.ts`: WhatsApp
   chat.whatsapp.com/EWCPnquUzXD9uppsSuQFVk, Luma luma.com/thehackcollective,
-  hack Luma luma.com/eveur09a, email lelouis.lnv@gmail.com.
+  email lelouis.lnv@gmail.com.

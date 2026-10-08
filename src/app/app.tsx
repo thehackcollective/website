@@ -7,7 +7,6 @@ import { GsapProvider } from "@/components/gsap-provider";
 import { LenisProvider } from "@/components/lenis-provider";
 import { SiteNav } from "@/components/site-nav";
 import { HeroSection } from "@/components/hero-section";
-import { UpcomingHackSection } from "@/components/upcoming-hack-section";
 import { StatsSection } from "@/components/stats-section";
 import { PartnersSection } from "@/components/partners-section";
 import { JoinSection } from "@/components/join-section";
@@ -46,9 +45,6 @@ export function App() {
           <SiteNav />
           <HeroSection />
           <div {...stylex.props(pageStyles.rail)}>
-            <div {...stylex.props(pageStyles.divider)}>
-              <UpcomingHackSection />
-            </div>
             <div {...stylex.props(pageStyles.divider)}>
               <StatsSection />
             </div>
