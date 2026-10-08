@@ -1,5 +1,3 @@
-"use client"
-
 import * as React from "react"
 import { Tooltip as TooltipPrimitive } from "@base-ui/react/tooltip"
 import * as stylex from "@stylexjs/stylex"

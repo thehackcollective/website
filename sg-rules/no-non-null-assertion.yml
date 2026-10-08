@@ -1,0 +1,11 @@
+id: no-non-null-assertion
+language: Tsx
+severity: error
+message: |
+  Non-null assertion. Narrow with a guard, or throw a named error when the
+  value must exist.
+rule:
+  kind: non_null_expression
+files:
+  - "src/**/*.ts"
+  - "src/**/*.tsx"

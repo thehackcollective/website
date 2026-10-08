@@ -1,0 +1,9 @@
+id: no-ui-imports-features
+valid:
+  - |
+    import { color } from '@/tokens/token-consts.stylex'
+invalid:
+  - |
+    import { thing } from '@/features/website'
+  - |
+    import { App } from '@/app/app-root'

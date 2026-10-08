@@ -1,13 +1,13 @@
 import * as stylex from '@stylexjs/stylex'
 
-import { heroStyles } from '@/components/hero-section.stylex'
-import { buttonStyles } from '@/components/button.stylex'
+import { heroStyles } from '@/features/website/workspace/hero-section.stylex'
+import { buttonStyles } from '@/features/website/workspace/button.stylex'
 import {
   StaggerReveal,
   StaggerRevealHeadline,
   StaggerRevealItem,
-} from '@/components/stagger-reveal'
-import { LINKS } from '@/content'
+} from '@/components/ui/stagger-reveal'
+import { LINKS } from '@/features/website/workspace/content'
 
 export function HeroSection() {
   return (

@@ -1,0 +1,10 @@
+id: no-comments
+valid:
+  - |
+    const MAX_ITEMS = 5
+invalid:
+  - |
+    // explain things
+    const a = 1
+  - |
+    const a = 1 /* inline */

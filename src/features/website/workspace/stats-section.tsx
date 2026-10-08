@@ -1,9 +1,9 @@
 import * as stylex from '@stylexjs/stylex'
 
-import { CountUp } from '@/components/count-up'
-import { Reveal } from '@/components/reveal'
-import { statsStyles } from '@/components/stats-section.stylex'
-import { STATS } from '@/content'
+import { CountUp } from '@/components/ui/count-up'
+import { Reveal } from '@/components/ui/reveal'
+import { statsStyles } from '@/features/website/workspace/stats-section.stylex'
+import { STATS } from '@/features/website/workspace/content'
 
 export function StatsSection() {
   return (

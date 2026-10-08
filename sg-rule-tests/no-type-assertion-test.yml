@@ -1,0 +1,7 @@
+id: no-type-assertion
+valid:
+  - |
+    const EASE = 'easeIn' as const
+invalid:
+  - |
+    const el = node as HTMLElement

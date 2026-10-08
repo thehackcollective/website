@@ -1,0 +1,9 @@
+id: no-non-null-assertion
+snapshots:
+  ? |
+    const el = root!
+  : labels:
+    - source: root!
+      style: primary
+      start: 11
+      end: 16

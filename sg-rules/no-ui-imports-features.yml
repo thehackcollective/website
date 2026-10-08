@@ -1,0 +1,17 @@
+id: no-ui-imports-features
+language: Tsx
+severity: error
+message: |
+  `components/ui`, `lib` or `tokens` imported a feature or app module.
+  General-purpose code must not depend on product surfaces. Move the
+  dependency into the feature that owns it.
+rule:
+  kind: string_fragment
+  regex: '^@/(features|app)/'
+  inside:
+    kind: import_statement
+    stopBy: end
+files:
+  - "src/components/**"
+  - "src/lib/**"
+  - "src/tokens/**"

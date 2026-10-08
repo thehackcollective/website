@@ -1,0 +1,18 @@
+id: no-use-effect
+language: Tsx
+severity: error
+message: |
+  useEffect/useLayoutEffect in app code. Use instead: derived values inline
+  or useMemo · user actions in event handlers · reset via `key` · true
+  mount-only work via `useMountEffect` from '@/lib/use-mount-effect'.
+rule:
+  any:
+    - pattern: useEffect($$$ARGS)
+    - pattern: useLayoutEffect($$$ARGS)
+    - pattern: React.useEffect($$$ARGS)
+    - pattern: React.useLayoutEffect($$$ARGS)
+files:
+  - "src/**/*.ts"
+  - "src/**/*.tsx"
+ignores:
+  - "src/lib/use-mount-effect.ts"

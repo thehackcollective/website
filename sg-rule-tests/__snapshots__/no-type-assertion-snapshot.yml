@@ -1,0 +1,9 @@
+id: no-type-assertion
+snapshots:
+  ? |
+    const el = node as HTMLElement
+  : labels:
+    - source: node as HTMLElement
+      style: primary
+      start: 11
+      end: 30

@@ -1,8 +1,8 @@
 import * as stylex from '@stylexjs/stylex'
 
-import { Reveal } from '@/components/reveal'
-import { joinStyles } from '@/components/join-section.stylex'
-import { LINKS } from '@/content'
+import { Reveal } from '@/components/ui/reveal'
+import { joinStyles } from '@/features/website/workspace/join-section.stylex'
+import { LINKS } from '@/features/website/workspace/content'
 
 const JOIN_ROWS = [
   { label: 'WhatsApp', value: 'chat.whatsapp.com/EWCPnquUzXD9uppsSuQFVk', href: LINKS.whatsapp },

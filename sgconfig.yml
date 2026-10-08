@@ -1,2 +1,4 @@
-rule_dirs:
+ruleDirs:
   - sg-rules
+testConfigs:
+  - testDir: sg-rule-tests

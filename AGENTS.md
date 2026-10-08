@@ -19,12 +19,71 @@ community. Deployed on Cloudflare Workers (assets-only) via Wrangler.
 ```bash
 bun install
 bun run dev         # Vite dev server
-bun run build       # production build to dist/
+bun run check       # typecheck + eslint + ast-grep test/scan + structure
+bun run build       # bun run check && vite build to dist/
 bun run typecheck   # tsc --noEmit
 bun run lint        # eslint
 bun run deploy      # build + wrangler deploy
-ast-grep scan       # design system lint rules (sg-rules/)
 ```
+
+`bun run check` is the gate. `bun run build` runs it, so a deploy cannot skip
+it.
+
+## Structure
+
+```
+src/
+  main.tsx                  createRoot + RouterProvider
+  app/                      router.tsx, app-root.tsx, smooth-scroll.tsx,
+                            agentation.tsx, not-found.tsx, globals.css
+  features/
+    entrypoint.ts           the FeatureEntrypoint contract
+    catalog.ts              glob discovery, fails loudly on bad entrypoints
+    website/                the landing page feature
+      entrypoint.ts         id, label, surface, default, routes
+      index.ts              the only public cross-feature edge
+      feature-map.md        product knowledge and how to verify
+      workspace/            flat: view.tsx, sections, stylex files, content.ts
+  components/
+    ui/                     flat, general-purpose primitives only
+  lib/                      flat shared helpers
+  tokens/                   design tokens
+```
+
+A feature folder has exactly `entrypoint.ts`, `index.ts`, `feature-map.md`,
+and `workspace/`. `workspace/` is flat.
+
+New product work is a new folder under `src/features/`, never a branch in an
+existing feature. The catalog discovers it; there is no route list to edit.
+
+Routes have a surface: `public` renders under the app root, `app` is reserved
+for a future app shell. Adding the shell later is a router-only change.
+
+Other code may import a feature only through `@/features/<name>` (its
+index.ts). Inside a feature, files import each other through full
+`@/features/<name>/workspace/...` paths.
+
+## Enforced rules
+
+`ast-grep scan` (sg-rules/) and `bun scripts/check-structure.ts` enforce these,
+all severity error:
+
+- `no-comments` — put the information in a name, a type, or feature-map.md.
+- `no-use-effect` — use useMountEffect, derived values, handlers, or `key`.
+- `no-relative-imports` — every import inside src uses `@/`.
+- `no-default-export` — named exports only.
+- `no-type-assertion` — narrow or annotate; `as const` is allowed.
+- `no-non-null-assertion` — guard, or throw a named error.
+- `no-feature-deep-imports` — outside code imports only `@/features/<name>`.
+- `no-ui-imports-features` — components/, lib/ and tokens/ never import
+  features/ or app/.
+- `no-tailwind-in-components`, `no-inline-style`, `no-hardcoded-colors`,
+  `no-vh-units`, `no-index-key` — the design system rules.
+
+The structure check enforces the src/ top-level layout, flat components/ui
+and lib/, the fixed feature anatomy, index-edge-only cross-feature imports,
+and the four feature-map.md sections (Sub-features, How to get to it,
+Gotchas, Verify).
 
 ## StyleX rules
 
@@ -55,6 +114,6 @@ Facts (use verbatim, do not invent claims):
 - Partners: Kickstart Global; Hacker's Unity; HackEurope; FINEDA.
 - Grok Bot hackathon section (22 Oct 2026, luma.com/eveur09a) removed on
   2026-10-08, restore from git history when it is time to announce.
-- Links live in `src/content.ts`: WhatsApp
+- Links live in `src/features/website/workspace/content.ts`: WhatsApp
   chat.whatsapp.com/EWCPnquUzXD9uppsSuQFVk, Luma luma.com/thehackcollective,
   email lelouis.lnv@gmail.com.

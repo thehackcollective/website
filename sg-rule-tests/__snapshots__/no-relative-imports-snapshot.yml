@@ -1,0 +1,24 @@
+id: no-relative-imports
+snapshots:
+  ? |
+    import { thing } from '../lib/thing'
+  : labels:
+    - source: ../lib/thing
+      style: primary
+      start: 23
+      end: 35
+    - source: import { thing } from '../lib/thing'
+      style: secondary
+      start: 0
+      end: 36
+  ? |
+    import { thing } from './thing'
+  : labels:
+    - source: ./thing
+      style: primary
+      start: 23
+      end: 30
+    - source: import { thing } from './thing'
+      style: secondary
+      start: 0
+      end: 31

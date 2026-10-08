@@ -1,0 +1,9 @@
+id: no-use-effect
+valid:
+  - |
+    useMountEffect(() => { start() })
+invalid:
+  - |
+    useEffect(() => { start() }, [])
+  - |
+    React.useLayoutEffect(() => { start() }, [])

@@ -1,0 +1,12 @@
+id: no-default-export
+language: Tsx
+severity: error
+message: |
+  Default export. Named exports are greppable and keep one name per thing.
+  Export by name (`export function View()`, `export const entrypoint`).
+rule:
+  kind: export_statement
+  regex: '^export default'
+files:
+  - "src/**/*.ts"
+  - "src/**/*.tsx"

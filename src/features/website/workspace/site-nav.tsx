@@ -1,8 +1,8 @@
 import * as stylex from '@stylexjs/stylex'
 
-import { navStyles } from '@/components/site-nav.stylex'
-import { buttonStyles } from '@/components/button.stylex'
-import { LINKS } from '@/content'
+import { navStyles } from '@/features/website/workspace/site-nav.stylex'
+import { buttonStyles } from '@/features/website/workspace/button.stylex'
+import { LINKS } from '@/features/website/workspace/content'
 
 export function SiteNav() {
   return (

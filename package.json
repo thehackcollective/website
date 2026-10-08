@@ -5,11 +5,12 @@
   "packageManager": "bun@1.4.0",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "bun run check && vite build",
     "preview": "vite preview",
     "deploy": "vite build && wrangler deploy",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint"
+    "lint": "eslint",
+    "check": "bun run typecheck && bun run lint && ast-grep test && ast-grep scan && bun scripts/check-structure.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
@@ -28,6 +29,7 @@
     "vite": "^8.2.2"
   },
   "devDependencies": {
+    "@ast-grep/cli": "^0.45.3",
     "@eslint/js": "^10.0.1",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -39,6 +41,8 @@
     "wrangler": "^4.125.0"
   },
   "trustedDependencies": [
+    "@ast-grep/cli",
     "unrs-resolver"
-  ]
+  ],
+  "type": "module"
 }

@@ -1,0 +1,24 @@
+id: no-ui-imports-features
+snapshots:
+  ? |
+    import { App } from '@/app/app-root'
+  : labels:
+    - source: '@/app/app-root'
+      style: primary
+      start: 21
+      end: 35
+    - source: import { App } from '@/app/app-root'
+      style: secondary
+      start: 0
+      end: 36
+  ? |
+    import { thing } from '@/features/website'
+  : labels:
+    - source: '@/features/website'
+      style: primary
+      start: 23
+      end: 41
+    - source: import { thing } from '@/features/website'
+      style: secondary
+      start: 0
+      end: 42

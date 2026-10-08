@@ -1,0 +1,7 @@
+id: no-non-null-assertion
+valid:
+  - |
+    const el = root === null ? fallback : root
+invalid:
+  - |
+    const el = root!

@@ -1,0 +1,9 @@
+id: no-default-export
+snapshots:
+  ? |
+    export default function Page() { return null }
+  : labels:
+    - source: export default function Page() { return null }
+      style: primary
+      start: 0
+      end: 46

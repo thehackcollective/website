@@ -1,0 +1,13 @@
+id: no-type-assertion
+language: Tsx
+severity: error
+message: |
+  A type assertion tells the compiler to trust you instead of proving the
+  type. Narrow with a type guard, annotate the declaration, or fix the type
+  at its source. Only `as const` is allowed.
+rule:
+  pattern: $X as $T
+  not: { pattern: $X as const }
+files:
+  - "src/**/*.ts"
+  - "src/**/*.tsx"

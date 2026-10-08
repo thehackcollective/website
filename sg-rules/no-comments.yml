@@ -1,0 +1,12 @@
+id: no-comments
+language: Tsx
+severity: error
+message: |
+  Comment in app code. Put the information in a name, a type, or the
+  feature's feature-map.md. Suppressions (eslint-disable, @ts-ignore,
+  @ts-expect-error) are comments too — fix the code the rule points at.
+rule:
+  kind: comment
+ignores:
+  - "dist/**"
+  - "node_modules/**"

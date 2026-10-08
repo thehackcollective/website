@@ -1,0 +1,13 @@
+id: no-feature-deep-imports
+snapshots:
+  ? |
+    import { thing } from '@/features/website/workspace/view'
+  : labels:
+    - source: '@/features/website/workspace/view'
+      style: primary
+      start: 23
+      end: 56
+    - source: import { thing } from '@/features/website/workspace/view'
+      style: secondary
+      start: 0
+      end: 57

@@ -1,0 +1,7 @@
+id: no-default-export
+valid:
+  - |
+    export function View() { return null }
+invalid:
+  - |
+    export default function Page() { return null }

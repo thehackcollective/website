@@ -1,0 +1,22 @@
+id: no-feature-deep-imports
+language: Tsx
+severity: error
+message: |
+  Deep import into a feature folder. Code outside a feature may import only
+  its public edge `@/features/<name>` (index.ts). If the name you need is not
+  exported, that feature's index.ts owns the decision to export it.
+rule:
+  kind: string_fragment
+  regex: '^@/features/[^/]+/.+'
+  inside:
+    kind: import_statement
+    stopBy: end
+files:
+  - "src/app/**/*.ts"
+  - "src/app/**/*.tsx"
+  - "src/components/**/*.ts"
+  - "src/components/**/*.tsx"
+  - "src/lib/**/*.ts"
+  - "src/main.tsx"
+  - "src/features/catalog.ts"
+  - "src/features/entrypoint.ts"

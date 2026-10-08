@@ -1,8 +1,8 @@
 import * as stylex from '@stylexjs/stylex'
 
-import { Reveal } from '@/components/reveal'
-import { partnersStyles } from '@/components/partners-section.stylex'
-import { PARTNERS } from '@/content'
+import { Reveal } from '@/components/ui/reveal'
+import { partnersStyles } from '@/features/website/workspace/partners-section.stylex'
+import { PARTNERS } from '@/features/website/workspace/content'
 
 export function PartnersSection() {
   return (

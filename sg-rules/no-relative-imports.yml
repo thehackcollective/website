@@ -1,0 +1,17 @@
+id: no-relative-imports
+language: Tsx
+severity: error
+message: |
+  Relative import. Use the '@/…' alias for every import inside src — absolute
+  paths are greppable and survive moves.
+rule:
+  kind: string_fragment
+  regex: '^\.\.?/'
+  inside:
+    any:
+      - kind: import_statement
+      - kind: export_statement
+    stopBy: end
+files:
+  - "src/**/*.ts"
+  - "src/**/*.tsx"

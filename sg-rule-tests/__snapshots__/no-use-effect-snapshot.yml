@@ -1,0 +1,16 @@
+id: no-use-effect
+snapshots:
+  ? |
+    React.useLayoutEffect(() => { start() }, [])
+  : labels:
+    - source: React.useLayoutEffect(() => { start() }, [])
+      style: primary
+      start: 0
+      end: 44
+  ? |
+    useEffect(() => { start() }, [])
+  : labels:
+    - source: useEffect(() => { start() }, [])
+      style: primary
+      start: 0
+      end: 32

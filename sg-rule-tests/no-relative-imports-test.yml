@@ -1,0 +1,9 @@
+id: no-relative-imports
+valid:
+  - |
+    import { thing } from '@/lib/thing'
+invalid:
+  - |
+    import { thing } from './thing'
+  - |
+    import { thing } from '../lib/thing'

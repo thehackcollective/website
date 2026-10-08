@@ -1,14 +1,13 @@
-"use client";
-
 import { animate } from "motion";
 import { splitText } from "motion-plus";
+import * as stylex from "@stylexjs/stylex";
+import { useMountEffect } from "@/lib/use-mount-effect";
+
 import {
   createElement,
-  useLayoutEffect,
   useRef,
   type ReactElement,
   type ReactNode,
-  type Ref,
   type RefObject,
 } from "react";
 
@@ -28,6 +27,12 @@ const STAGGER_RELAXED = 0.15;
 const STAGGER_BASE = 0.08;
 const TRAVEL_ENTER = 24;
 
+const styles = stylex.create({
+  hidden: {
+    visibility: "hidden",
+  },
+});
+
 export type StaggerRevealTag = "div" | "section" | "header" | "article";
 
 export interface StaggerRevealProps {
@@ -42,18 +47,19 @@ export function useStaggerReveal(): {
 } {
   const ref = useRef<HTMLElement | null>(null);
 
-  useLayoutEffect(() => {
+  useMountEffect(() => {
     const container = ref.current;
     if (!container) return;
     const headlineEl = container.querySelector<HTMLElement>(
       `[${HEADLINE_ATTR}]`,
     );
-    if (!headlineEl) return;
+    if (!headlineEl) {
+      container.style.visibility = "visible";
+      return;
+    }
 
     const animations: Array<ReturnType<typeof animate>> = [];
     let cancelled = false;
-
-    container.style.visibility = "hidden";
 
     void (async () => {
       try {
@@ -141,7 +147,7 @@ export function useStaggerReveal(): {
           delay += STAGGER_BASE;
         });
       } catch {
-        // fail open
+        animations.length = 0;
       } finally {
         if (!cancelled && ref.current === container) {
           container.style.visibility = "visible";
@@ -153,7 +159,7 @@ export function useStaggerReveal(): {
       cancelled = true;
       animations.forEach((animation) => animation.stop());
     };
-  }, []);
+  });
 
   return { ref };
 }
@@ -168,9 +174,12 @@ export function StaggerReveal({
   return createElement(
     as,
     {
-      ref: ref as Ref<HTMLElement>,
+      ref,
       id,
-      className,
+      className: [
+        stylex.props(styles.hidden).className,
+        className ?? "",
+      ].join(" "),
     },
     children,
   );

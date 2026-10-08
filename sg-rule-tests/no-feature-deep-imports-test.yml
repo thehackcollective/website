@@ -1,0 +1,7 @@
+id: no-feature-deep-imports
+valid:
+  - |
+    import { thing } from '@/features/website'
+invalid:
+  - |
+    import { thing } from '@/features/website/workspace/view'

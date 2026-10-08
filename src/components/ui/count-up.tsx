@@ -1,8 +1,11 @@
-"use client";
-
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useReducedMotion } from "motion/react";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
+
+import { useMountEffect } from "@/lib/use-mount-effect";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export interface CountUpProps {
   value: string;
@@ -13,7 +16,7 @@ export function CountUp({ value, className }: CountUpProps) {
   const ref = useRef<HTMLSpanElement>(null);
   const reduceMotion = useReducedMotion();
 
-  useEffect(() => {
+  useMountEffect(() => {
     const el = ref.current;
     if (!el || reduceMotion) return;
 
@@ -47,7 +50,7 @@ export function CountUp({ value, className }: CountUpProps) {
       tween.scrollTrigger?.kill();
       tween.kill();
     };
-  }, [value, reduceMotion]);
+  });
 
   return (
     <span ref={ref} className={className}>

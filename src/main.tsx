@@ -1,18 +1,16 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router";
+import { RouterProvider } from "react-router";
 
-import { App } from "@/app/app";
 import "@/app/globals.css";
+import { router } from "@/app/router";
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    Component: App,
-  },
-]);
+const container = document.getElementById("root");
+if (container === null) {
+  throw new Error("missing #root");
+}
 
-createRoot(document.getElementById("root")!).render(
+createRoot(container).render(
   <StrictMode>
     <RouterProvider router={router} />
   </StrictMode>,
