@@ -33,8 +33,8 @@ export function SiteNav() {
             <img
               src="/brand/icon.svg"
               alt=""
-              width={24}
-              height={24}
+              width={32}
+              height={32}
               {...stylex.props(navStyles.wordmarkLogo)}
             />
             The Hack Collective

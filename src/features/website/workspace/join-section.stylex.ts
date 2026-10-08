@@ -30,15 +30,16 @@ export const joinStyles = stylex.create({
     },
   },
   imageCol: {
-    display: {
-      default: 'none',
-      '@media (min-width: 960px)': 'flex',
-    },
+    alignItems: 'center',
+    display: 'flex',
     flex: '1',
+    justifyContent: 'center',
     position: 'relative',
+    width: '100%',
   },
   imageFrame: {
     aspectRatio: '1 / 1',
+    flexShrink: 0,
     backgroundColor: color.surfaceSoft,
     borderColor: color.hairline,
     borderRadius: radius.lg,

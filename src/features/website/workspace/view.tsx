@@ -13,9 +13,7 @@ export function View() {
       <HeroSection />
       <div {...stylex.props(pageStyles.rail)}>
         <StatsSection />
-        <div {...stylex.props(pageStyles.divider)}>
-          <JoinSection />
-        </div>
+        <JoinSection />
       </div>
     </div>
   );

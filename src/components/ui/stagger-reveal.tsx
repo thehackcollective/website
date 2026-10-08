@@ -2,6 +2,7 @@ import { animate } from "motion";
 import { splitText } from "motion-plus";
 import * as stylex from "@stylexjs/stylex";
 import { useMountEffect } from "@/lib/use-mount-effect";
+import { color, motion } from "@/tokens/token-consts.stylex";
 
 import {
   createElement,
@@ -13,23 +14,43 @@ import {
 
 const LINE_CLASS = "stagger-line";
 const WORD_CLASS = "stagger-word";
+const CHAR_CLASS = "stagger-char";
 const HEADLINE_ATTR = "data-stagger-headline";
 const ITEM_ATTR = "data-stagger-item";
 
-const HEADLINE_RISE_FROM = "translateY(0.4em)";
-const HEADLINE_RISE_TO = "translateY(0em)";
 const ENTER_BLUR_FROM = "blur(4px)";
 const ENTER_BLUR_TO = "blur(0px)";
 
-const GENTLE_TRANSITION = { stiffness: 110, damping: 20 };
 const UI_TRANSITION = { stiffness: 305, damping: 33 };
-const STAGGER_RELAXED = 0.15;
 const STAGGER_BASE = 0.08;
 const TRAVEL_ENTER = 24;
+const DIA_SWEEP_DURATION = 1.5;
+const DIA_FOLLOWER_DELAY = 0.9;
+
+const diaSweepEase = (t: number) =>
+  t < 0.5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2;
 
 const styles = stylex.create({
   hidden: {
     visibility: "hidden",
+  },
+  diaChar: {
+    backgroundClip: "text",
+    backgroundImage: `linear-gradient(90deg, ${color.ink} 0%, ${color.ink} calc(var(--thc-dia-pos) - 17%), ${color.primaryDeep} calc(var(--thc-dia-pos) - 12%), ${color.primary} calc(var(--thc-dia-pos) - 3%), ${color.primaryActive} calc(var(--thc-dia-pos) + 6%), ${color.primaryTint} calc(var(--thc-dia-pos) + 14%), transparent calc(var(--thc-dia-pos) + 17%), transparent 100%)`,
+    backgroundPosition: "var(--thc-dia-x) 0",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "var(--thc-dia-width) 100%",
+    color: { default: "transparent", ":hover": color.primary },
+    display: "inline-block",
+    transitionDuration: motion.durationFast,
+    transitionProperty: "color",
+    WebkitBackgroundClip: "text",
+  },
+  diaCharDone: {
+    color: { default: color.ink, ":hover": color.primary },
+    display: "inline-block",
+    transitionDuration: motion.durationFast,
+    transitionProperty: "color",
   },
 });
 
@@ -73,6 +94,7 @@ export function useStaggerReveal(): {
         const { lines } = splitText(headlineEl, {
           lineClass: LINE_CLASS,
           wordClass: WORD_CLASS,
+          charClass: CHAR_CLASS,
         });
 
         lines.forEach((line) => {
@@ -84,6 +106,10 @@ export function useStaggerReveal(): {
             });
         });
 
+        const chars = Array.from(
+          headlineEl.querySelectorAll<HTMLElement>(`.${CHAR_CLASS}`),
+        );
+
         const followers = Array.from(
           container.querySelectorAll<HTMLElement>(`[${ITEM_ATTR}]`),
         );
@@ -92,32 +118,51 @@ export function useStaggerReveal(): {
           "(prefers-reduced-motion: reduce)",
         ).matches;
 
-        if (reduceMotion) return;
+        const diaCharClasses = (
+          stylex.props(styles.diaChar)?.className ?? ""
+        )
+          .split(/\s+/)
+          .filter(Boolean);
+        const diaCharDoneClasses = (
+          stylex.props(styles.diaCharDone)?.className ?? ""
+        )
+          .split(/\s+/)
+          .filter(Boolean);
 
-        let delay = 0;
-        const gentleOpacity = {
-          ...GENTLE_TRANSITION,
-          ease: "easeIn" as const,
-        };
+        if (reduceMotion) {
+          chars.forEach((char) => char.classList.add(...diaCharDoneClasses));
+          return;
+        }
 
-        lines.forEach((line) => {
-          animations.push(
-            animate(
-              line,
-              {
-                opacity: [0, 1],
-                transform: [HEADLINE_RISE_FROM, HEADLINE_RISE_TO],
-                filter: [ENTER_BLUR_FROM, ENTER_BLUR_TO],
-              },
-              { ...GENTLE_TRANSITION, delay, opacity: gentleOpacity },
-            ),
-          );
-          delay += STAGGER_RELAXED;
+        const headRect = headlineEl.getBoundingClientRect();
+        const charOffsets = chars.map(
+          (char) => headRect.left - char.getBoundingClientRect().left,
+        );
+        headlineEl.style.setProperty("--thc-dia-width", `${headRect.width}px`);
+        headlineEl.style.setProperty("--thc-dia-pos", "-17%");
+        chars.forEach((char, index) => {
+          char.style.setProperty("--thc-dia-x", `${charOffsets[index]}px`);
+          char.classList.add(...diaCharClasses);
         });
 
-        if (lines.length > 0) {
-          delay += STAGGER_RELAXED * 2;
-        }
+        animations.push(
+          animate(-17, 117, {
+            duration: DIA_SWEEP_DURATION,
+            ease: diaSweepEase,
+            onUpdate: (value) => {
+              headlineEl.style.setProperty("--thc-dia-pos", `${value}%`);
+            },
+            onComplete: () => {
+              if (cancelled || ref.current !== container) return;
+              chars.forEach((char) => {
+                char.classList.remove(...diaCharClasses);
+                char.classList.add(...diaCharDoneClasses);
+              });
+            },
+          }),
+        );
+
+        let delay = DIA_FOLLOWER_DELAY;
 
         const followerTransition = {
           ...UI_TRANSITION,

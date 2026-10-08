@@ -31,9 +31,15 @@ function piece(ring, x, y, a) {
   return ring.map(([u, v, nu, nv]) => ({ u: x + u * c - v * s, v: y + u * s + v * c, nu: nu * c - nv * s, nv: nu * s + nv * c }));
 }
 
-/** A solid whose lid is a concave outline: the side silhouette is the outline's own, not its hull, so the socket stays open and the knob keeps its neck. */
-function pieceSolid(P, front, ring, inner, z0, z1) {
-  const top = ringAt(P, ring, z1), bot = ringAt(P, ring, z0), n = ring.length, f = ring.map(front), side = [];
+// the knob side and the socket side of OUTER: once two neighbours are both seated, the sides between them are not drawn
+const HALF = 9, KNOB = OUTER.map(([u]) => u >= HALF - 0.01), SOCKET = OUTER.map(([u, v]) => v >= HALF - 0.01 || (v > 0 && Math.abs(u) < HALF * 0.75));
+// which piece each one's knob goes into, and whose knob fills its socket
+const INTO = [1, 5, 3, 7, 0, 4, 2, 6], FROM = [4, 0, 6, 2, 5, 1, 7, 3];
+
+/** A solid whose lid is a concave outline: the side silhouette is the outline's own, not its hull, so the socket stays open and the knob keeps its neck. A seated piece shows no wall at its joints. */
+function pieceSolid(P, front, ring, inner, z0, z1, hideKnob, hideSocket) {
+  const top = ringAt(P, ring, z1), bot = ringAt(P, ring, z0), n = ring.length, side = [];
+  const f = ring.map((q, i) => front(q) && !(hideKnob && KNOB[i]) && !(hideSocket && SOCKET[i]));
   for (let i = 0; i < n; i++) {
     const was = f[(i + n - 1) % n];
     if (f[i]) { if (!was) side.push(top[i]); side.push(bot[i]); } else { if (was) side.push(bot[i]); side.push(top[i]); }
@@ -66,11 +72,12 @@ function mount({ stage, svg, read }, value) {
     return { x: lerp(x0, sx, s), y: lerp(y0, sy, s), a: lerp(a0, sa, s), z: Math.max(0, lerp(z0, 0, w) + hop) };
   }
   function draw(tl) {
-    const p = pose(tl), key = [p.x, p.y, p.a, p.z].map((v) => v.toFixed(2)).join();
+    const p = pose(tl), seated = (t) => t.sp.x > 0.92, hk = seated(tl) && seated(tiles[INTO[tl.i]]), hs = seated(tl) && seated(tiles[FROM[tl.i]]);
+    const key = [p.x, p.y, p.a, p.z, hk ? 1 : 0, hs ? 1 : 0].map((v) => v.toFixed(2)).join();
     tl.k = p.x + p.y + 6 * p.z;
     if (key === tl.key) return;
     tl.key = key;
-    put(tl.el, pieceSolid(P, front, piece(OUTER, p.x, p.y, p.a), piece(INNER, p.x, p.y, p.a), p.z, p.z + TH));
+    put(tl.el, pieceSolid(P, front, piece(OUTER, p.x, p.y, p.a), piece(INNER, p.x, p.y, p.a), p.z, p.z + TH, hk, hs));
   }
 
   let order = "";

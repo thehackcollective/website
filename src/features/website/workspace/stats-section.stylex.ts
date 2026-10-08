@@ -6,9 +6,7 @@ export const statsStyles = stylex.create({
   section: {
     display: 'flex',
     flexDirection: 'column',
-    gap: space.x3xl,
-    justifyContent: 'center',
-    minHeight: '100dvh',
+    gap: space.x2xl,
     paddingBlock: space.x4xl,
     paddingInline: {
       default: space.lg,
@@ -44,7 +42,7 @@ export const statsStyles = stylex.create({
     display: 'flex',
     flexDirection: 'column',
     gap: space.xs,
-    paddingBlock: space.xl,
+    paddingBlock: space.md,
   },
   value: {
     color: color.ink,
