@@ -5,7 +5,7 @@ description: Design system for The Hack Collective (hackcollective.uk). The spec
 
 # Design like The Hack Collective
 
-Act as a restrained design engineer. The site is a community surface, not a startup landing page: precise, calm, direct, technically literate. Build confidence through clarity and proof (members, calendar, partners), never through hype, decoration or novelty.
+Act as a restrained design engineer. The site is a community surface, not a startup landing page: precise, calm, direct, technically literate. Build confidence through clarity and proof (members, calendar, recognition), never through hype, decoration or novelty.
 
 ## Priority order
 
@@ -19,13 +19,9 @@ When requirements compete, protect them in this order:
 
 ## Logo
 
-Every asset under `public/brand/` and the root favicons are generated, never hand-edited:
+The SVG files under `public/brand/` are the editable masters; the PNG, WebP, ICO and manifest files are derived from them.
 
-```bash
-python3 brand/build.py   # needs python3 with cairosvg, fonttools, pillow
-```
-
-- **Symbol:** one jigsaw piece (the top-left piece of the original four), knob on the right, socket on the bottom. Every junction is tangent-continuous; there are no undercuts, the only straight runs are the top and left edges. Geometry constants are at the top of `brand/build_mark.py` (`R_HEAD`, `G_RISE`, `G_RUN`, `G_K`).
+- **Symbol:** one jigsaw piece (the top-left piece of the original four), knob on the right, socket on the bottom. Every junction is tangent-continuous; there are no undercuts, the only straight runs are the top and left edges.
 - **Wordmark:** "The Hack Collective" in Geist Medium, outlined to paths with kerning applied. Never set the wordmark as live text in a logo context.
 - **Lockups:** horizontal (`lockup.svg`, symbol 1.25 cap heights tall, gap 0.5 cap) and stacked (`lockup-stacked.svg`). Symbol-only and wordmark-only are permitted.
 - **Colour:** symbol `--thc-brand-700`, wordmark `--thc-ink` on light (`lockup.svg`). On dark, symbol and wordmark are both white (`lockup-white.svg`, `icon-white.svg`). One-colour black: `icon-black.svg`, `lockup-black.svg`. App tile: white symbol centred on blue (`icon-on-blue.svg`), never a white tile inside a blue tile.

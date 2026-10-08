@@ -22,9 +22,9 @@ Make the page right for a London builder who lands on it once: they should know 
 1. **`DESIGN.md`** — the system: priority order, logo rules, colour roles, type roles, spacing, grid, motion, copy, review checklist. Names tokens and reasoning; values live in the token SOT.
 2. **`src/tokens/design-tokens.css`** (values, `--thc-*`) and **`src/tokens/token-consts.stylex.ts`** (typed StyleX accessors `color`, `text`, `space`, `radius`, `shadow`, `layout`). **`src/tokens/page-shell.stylex.ts`** holds the recipes (`pageRecipe`, `railRecipe`, `displayTitleLg/Md/Sm`, `eyebrow`, `bodyLg/Md/Sm`).
 3. **`AGENTS.md`** — stack, commands, StyleX rules, copy rules, the facts you may state.
-4. **`src/features/website/`** — the one feature. `workspace/view.tsx` composes the sections; `workspace/content.ts` holds every link and fact; one file per section (`site-nav`, `hero-section`, `stats-section`, `partners-section`, `join-section`) with a sibling `.stylex.ts`.
+4. **`src/features/website/`** — the one feature. `workspace/view.tsx` composes the sections; `workspace/content.ts` holds every link and fact; one file per section (`site-nav`, `hero-section`, `hero-figure`, `stats-section`, `join-section`) with a sibling `.stylex.ts`.
 5. **`src/components/ui/`** — shared primitives (`reveal`, `stagger-reveal`, `count-up`, `tooltip`). Closed API: no `className` or `style` props.
-6. **`public/brand/`** — generated logo assets. Never hand-edit; run `python3 brand/build.py`.
+6. **`public/brand/`** — logo assets. The SVGs are the editable masters; regenerate the PNG/WebP twins from them after edits.
 
 If you are about to invent a colour, type size, radius, spacing value, or logo variant, stop. It is already specified. Read tokens → recipes → `DESIGN.md` → existing sections.
 

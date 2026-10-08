@@ -5,7 +5,7 @@
 - One sentence per paragraph. If a thought needs two, cut one.
 - Plain words a first-year can repeat. No "ecosystem", "leverage", "empower", "unlock", "vibrant", "passionate".
 - Exact names, verbatim: The Hack Collective, WhatsApp, Luma, Kickstart Global, Hacker's Unity, HackEurope, FINEDA, UCL.
-- Numbers as proof, formatted as they appear in `AGENTS.md`: `1,000+`, `400+`, `#2`. Never round up or add a qualifier the source lacks.
+- Numbers as proof, formatted as they appear in `AGENTS.md`: `1,100+`, `450+`, `#2`. Never round up or add a qualifier the source lacks.
 - British spelling (organiser, colour, programme).
 - Headings are statements, not labels: "Every London hackathon on one calendar" beats "Calendar".
 - Buttons name the destination or the result: "Join the WhatsApp", "Subscribe on Luma", "Submit an event", "Partner with us". Never "Learn more", "Click here", "Get started".
