@@ -1,7 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "hackcollective",
-  "account_id": "062a91f6e4ad306625307277f1fe668b",
+  "name": "website",
+  "account_id": "191ce0f3febaf227407c1f816ab193e2",
   "compatibility_date": "2026-10-08",
   "workers_dev": false,
   "preview_urls": false,
