@@ -1,6 +1,6 @@
 import * as stylex from '@stylexjs/stylex'
 
-import { color, layout, motion, space, text } from '@/tokens/token-consts.stylex'
+import { color, layout, motion, radius, space, text } from '@/tokens/token-consts.stylex'
 
 export const joinStyles = stylex.create({
   section: {
@@ -8,17 +8,60 @@ export const joinStyles = stylex.create({
     flexDirection: 'column',
     minHeight: '100dvh',
   },
-  content: {
+  grid: {
+    alignItems: {
+      default: 'flex-start',
+      '@media (min-width: 960px)': 'stretch',
+    },
+    display: 'flex',
+    flex: '1',
+    flexDirection: {
+      default: 'column',
+      '@media (min-width: 960px)': 'row',
+    },
+    gap: {
+      default: space.x3xl,
+      '@media (min-width: 960px)': space.x5xl,
+    },
+    paddingBlock: space.x5xl,
+    paddingInline: {
+      default: space.lg,
+      '@media (min-width: 1200px)': space.x4xl,
+    },
+  },
+  imageCol: {
+    display: {
+      default: 'none',
+      '@media (min-width: 960px)': 'flex',
+    },
+    flex: '1',
+    position: 'relative',
+  },
+  imageFrame: {
+    aspectRatio: '1 / 1',
+    backgroundColor: color.surfaceSoft,
+    borderColor: color.hairline,
+    borderRadius: radius.lg,
+    borderStyle: 'solid',
+    borderWidth: '1px',
+    maxWidth: '100%',
+    overflow: 'hidden',
+    position: 'relative',
+    width: '100%',
+  },
+  objectCover: {
+    display: 'block',
+    height: '100%',
+    objectFit: 'cover',
+    objectPosition: 'center',
+    width: '100%',
+  },
+  textCol: {
     display: 'flex',
     flex: '1',
     flexDirection: 'column',
     gap: space.x2xl,
     justifyContent: 'center',
-    paddingBlock: space.x4xl,
-    paddingInline: {
-      default: space.lg,
-      '@media (min-width: 1200px)': space.x4xl,
-    },
   },
   copy: {
     display: 'flex',

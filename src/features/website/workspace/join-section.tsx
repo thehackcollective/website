@@ -1,51 +1,84 @@
-import * as stylex from '@stylexjs/stylex'
+import * as stylex from "@stylexjs/stylex";
 
-import { Reveal } from '@/components/ui/reveal'
-import { joinStyles } from '@/features/website/workspace/join-section.stylex'
-import { LINKS } from '@/features/website/workspace/content'
+import { Reveal } from "@/components/ui/reveal";
+import { joinStyles } from "@/features/website/workspace/join-section.stylex";
+import { LINKS } from "@/features/website/workspace/content";
 
 const JOIN_ROWS = [
-  { label: 'WhatsApp', value: 'Join the group chat', href: LINKS.whatsapp },
-  { label: 'Luma', value: 'luma.com/thehackcollective', href: LINKS.luma },
-  { label: 'Submit an event', value: 'luma.com/thehackcollective', href: LINKS.luma },
-  { label: 'Partner with us', value: 'lelouis.lnv@gmail.com', href: LINKS.email },
-]
+  { label: "WhatsApp", value: "Join the group chat", href: LINKS.whatsapp },
+  { label: "Luma", value: "luma.com/thehackcollective", href: LINKS.luma },
+  {
+    label: "Submit an event",
+    value: "luma.com/thehackcollective",
+    href: LINKS.luma,
+  },
+  {
+    label: "Partner with us",
+    value: "lelouis.lnv@gmail.com",
+    href: LINKS.email,
+  },
+];
 
 export function JoinSection() {
   return (
     <section id="join" {...stylex.props(joinStyles.section)}>
-      <div {...stylex.props(joinStyles.content)}>
-        <Reveal className={stylex.props(joinStyles.copy).className}>
-          <h2 {...stylex.props(joinStyles.heading)}>Join the collective.</h2>
-          <p {...stylex.props(joinStyles.body)}>
-            Founded in London in September 2025 by UCL students, run on WhatsApp
-            and Luma.
-          </p>
-        </Reveal>
+      <div {...stylex.props(joinStyles.grid)}>
+        <div {...stylex.props(joinStyles.imageCol)}>
+          <div {...stylex.props(joinStyles.imageFrame)}>
+            <img
+              src="/brand/icon-on-blue.svg"
+              alt=""
+              loading="lazy"
+              decoding="async"
+              {...stylex.props(joinStyles.objectCover)}
+            />
+          </div>
+        </div>
 
-        <div {...stylex.props(joinStyles.contactList)}>
-          {JOIN_ROWS.map((row, i) => (
-            <Reveal
-              key={row.label}
-              delay={i * 0.06}
-              className={
-                stylex.props(
-                  joinStyles.contactRow,
-                  i === 0 && joinStyles.contactRowFirst,
-                ).className
-              }
-            >
-              <span {...stylex.props(joinStyles.contactLabel)}>{row.label}</span>
-              <a
-                href={row.href}
-                target={row.href.startsWith('mailto:') ? undefined : '_blank'}
-                rel={row.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
-                {...stylex.props(joinStyles.contactValue, joinStyles.contactLink)}
+        <div {...stylex.props(joinStyles.textCol)}>
+          <Reveal className={stylex.props(joinStyles.copy).className}>
+            <h2 {...stylex.props(joinStyles.heading)}>
+              Let&rsquo;s build together.
+            </h2>
+            <p {...stylex.props(joinStyles.body)}>
+              Founded in London in September 2025 by UCL students, run on
+              WhatsApp and Luma.
+            </p>
+          </Reveal>
+
+          <div {...stylex.props(joinStyles.contactList)}>
+            {JOIN_ROWS.map((row, i) => (
+              <Reveal
+                key={row.label}
+                delay={i * 0.06}
+                className={
+                  stylex.props(
+                    joinStyles.contactRow,
+                    i === 0 && joinStyles.contactRowFirst,
+                  ).className
+                }
               >
-                {row.value}
-              </a>
-            </Reveal>
-          ))}
+                <span {...stylex.props(joinStyles.contactLabel)}>
+                  {row.label}
+                </span>
+                <a
+                  href={row.href}
+                  target={row.href.startsWith("mailto:") ? undefined : "_blank"}
+                  rel={
+                    row.href.startsWith("mailto:")
+                      ? undefined
+                      : "noopener noreferrer"
+                  }
+                  {...stylex.props(
+                    joinStyles.contactValue,
+                    joinStyles.contactLink,
+                  )}
+                >
+                  {row.value}
+                </a>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -53,5 +86,5 @@ export function JoinSection() {
         &copy; 2026 The Hack Collective. London.
       </div>
     </section>
-  )
+  );
 }
