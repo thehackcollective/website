@@ -5,6 +5,12 @@
   --thc-brand-800: #005ff2;
   --thc-brand-900: #002359;
 
+  --thc-dia-1: #c679c4;
+  --thc-dia-2: #fa3d1d;
+  --thc-dia-3: #ffb005;
+  --thc-dia-4: #e1e1fe;
+  --thc-dia-5: #0358f7;
+
   --thc-gray-50: #fafafa;
   --thc-gray-100: #f4f4f5;
   --thc-gray-200: #e4e4e7;
@@ -54,11 +60,13 @@
   --thc-font-sans: "Geist", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --thc-font-mono: "Geist Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
 
+  --thc-size-display-2xl: 64px;
   --thc-size-display-xl: 44px;
   --thc-size-display-lg: 40px;
   --thc-size-display-md: 32px;
   --thc-size-display-sm: 22px;
   --thc-size-display-xs: 18px;
+  --thc-size-body-xl: 24px;
   --thc-size-body-lg: 18px;
   --thc-size-body-md: 16px;
   --thc-size-body-sm: 14px;
@@ -66,11 +74,13 @@
   --thc-size-micro: 11px;
   --thc-size-code: 13px;
 
+  --thc-leading-display-2xl: 68px;
   --thc-leading-display-xl: 48px;
   --thc-leading-display-lg: 44px;
   --thc-leading-display-md: 40px;
   --thc-leading-display-sm: 28px;
   --thc-leading-display-xs: 24px;
+  --thc-leading-body-xl: 34px;
   --thc-leading-body-lg: 28px;
   --thc-leading-body-md: 24px;
   --thc-leading-body-sm: 20px;
@@ -78,6 +88,7 @@
   --thc-leading-micro: 16px;
   --thc-leading-code: 20px;
 
+  --thc-tracking-display-2xl: -0.032em;
   --thc-tracking-display-xl: -0.03em;
   --thc-tracking-display-lg: -0.028em;
   --thc-tracking-display-md: -0.025em;

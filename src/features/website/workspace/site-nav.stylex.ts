@@ -63,6 +63,12 @@ export const navStyles = stylex.create({
     fontWeight: text.weightMedium,
     gap: space.xs,
   },
+  wordmarkText: {
+    display: {
+      default: 'none',
+      '@media (min-width: 640px)': 'inline',
+    },
+  },
   wordmarkLogo: {
     display: 'block',
     height: 32,
@@ -71,6 +77,7 @@ export const navStyles = stylex.create({
   actions: {
     alignItems: 'center',
     display: 'flex',
+    flexShrink: 0,
     gap: space.xs,
   },
 })

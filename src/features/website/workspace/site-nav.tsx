@@ -37,7 +37,9 @@ export function SiteNav() {
               height={32}
               {...stylex.props(navStyles.wordmarkLogo)}
             />
-            The Hack Collective
+            <span {...stylex.props(navStyles.wordmarkText)}>
+              The Hack Collective
+            </span>
           </a>
 
           <div {...stylex.props(navStyles.actions)}>

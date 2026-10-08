@@ -27,14 +27,17 @@ export const heroStyles = stylex.create({
       default: 'column',
       '@media (min-width: 960px)': 'row',
     },
-    gap: space.x5xl,
+    gap: {
+      default: space.x3xl,
+      '@media (min-width: 960px)': space.x5xl,
+    },
     width: '100%',
   },
   content: {
     display: 'flex',
     flexDirection: 'column',
-    gap: space.lg,
-    maxWidth: '42rem',
+    gap: space.xl,
+    maxWidth: '46rem',
   },
   figure: {
     display: {
@@ -44,40 +47,49 @@ export const heroStyles = stylex.create({
     flexShrink: 0,
     justifyContent: 'center',
     maxWidth: {
-      default: 320,
-      '@media (min-width: 960px)': 480,
+      default: 360,
+      '@media (min-width: 960px)': 560,
+      '@media (min-width: 1200px)': 680,
     },
     width: '100%',
   },
   heading: {
     color: color.ink,
+    marginBlock: 0,
     fontFamily: text.fontDisplay,
     fontSize: {
       default: text.sizeDisplayLg,
-      '@media (min-width: 960px)': text.sizeDisplayXl,
+      '@media (min-width: 960px)': text.sizeDisplay2xl,
     },
     fontWeight: text.weightMedium,
     letterSpacing: {
       default: text.trackingDisplayLg,
-      '@media (min-width: 960px)': text.trackingDisplayXl,
+      '@media (min-width: 960px)': text.trackingDisplay2xl,
     },
     lineHeight: {
       default: text.leadingDisplayLg,
-      '@media (min-width: 960px)': text.leadingDisplayXl,
+      '@media (min-width: 960px)': text.leadingDisplay2xl,
     },
     textWrap: 'balance',
   },
   subheading: {
     color: color.body,
-    fontSize: text.sizeBodyLg,
-    lineHeight: text.leadingBodyLg,
-    maxWidth: '42rem',
+    marginBlock: 0,
+    fontSize: {
+      default: text.sizeBodyLg,
+      '@media (min-width: 960px)': text.sizeBodyXl,
+    },
+    lineHeight: {
+      default: text.leadingBodyLg,
+      '@media (min-width: 960px)': text.leadingBodyXl,
+    },
+    maxWidth: '36rem',
   },
   actions: {
     alignItems: 'center',
     display: 'flex',
     flexWrap: 'wrap',
-    gap: space.sm,
+    gap: space.md,
     marginTop: space.md,
   },
 })

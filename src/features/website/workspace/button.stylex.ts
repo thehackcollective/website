@@ -20,6 +20,11 @@ export const buttonStyles = stylex.create({
     transitionDuration: '200ms',
     transitionProperty: 'background-color, border-color, transform',
   },
+  buttonLg: {
+    fontSize: text.sizeBodyLg,
+    paddingBlock: space.sm,
+    paddingInline: space.lg,
+  },
   buttonPrimary: {
     backgroundColor: {
       default: color.primary,

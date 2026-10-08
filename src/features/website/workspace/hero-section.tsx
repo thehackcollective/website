@@ -43,6 +43,7 @@ export function HeroSection() {
               rel="noopener noreferrer"
               {...stylex.props(
                 buttonStyles.buttonBase,
+                buttonStyles.buttonLg,
                 buttonStyles.buttonPrimary,
               )}
             >
@@ -54,6 +55,7 @@ export function HeroSection() {
               rel="noopener noreferrer"
               {...stylex.props(
                 buttonStyles.buttonBase,
+                buttonStyles.buttonLg,
                 buttonStyles.buttonSecondary,
               )}
             >

@@ -2,7 +2,7 @@ import { animate } from "motion";
 import { splitText } from "motion-plus";
 import * as stylex from "@stylexjs/stylex";
 import { useMountEffect } from "@/lib/use-mount-effect";
-import { color, motion } from "@/tokens/token-consts.stylex";
+import { color, dia } from "@/tokens/token-consts.stylex";
 
 import {
   createElement,
@@ -36,21 +36,32 @@ const styles = stylex.create({
   },
   diaChar: {
     backgroundClip: "text",
-    backgroundImage: `linear-gradient(90deg, ${color.ink} 0%, ${color.ink} calc(var(--thc-dia-pos) - 17%), ${color.primaryDeep} calc(var(--thc-dia-pos) - 12%), ${color.primary} calc(var(--thc-dia-pos) - 3%), ${color.primaryActive} calc(var(--thc-dia-pos) + 6%), ${color.primaryTint} calc(var(--thc-dia-pos) + 14%), transparent calc(var(--thc-dia-pos) + 17%), transparent 100%)`,
-    backgroundPosition: "var(--thc-dia-x) 0",
+    backgroundImage: {
+      default: `linear-gradient(90deg, ${color.ink} 0%, ${color.ink} calc(var(--thc-dia-pos) - 17%), ${dia.c1} calc(var(--thc-dia-pos) - 17%), ${dia.c2} calc(var(--thc-dia-pos) - 8.5%), ${dia.c3} var(--thc-dia-pos), ${dia.c4} calc(var(--thc-dia-pos) + 8.5%), ${dia.c5} calc(var(--thc-dia-pos) + 17%), transparent calc(var(--thc-dia-pos) + 17%), transparent 100%)`,
+      ":hover": `linear-gradient(90deg, ${dia.c1} 0%, ${dia.c2} 25%, ${dia.c3} 50%, ${dia.c4} 75%, ${dia.c5} 100%)`,
+    },
+    backgroundPosition: {
+      default: "var(--thc-dia-x) 0",
+      ":hover": "0 0",
+    },
     backgroundRepeat: "no-repeat",
-    backgroundSize: "var(--thc-dia-width) 100%",
-    color: { default: "transparent", ":hover": color.primary },
+    backgroundSize: {
+      default: "var(--thc-dia-width) 100%",
+      ":hover": "100% 100%",
+    },
+    color: "transparent",
     display: "inline-block",
-    transitionDuration: motion.durationFast,
-    transitionProperty: "color",
     WebkitBackgroundClip: "text",
   },
   diaCharDone: {
-    color: { default: color.ink, ":hover": color.primary },
+    backgroundClip: "text",
+    backgroundImage: {
+      default: `linear-gradient(90deg, ${color.ink}, ${color.ink})`,
+      ":hover": `linear-gradient(90deg, ${dia.c1} 0%, ${dia.c2} 25%, ${dia.c3} 50%, ${dia.c4} 75%, ${dia.c5} 100%)`,
+    },
+    color: "transparent",
     display: "inline-block",
-    transitionDuration: motion.durationFast,
-    transitionProperty: "color",
+    WebkitBackgroundClip: "text",
   },
 });
 
