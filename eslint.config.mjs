@@ -10,6 +10,7 @@ const eslintConfig = defineConfig([
     "node_modules/**",
     "vite.config.ts",
     ".agents/**",
+    "src/lib/hairline-kernel.js",
   ]),
   {
     rules: {

@@ -1,68 +1,31 @@
 import * as stylex from "@stylexjs/stylex";
-import { m, useReducedMotion } from "motion/react";
+import { useReducedMotion } from "motion/react";
+import { useRef } from "react";
 
 import { heroFigureStyles } from "@/features/website/workspace/hero-figure.stylex";
-
-const VIEW_BOX = "0 0 186.3 132.6";
-const BASE =
-  "M174.3 80.1 L173.9 81.8 L172.9 83.4 L171.3 84.9 L169.2 86.3 L165.6 88 L163.9 89 L162.6 90 L161.6 91.1 L161 92.2 L160.8 93.3 M172.9 107.5 L172.7 109.4 L171.8 111.3 L170.3 113.1 L168.3 114.8 L165.6 116.3 L162.5 117.6 L159.1 118.7 L155.5 119.4 L151.8 119.8 L147.9 120 L144.1 119.8 L140.4 119.4 L136.8 118.7 L133.4 117.6 L130.3 116.3 L128.3 115.4 L126.2 114.8 L124.1 114.3 L121.9 114 L119.7 113.9 L117.4 114 L115.2 114.3 L113.1 114.8 L111 115.4 L109 116.3 L105.5 118.1 L102.9 119.2 L99.8 120 L96.6 120.5 L93.1 120.6 L89.7 120.5 L86.4 120 L83.4 119.2 L80.8 118.1 L77.2 116.3 L75.5 115.3 L74.2 114.3 L73.2 113.2 L72.6 112.1 L72.5 111 M84.6 96.9 L84.3 95 L83.4 93.1 L81.9 91.3 L79.9 89.6 L77.2 88 L74.1 86.7 L70.7 85.7 L67.1 84.9 L63.4 84.5 L59.6 84.4 L55.7 84.5 L52 84.9 L48.4 85.7 L45 86.7 L41.9 88 L39.9 88.9 L37.8 89.6 L35.7 90 L33.5 90.3 L31.3 90.4 L29 90.3 L26.8 90 L24.7 89.6 L22.6 88.9 L20.7 88 L17.1 86.3 L14.9 84.9 L13.3 83.4 L12.3 81.8 L12 80.1 M174.3 80.1 L174.3 52.6 M160.8 93.3 L160.8 65.8 M172.9 107.5 L172.9 80 M72.5 111 L72.5 83.5 M84.6 96.9 L84.6 69.4 M12 80.1 L12 52.6";
-const TOP =
-  "M105.5 14.6 L169.2 46.4 L171.3 47.7 L172.9 49.2 L173.9 50.9 L174.3 52.6 L173.9 54.3 L172.9 55.9 L171.3 57.4 L169.2 58.8 L165.6 60.5 L163.9 61.5 L162.6 62.5 L161.6 63.6 L161 64.7 L160.8 65.8 L161 66.9 L161.6 68 L162.6 69.1 L163.9 70.1 L165.6 71.1 L168.3 72.7 L170.3 74.4 L171.8 76.2 L172.7 78.1 L172.9 80 L172.7 81.9 L171.8 83.8 L170.3 85.6 L168.3 87.3 L165.6 88.8 L162.5 90.1 L159.1 91.2 L155.5 91.9 L151.8 92.3 L147.9 92.5 L144.1 92.3 L140.4 91.9 L136.8 91.2 L133.4 90.1 L130.3 88.8 L128.3 87.9 L126.2 87.3 L124.1 86.8 L121.9 86.5 L119.7 86.4 L117.4 86.5 L115.2 86.8 L113.1 87.3 L111 87.9 L109 88.8 L105.5 90.6 L102.9 91.7 L99.8 92.5 L96.6 93 L93.1 93.1 L89.7 93 L86.4 92.5 L83.4 91.7 L80.8 90.6 L77.2 88.8 L75.5 87.8 L74.2 86.8 L73.2 85.7 L72.6 84.6 L72.5 83.5 L72.6 82.4 L73.2 81.3 L74.2 80.2 L75.5 79.2 L77.2 78.2 L79.9 76.7 L81.9 75 L83.4 73.2 L84.3 71.3 L84.6 69.4 L84.3 67.5 L83.4 65.6 L81.9 63.8 L79.9 62.1 L77.2 60.5 L74.1 59.2 L70.7 58.2 L67.1 57.4 L63.4 57 L59.6 56.9 L55.7 57 L52 57.4 L48.4 58.2 L45 59.2 L41.9 60.5 L39.9 61.4 L37.8 62.1 L35.7 62.5 L33.5 62.8 L31.3 62.9 L29 62.8 L26.8 62.5 L24.7 62.1 L22.6 61.4 L20.7 60.5 L17.1 58.8 L14.9 57.4 L13.3 55.9 L12.3 54.3 L12 52.6 L12.3 50.9 L13.3 49.2 L14.9 47.7 L17.1 46.4 L80.8 14.6 L83.4 13.5 L86.4 12.7 L89.7 12.2 L93.1 12 L96.6 12.2 L99.8 12.7 L102.9 13.5 Z";
-const CREASE =
-  "M101.1 16.8 L164.7 48.6 L166.1 49.4 L167.2 50.4 L167.8 51.5 L168 52.6 L167.8 53.7 L167.2 54.7 L166.1 55.7 L164.7 56.5 L158.4 59.7 L156.8 60.6 L155.6 61.5 L154.8 62.5 L154.2 63.5 L154.1 64.5 L154.2 65.5 L154.8 66.5 L155.6 67.5 L156.8 68.4 L158.4 69.3 L160.7 70.7 L162.6 72.2 L163.9 73.8 L164.7 75.5 L165 77.2 L164.7 79 L163.9 80.6 L162.6 82.3 L160.7 83.8 L158.4 85.2 L155.6 86.4 L152.5 87.3 L149.3 88 L145.9 88.3 L142.5 88.5 L139 88.3 L135.6 88 L132.4 87.3 L129.3 86.4 L126.6 85.2 L124.8 84.4 L122.9 83.8 L121 83.4 L119 83.1 L117 83 L115 83.1 L113 83.4 L111.1 83.8 L109.2 84.4 L107.5 85.2 L101.1 88.4 L99.4 89.1 L97.4 89.6 L95.3 89.9 L93.1 90 L90.9 89.9 L88.8 89.6 L86.9 89.1 L85.2 88.4 L78.8 85.2 L77.3 84.3 L76.1 83.4 L75.2 82.4 L74.7 81.4 L74.5 80.4 L74.7 79.4 L75.2 78.4 L76.1 77.5 L77.3 76.5 L78.8 75.6 L81.2 74.2 L83 72.7 L84.4 71.1 L85.1 69.4 L85.4 67.7 L85.1 66 L84.4 64.3 L83 62.6 L81.2 61.1 L78.8 59.7 L76 58.5 L73 57.6 L69.7 57 L66.4 56.6 L62.9 56.4 L59.5 56.6 L56.1 57 L52.8 57.6 L49.8 58.5 L47 59.7 L45.2 60.5 L43.4 61.1 L41.4 61.5 L39.5 61.8 L37.5 61.9 L35.5 61.8 L33.5 61.5 L31.5 61.1 L29.7 60.5 L27.9 59.7 L21.5 56.5 L20.1 55.7 L19.1 54.7 L18.5 53.7 L18.3 52.6 L18.5 51.5 L19.1 50.4 L20.1 49.4 L21.5 48.6 L85.2 16.8 L86.9 16.1 L88.8 15.6 L90.9 15.2 L93.1 15.1 L95.3 15.2 L97.4 15.6 L99.4 16.1 Z";
-const KNOB =
-  "M162.6 62.5 L161.6 63.6 L161 64.7 L160.8 65.8 L161 66.9 L161.6 68 L162.6 69.1 L163.9 70.1 L165.6 71.1 L168.3 72.7 L170.3 74.4 L171.8 76.2 L172.7 78.1 L172.9 80 L172.7 81.9 L171.8 83.8 L170.3 85.6 L168.3 87.3 L165.6 88.8 L162.5 90.1 L159.1 91.2 L155.5 91.9 L151.8 92.3 L147.9 92.5 L144.1 92.3 L140.4 91.9 L136.8 91.2 L133.4 90.1 L130.3 88.8 L128.3 87.9 L126.2 87.3 L124.1 86.8 L121.9 86.5 L119.7 86.4 L117.4 86.5 L115.2 86.8 L113.1 87.3";
-
-const FLOAT = { y: [0, -12, 0] };
-const FLOAT_TRANSITION = {
-  duration: 6,
-  ease: [0.42, 0, 0.58, 1] as const,
-  repeat: Infinity,
-};
+import { MEANS, RANGE, TOUR, mount } from "@/lib/hairline-assemble.js";
+import { HL } from "@/lib/hairline-kernel.js";
+import { useMountEffect } from "@/lib/use-mount-effect";
 
 export function HeroFigure() {
+  const ref = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
-  const figure = (
-    <svg
-      viewBox={VIEW_BOX}
-      role="img"
-      aria-label="The Hack Collective mark, drawn as an isometric tile"
-      {...stylex.props(heroFigureStyles.svg)}
-    >
-      <path
-        d={BASE}
-        {...stylex.props(heroFigureStyles.stroke, heroFigureStyles.sil)}
-      />
-      <path
-        d={TOP}
-        {...stylex.props(
-          heroFigureStyles.stroke,
-          heroFigureStyles.sil,
-          heroFigureStyles.face,
-        )}
-      />
-      <path
-        d={CREASE}
-        {...stylex.props(heroFigureStyles.stroke, heroFigureStyles.lo)}
-      />
-      <path
-        d={KNOB}
-        {...stylex.props(heroFigureStyles.stroke, heroFigureStyles.hi)}
-      />
-    </svg>
-  );
 
-  if (reduceMotion) {
-    return <div {...stylex.props(heroFigureStyles.frame)}>{figure}</div>;
-  }
+  useMountEffect(() => {
+    const stage = ref.current;
+    if (!stage) return;
+    HL.inject(document);
+    stage.setAttribute("data-hairline", "assemble");
+    const svg = HL.mk("svg", { viewBox: "0 0 400 320", "aria-hidden": "true" }, stage);
+    const read = { textContent: "" };
+    const handle = mount({ stage, svg, read }, RANGE[1]);
+    const lap = reduceMotion ? null : HL.tour(stage, TOUR, () => {});
+    return () => {
+      lap?.stop();
+      handle.destroy();
+      svg.remove();
+    };
+  });
 
-  return (
-    <m.div
-      animate={FLOAT}
-      transition={FLOAT_TRANSITION}
-      {...stylex.props(heroFigureStyles.frame)}
-    >
-      {figure}
-    </m.div>
-  );
+  return <div ref={ref} role="img" aria-label={MEANS} {...stylex.props(heroFigureStyles.stage)} />;
 }
