@@ -7,7 +7,7 @@ Accepted design decisions, newest first. Add one when Louis accepts a change tha
 ## 2026-10-08 — Hero figure: "Assemble", a hairline figure built on the vendored kernel
 
 - Eight copies of the mark lie scattered on a plinth, one seated and bright; the nearer the pointer to the centre, the more slide and turn into a 4x2 solve (turns 0/90/270/180 so the one piece interlocks with itself). Read-out `joined n·8`, slider = reach. With no pointer the figure plays its tour; under reduced motion it rests.
-- Engine: `src/lib/hairline-kernel.js` is the `kernel.js` from lucasmarkes/hairline (`skills/hairline-create`) byte-for-byte plus one `export { HL }` line; it is vendored, ESLint-ignored, and never edited. The figure is `src/lib/hairline-assemble.js` (hairline dialect); `hero-figure.tsx` mounts it. The skill itself was a one-off and is not kept in the repo; re-add it from the source if a new figure is needed. A new figure means a new `hairline-<name>.js`, not a change to the kernel.
+- Engine: `src/lib/hairline-kernel.js` is the hairline-create skill's `kernel.js` byte-for-byte plus one `export { HL }` line; it is vendored, ESLint-ignored, and never edited. The figure is `src/lib/hairline-assemble.js` (hairline dialect, validated with the skill's `validate.mjs`); `hero-figure.tsx` mounts it. A new figure means a new `hairline-<name>.js`, not a change to the kernel.
 - Palette comes from `--hairline-*` custom properties set in `hero-figure.stylex.ts` from tokens: plate = canvas, hi = ink, edge/mid/lo = gray 500/300/200.
 
 ## 2026-10-08 — Logo: one piece, mass-centred, Vercel blue
