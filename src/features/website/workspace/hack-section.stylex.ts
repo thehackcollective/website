@@ -6,7 +6,6 @@ export const hackStyles = stylex.create({
   section: {
     display: 'flex',
     flexDirection: 'column',
-    gap: space.x2xl,
     paddingBlock: space.x4xl,
     paddingInline: {
       default: space.lg,
@@ -59,52 +58,6 @@ export const hackStyles = stylex.create({
     fontSize: text.sizeBodyLg,
     lineHeight: text.leadingBodyLg,
     marginBlock: 0,
-  },
-  itemList: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 0,
-  },
-  item: {
-    borderBottomColor: color.hairline,
-    borderBottomStyle: 'solid',
-    borderBottomWidth: '1px',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: space.sm,
-    paddingBlock: space.xl,
-  },
-  itemFirst: {
-    borderTopColor: color.hairline,
-    borderTopStyle: 'solid',
-    borderTopWidth: '1px',
-  },
-  itemHeader: {
-    alignItems: 'baseline',
-    display: 'flex',
-    gap: space.lg,
-    justifyContent: 'space-between',
-  },
-  itemBody: {
-    color: color.body,
-    fontSize: text.sizeBodyMd,
-    lineHeight: text.leadingBodyMd,
-    marginBlock: 0,
-  },
-  itemName: {
-    color: color.ink,
-    fontWeight: text.weightMedium,
-  },
-  itemNumber: {
-    color: color.ink,
-    fontFamily: text.fontDisplay,
-    fontSize: {
-      default: text.sizeDisplaySm,
-      '@media (min-width: 960px)': text.sizeDisplayMd,
-    },
-    fontWeight: text.weightMedium,
-    letterSpacing: text.trackingDisplaySm,
-    lineHeight: text.leadingDisplaySm,
   },
   actions: {
     display: 'flex',

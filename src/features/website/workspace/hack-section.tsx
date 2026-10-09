@@ -61,33 +61,6 @@ export function HackSection() {
           </picture>
         </Reveal>
       </div>
-
-      <div {...stylex.props(hackStyles.itemList)}>
-        {HACK.tracks.map((track, i) => (
-          <Reveal
-            key={track.name}
-            delay={i * 0.06}
-            className={
-              stylex.props(
-                hackStyles.item,
-                i === 0 && hackStyles.itemFirst,
-              ).className
-            }
-          >
-            <div {...stylex.props(hackStyles.itemHeader)}>
-              <p {...stylex.props(hackStyles.itemBody)}>
-                <span {...stylex.props(hackStyles.itemName)}>
-                  {track.name}
-                </span>{' '}
-                {track.description}
-              </p>
-              <span {...stylex.props(hackStyles.itemNumber)}>
-                {String(i + 1).padStart(2, '0')}
-              </span>
-            </div>
-          </Reveal>
-        ))}
-      </div>
     </section>
   )
 }
