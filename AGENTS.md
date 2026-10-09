@@ -115,6 +115,9 @@ Facts (use verbatim, do not invent claims):
 - Links live in `src/features/website/workspace/content.ts`: WhatsApp
   chat.whatsapp.com/EWCPnquUzXD9uppsSuQFVk, Luma luma.com/thehackcollective,
   email thehackcollective@gmail.com.
+- Next event: Grok Bot Community Engineering London Hackathon, Thu 22 Oct
+  2026, London, 6:00 PM, luma.com/eveur09a. The Hack Collective is a community
+  partner with its own track; Louis co-hosts.
 
 ## Design skill
 

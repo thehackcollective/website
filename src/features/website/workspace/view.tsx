@@ -1,5 +1,6 @@
 import * as stylex from "@stylexjs/stylex";
 
+import { HackSection } from "@/features/website/workspace/hack-section";
 import { HeroSection } from "@/features/website/workspace/hero-section";
 import { JoinSection } from "@/features/website/workspace/join-section";
 import { SiteNav } from "@/features/website/workspace/site-nav";
@@ -12,6 +13,7 @@ export function View() {
       <SiteNav />
       <HeroSection />
       <div {...stylex.props(pageStyles.rail)}>
+        <HackSection />
         <StatsSection />
         <JoinSection />
       </div>

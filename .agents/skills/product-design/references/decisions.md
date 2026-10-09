@@ -2,6 +2,8 @@
 
 Accepted design decisions, newest first. Add one when Louis accepts a change that future work must not reopen.
 
+## 2026-10-08 — Grok Bot section is back as the first section after the hero, now that the event is announced (luma.com/eveur09a). Facts in content.ts `HACK`; THC is a community partner with a track.
+
 ## 2026-10-08 — Hero figure: "Assemble", a hairline figure built on the vendored kernel
 
 - Eight copies of the mark lie scattered on a plinth, one seated and bright; the nearer the pointer to the centre, the more slide and turn into a 4x2 solve (turns 0/90/270/180 so the one piece interlocks with itself). Read-out `joined n·8`, slider = reach. With no pointer the figure plays its tour; under reduced motion it rests.

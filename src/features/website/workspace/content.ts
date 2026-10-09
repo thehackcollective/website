@@ -2,7 +2,21 @@ export const LINKS = {
   whatsapp: 'https://chat.whatsapp.com/EWCPnquUzXD9uppsSuQFVk',
   luma: 'https://luma.com/thehackcollective',
   email: 'mailto:thehackcollective@gmail.com',
+  hack: 'https://luma.com/eveur09a',
 }
+
+export const HACK = {
+  eyebrow: 'Next up · Thu 22 Oct 2026 · London · 6:00 PM',
+  title: 'Grok Bot Community Engineering London Hackathon.',
+  tracks: [
+    { name: 'Channel Acquisition.', description: "Acquisition tooling built by a bot that knows every channel you're in." },
+    { name: 'Community Collabs.', description: 'A collab engine that reads two communities and finds the overlap.' },
+    { name: 'Event Tooling.', description: 'Build the event stack.' },
+    { name: 'Community Activation.', description: 'Activation built from what members actually say and do.' },
+    { name: 'Idea to Event.', description: 'Take an event from idea to proposal to live page to the night itself.' },
+    { name: 'Weird Stuff.', description: 'Anything only possible when bots that know your whole community write the code.' },
+  ],
+} as const
 
 export const STATS = [
   { value: '1,100+', label: 'Members' },
