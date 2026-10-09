@@ -1,6 +1,6 @@
 import * as stylex from '@stylexjs/stylex'
 
-import { color, space, text } from '@/tokens/token-consts.stylex'
+import { color, radius, space, text } from '@/tokens/token-consts.stylex'
 
 export const hackStyles = stylex.create({
   section: {
@@ -13,21 +13,27 @@ export const hackStyles = stylex.create({
       '@media (min-width: 1200px)': space.x4xl,
     },
   },
+  intro: {
+    alignItems: {
+      default: 'stretch',
+      '@media (min-width: 960px)': 'flex-start',
+    },
+    display: 'flex',
+    flexDirection: {
+      default: 'column',
+      '@media (min-width: 960px)': 'row',
+    },
+    gap: {
+      default: space.x2xl,
+      '@media (min-width: 960px)': space.x5xl,
+    },
+  },
   headingBlock: {
     display: 'flex',
+    flex: '1',
     flexDirection: 'column',
     gap: space.md,
     maxWidth: '42rem',
-  },
-  eyebrow: {
-    color: color.meta,
-    fontFamily: text.fontMono,
-    fontSize: text.sizeCaption,
-    fontWeight: text.weightMedium,
-    letterSpacing: text.trackingEyebrow,
-    lineHeight: text.leadingCaption,
-    marginBlock: 0,
-    textTransform: 'uppercase',
   },
   heading: {
     color: color.ink,
@@ -102,5 +108,28 @@ export const hackStyles = stylex.create({
   },
   actions: {
     display: 'flex',
+    marginTop: space.md,
+  },
+  posterCol: {
+    alignSelf: {
+      default: 'stretch',
+      '@media (min-width: 960px)': 'flex-start',
+    },
+    flex: {
+      default: 'none',
+      '@media (min-width: 960px)': '0 0 420px',
+    },
+    width: {
+      default: '100%',
+      '@media (min-width: 960px)': 420,
+    },
+  },
+  poster: {
+    aspectRatio: '816 / 810',
+    borderRadius: radius.lg,
+    display: 'block',
+    height: 'auto',
+    objectFit: 'cover',
+    width: '100%',
   },
 })

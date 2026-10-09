@@ -6,7 +6,6 @@ export const LINKS = {
 }
 
 export const HACK = {
-  eyebrow: 'Next up · Thu 22 Oct 2026 · London · 6:00 PM',
   title: 'Grok Bot Community Engineering London Hackathon.',
   tracks: [
     { name: 'Channel Acquisition.', description: "Acquisition tooling built by a bot that knows every channel you're in." },
