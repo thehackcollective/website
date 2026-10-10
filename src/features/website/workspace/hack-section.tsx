@@ -18,14 +18,34 @@ export function HackSection() {
           </DiaHeading>
           <Reveal>
             <p {...stylex.props(hackStyles.body)}>
-              An evening hackathon where Grok Bot holds the community context
-              and Cursor turns it into code.
+              An evening hackathon where{' '}
+              <a
+                href={LINKS.grokBot}
+                target="_blank"
+                rel="noopener noreferrer"
+                {...stylex.props(hackStyles.bodyLink)}
+              >
+                Grok Bot
+              </a>{' '}
+              holds the community context and{' '}
+              <a
+                href={LINKS.cursor}
+                target="_blank"
+                rel="noopener noreferrer"
+                {...stylex.props(hackStyles.bodyLink)}
+              >
+                Cursor
+              </a>{' '}
+              turns it into code.
             </p>
           </Reveal>
           <Reveal>
             <p {...stylex.props(hackStyles.body)}>
-              The Hack Collective is a community partner with its own track on
-              the night, and the top 5 teams demo live for 3 minutes each.
+              <strong {...stylex.props(hackStyles.bodyStrong)}>
+                The Hack Collective
+              </strong>{' '}
+              is a community partner with its own track on the night, and the
+              top 5 teams demo live for 3 minutes each.
             </p>
           </Reveal>
           <div {...stylex.props(hackStyles.actions)}>

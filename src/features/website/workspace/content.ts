@@ -3,6 +3,8 @@ export const LINKS = {
   luma: 'https://luma.com/thehackcollective',
   email: 'mailto:thehackcollective@gmail.com',
   hack: 'https://luma.com/eveur09a',
+  grokBot: 'https://x.ai/bot',
+  cursor: 'https://cursor.com/',
 }
 
 export const HACK = {

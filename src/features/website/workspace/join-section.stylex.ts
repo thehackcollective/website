@@ -9,10 +9,7 @@ export const joinStyles = stylex.create({
     minHeight: '100dvh',
   },
   grid: {
-    alignItems: {
-      default: 'flex-start',
-      '@media (min-width: 960px)': 'stretch',
-    },
+    alignItems: 'stretch',
     display: 'flex',
     flex: '1',
     flexDirection: {

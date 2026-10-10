@@ -34,18 +34,30 @@ export const heroStyles = stylex.create({
     width: '100%',
   },
   content: {
+    containerName: 'hero-copy',
+    containerType: 'inline-size',
     display: 'flex',
+    flex: {
+      default: '0 0 auto',
+      '@media (min-width: 960px)': '0 1 50%',
+    },
     flexDirection: 'column',
     gap: space.xl,
     maxWidth: '46rem',
+    minWidth: 0,
+    width: '100%',
   },
   figure: {
     display: {
       default: 'none',
       '@media (min-width: 640px)': 'flex',
     },
-    flexShrink: 0,
+    flex: {
+      default: '0 0 auto',
+      '@media (min-width: 960px)': '1 1 0%',
+    },
     justifyContent: 'center',
+    minWidth: 0,
     maxWidth: {
       default: 360,
       '@media (min-width: 960px)': 560,
@@ -59,16 +71,19 @@ export const heroStyles = stylex.create({
     fontFamily: text.fontDisplay,
     fontSize: {
       default: text.sizeDisplayLg,
-      '@media (min-width: 960px)': text.sizeDisplay2xl,
+      '@container hero-copy (min-width: 420px)': text.sizeDisplayXl,
+      '@container hero-copy (min-width: 560px)': text.sizeDisplay2xl,
     },
     fontWeight: text.weightMedium,
     letterSpacing: {
       default: text.trackingDisplayLg,
-      '@media (min-width: 960px)': text.trackingDisplay2xl,
+      '@container hero-copy (min-width: 420px)': text.trackingDisplayXl,
+      '@container hero-copy (min-width: 560px)': text.trackingDisplay2xl,
     },
     lineHeight: {
       default: text.leadingDisplayLg,
-      '@media (min-width: 960px)': text.leadingDisplay2xl,
+      '@container hero-copy (min-width: 420px)': text.leadingDisplayXl,
+      '@container hero-copy (min-width: 560px)': text.leadingDisplay2xl,
     },
     textWrap: 'balance',
   },
@@ -77,11 +92,11 @@ export const heroStyles = stylex.create({
     marginBlock: 0,
     fontSize: {
       default: text.sizeBodyLg,
-      '@media (min-width: 960px)': text.sizeBodyXl,
+      '@container hero-copy (min-width: 560px)': text.sizeBodyXl,
     },
     lineHeight: {
       default: text.leadingBodyLg,
-      '@media (min-width: 960px)': text.leadingBodyXl,
+      '@container hero-copy (min-width: 560px)': text.leadingBodyXl,
     },
     maxWidth: '36rem',
   },

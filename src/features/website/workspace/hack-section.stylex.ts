@@ -59,6 +59,19 @@ export const hackStyles = stylex.create({
     lineHeight: text.leadingBodyLg,
     marginBlock: 0,
   },
+  bodyStrong: {
+    color: color.primary,
+    fontWeight: text.weightSemibold,
+  },
+  bodyLink: {
+    color: color.primary,
+    fontWeight: text.weightSemibold,
+    textDecorationLine: {
+      default: 'none',
+      ':hover': 'underline',
+    },
+    textUnderlineOffset: '3px',
+  },
   actions: {
     display: 'flex',
     marginTop: space.md,

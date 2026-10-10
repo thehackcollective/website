@@ -32,3 +32,7 @@ Accepted design decisions, newest first. Add one when Louis accepts a change tha
 
 - Hack, stats, partners and join sections are `100dvh` with centred content. `Reveal` on blocks, `CountUp` on stats, Lenis bridged to ScrollTrigger in `src/app/smooth-scroll.tsx`.
 - 2026-10-08: gsap removed; count-up uses motion `inView` + `animate`, Lenis runs its own rAF.
+
+## 2026-10-10 — Hack-section body copy may use primary blue bold for partner/tool names
+
+- `color.primary` semibold inline marks partner and tool names in the hack-section body: Grok Bot and Cursor as links, The Hack Collective as `<strong>`. Requested by Louis; an exception to the "blue only on mark/primary action/hover/focus" rule.

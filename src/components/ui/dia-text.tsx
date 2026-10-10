@@ -129,6 +129,7 @@ export function finishDia(chars: HTMLElement[]): void {
 export function playDiaSweep(
   el: HTMLElement,
   chars: HTMLElement[],
+  onComplete?: () => void,
 ): ReturnType<typeof animate> {
   return animate(-17, 117, {
     duration: DIA_SWEEP_DURATION,
@@ -136,8 +137,39 @@ export function playDiaSweep(
     onUpdate: (value) => {
       el.style.setProperty("--thc-dia-pos", `${value}%`);
     },
-    onComplete: () => finishDia(chars),
+    onComplete: () => {
+      finishDia(chars);
+      onComplete?.();
+    },
   });
+}
+
+export function observeDiaReflow(
+  el: HTMLElement,
+  onReflow: () => void,
+): () => void {
+  let lastInlineSize = el.getBoundingClientRect().width;
+  let frame = 0;
+  const observer = new ResizeObserver((entries) => {
+    const entry = entries[0];
+    if (!entry) return;
+    const inlineSize =
+      entry.borderBoxSize?.[0]?.inlineSize ??
+      el.getBoundingClientRect().width;
+    if (inlineSize === lastInlineSize) return;
+    lastInlineSize = inlineSize;
+    if (frame) cancelAnimationFrame(frame);
+    frame = requestAnimationFrame(() => {
+      frame = 0;
+      onReflow();
+    });
+  });
+  observer.observe(el);
+  return () => {
+    observer.disconnect();
+    if (frame) cancelAnimationFrame(frame);
+    frame = 0;
+  };
 }
 
 export interface DiaHeadingProps {
@@ -160,21 +192,42 @@ export function DiaHeading({
     if (!el) return;
     let cancelled = false;
     let stopInView: (() => void) | undefined;
+    let stopReflow: (() => void) | undefined;
     let controls: ReturnType<typeof animate> | undefined;
+    let lines: HTMLElement[] = [];
+    let chars: HTMLElement[] = [];
+    let done = false;
 
     void (async () => {
       try {
         await document.fonts?.ready;
         if (cancelled || ref.current !== el) return;
 
-        const { lines, chars } = splitDiaHeadline(el);
+        const split = splitDiaHeadline(el);
+        lines = split.lines;
+        chars = split.chars;
 
         const reduceMotion = window.matchMedia(
           "(prefers-reduced-motion: reduce)",
         ).matches;
 
+        stopReflow = observeDiaReflow(el, () => {
+          if (cancelled || ref.current !== el) return;
+          controls?.stop();
+          const resplit = splitDiaHeadline(el);
+          lines = resplit.lines;
+          chars = resplit.chars;
+          if (done || controls) {
+            finishDia(chars);
+            done = true;
+          } else {
+            armDiaSweep(el, lines);
+          }
+        });
+
         if (reduceMotion) {
           finishDia(chars);
+          done = true;
           return;
         }
 
@@ -184,7 +237,9 @@ export function DiaHeading({
           el,
           () => {
             armDiaSweep(el, lines);
-            controls = playDiaSweep(el, chars);
+            controls = playDiaSweep(el, chars, () => {
+              done = true;
+            });
             stopInView?.();
           },
           { amount: 0.3 },
@@ -204,6 +259,7 @@ export function DiaHeading({
     return () => {
       cancelled = true;
       stopInView?.();
+      stopReflow?.();
       controls?.stop();
     };
   });

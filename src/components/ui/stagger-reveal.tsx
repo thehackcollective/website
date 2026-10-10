@@ -4,6 +4,7 @@ import {
   DIA_FOLLOWER_DELAY,
   armDiaSweep,
   finishDia,
+  observeDiaReflow,
   playDiaSweep,
   splitDiaHeadline,
 } from "@/components/ui/dia-text";
@@ -60,13 +61,18 @@ export function useStaggerReveal(): {
 
     const animations: Array<ReturnType<typeof animate>> = [];
     let cancelled = false;
+    let stopReflow: (() => void) | undefined;
+    let sweep: ReturnType<typeof animate> | undefined;
+    let done = false;
 
     void (async () => {
       try {
         await document.fonts?.ready;
         if (cancelled || ref.current !== container) return;
 
-        const { lines, chars } = splitDiaHeadline(headlineEl);
+        const split = splitDiaHeadline(headlineEl);
+        let lines = split.lines;
+        let chars = split.chars;
 
         const followers = Array.from(
           container.querySelectorAll<HTMLElement>(`[${ITEM_ATTR}]`),
@@ -76,13 +82,31 @@ export function useStaggerReveal(): {
           "(prefers-reduced-motion: reduce)",
         ).matches;
 
+        stopReflow = observeDiaReflow(headlineEl, () => {
+          if (cancelled || ref.current !== container) return;
+          sweep?.stop();
+          const resplit = splitDiaHeadline(headlineEl);
+          lines = resplit.lines;
+          chars = resplit.chars;
+          if (done || sweep) {
+            finishDia(chars);
+            done = true;
+          } else {
+            armDiaSweep(headlineEl, lines);
+          }
+        });
+
         if (reduceMotion) {
           finishDia(chars);
+          done = true;
           return;
         }
 
         armDiaSweep(headlineEl, lines);
-        animations.push(playDiaSweep(headlineEl, chars));
+        sweep = playDiaSweep(headlineEl, chars, () => {
+          done = true;
+        });
+        animations.push(sweep);
 
         let delay = DIA_FOLLOWER_DELAY;
 
@@ -124,6 +148,7 @@ export function useStaggerReveal(): {
 
     return () => {
       cancelled = true;
+      stopReflow?.();
       animations.forEach((animation) => animation.stop());
     };
   });
