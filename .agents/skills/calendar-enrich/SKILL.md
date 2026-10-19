@@ -77,8 +77,8 @@ your harness has none) and give it `existing.json` plus these instructions.
 ## 3. Write the files
 
 The child agent writes two files to `~/Downloads/thc-calendar-enrich/`, never
-into the repo. The bar is the 2026-10-19 run: 14 entries, 83 skipped, a
-handoff a cloud agent could act on with no WhatsApp access.
+into the repo. The bar: a handoff a person or cloud agent can act on with no
+WhatsApp access.
 
 **`hacks-to-add.yaml`**: a short `#` header (scan window, date generated,
 scope, sort order, the BST/GMT note), then `hacks:` sorted London, rest of UK,
