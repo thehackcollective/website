@@ -124,3 +124,9 @@ Facts (use verbatim, do not invent claims):
 Load `.agents/skills/product-design/SKILL.md` before shaping, editing or
 reviewing anything a visitor sees, including logo placement. `DESIGN.md` is
 the system spec; token values live only in `src/tokens/design-tokens.css`.
+
+## Calendar skill
+
+`.agents/skills/calendar-enrich/SKILL.md` (also `.claude/skills/calendar-enrich`)
+finds upcoming hackathons in WhatsApp groups via wacli and adds the missing ones
+to luma.com/thehackcollective, or writes a handoff file when it can't.
