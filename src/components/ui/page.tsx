@@ -38,6 +38,16 @@ const spanStyles = {
   12: styles.span12,
 } as const
 
+export function PageSpan({
+  span = 12,
+  children,
+}: {
+  span?: keyof typeof spanStyles
+  children: ReactNode
+}) {
+  return <div {...stylex.props(spanStyles[span])}>{children}</div>
+}
+
 type SectionProps = Partial<AsyncContentProps> & {
   span?: 4 | 5 | 6 | 7 | 8 | 12
   heading: string
