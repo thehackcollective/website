@@ -1,109 +1,79 @@
+@font-face {
+  font-family: "Geist Fallback";
+  src: local("Arial"), local("ArialMT");
+  size-adjust: 102.21%;
+  ascent-override: 98.33%;
+  descent-override: 28.86%;
+  line-gap-override: 0%;
+}
+
 :root {
-  --thc-brand-50: #f0f7ff;
-  --thc-brand-600: #005ff2;
-  --thc-brand-700: #006bff;
-  --thc-brand-800: #005ff2;
-  --thc-brand-900: #002359;
+  --thc-palette-blue-600: #0080f5;
+  --thc-palette-blue-700: #006bff;
+  --thc-palette-blue-800: #0054d4;
+  --thc-palette-blue-900: #003f99;
+  --thc-palette-gray-0: #ffffff;
+  --thc-palette-gray-25: #fdfdfd;
+  --thc-palette-gray-50: #fafafa;
+  --thc-palette-gray-100: #f4f4f5;
+  --thc-palette-gray-200: #e4e4e7;
+  --thc-palette-gray-300: #d4d4d8;
+  --thc-palette-gray-400: #a1a1aa;
+  --thc-palette-gray-450: #8a8a93;
+  --thc-palette-gray-500: #71717a;
+  --thc-palette-gray-800: #27272a;
+  --thc-palette-gray-900: #18181b;
+  --thc-palette-gray-950: #09090b;
+  --thc-palette-gray-900-a96: #18181bf5;
+  --thc-palette-gray-900-a82: #18181bd1;
+  --thc-palette-gray-900-a68: #18181bad;
+  --thc-palette-gray-900-a62: #18181b9e;
+  --thc-palette-gray-900-a04: #18181b0a;
+  --thc-palette-green-50: #ecfdf5;
+  --thc-palette-green-500: #10b981;
+  --thc-palette-green-700: #047857;
+  --thc-palette-red-50: #fef2f2;
+  --thc-palette-red-700: #b91c1c;
+  --thc-palette-red-a10: #dc26261a;
+  --thc-palette-amber-50: #fffbeb;
+  --thc-palette-amber-500: #f59e0b;
+  --thc-palette-amber-800: #92400e;
+  --thc-palette-white-a70: #ffffffb3;
+  --thc-palette-white-a24: #ffffff3d;
+  --thc-palette-white-a16: #ffffff29;
+  --thc-palette-black-a72: #111111b8;
+  --thc-palette-black-a40: #00000066;
+  --thc-palette-black-a10: #0000001a;
 
-  --thc-dia-1: #c679c4;
-  --thc-dia-2: #fa3d1d;
-  --thc-dia-3: #ffb005;
-  --thc-dia-4: #e1e1fe;
-  --thc-dia-5: #0358f7;
+  --thc-glass-backdrop: blur(12px);
 
-  --thc-gray-50: #fafafa;
-  --thc-gray-100: #f4f4f5;
-  --thc-gray-200: #e4e4e7;
-  --thc-gray-300: #d4d4d8;
-  --thc-gray-400: #a1a1aa;
-  --thc-gray-500: #71717a;
-  --thc-gray-600: #52525b;
-  --thc-gray-700: #3f3f46;
-  --thc-gray-800: #27272a;
-  --thc-gray-900: #18181b;
-  --thc-gray-950: #09090b;
-
-  --thc-primary: var(--thc-brand-700);
-  --thc-primary-active: var(--thc-brand-600);
-  --thc-primary-tint: var(--thc-brand-50);
-  --thc-primary-deep: var(--thc-brand-900);
-  --thc-on-primary: #ffffff;
-
-  --thc-canvas: #f5f5f5;
-  --thc-surface-card: #ffffff;
-  --thc-surface-soft: #fafafa;
-  --thc-surface-hover: #f0f0f0;
-  --thc-surface-nav: rgba(24, 24, 27, 0.06);
-
-  --thc-overlay-scrim: rgba(17, 17, 17, 0.72);
-  --thc-overlay-ink: #ffffff;
-  --thc-overlay-muted: rgba(255, 255, 255, 0.7);
-  --thc-overlay-hover: rgba(255, 255, 255, 0.16);
-  --thc-overlay-track: rgba(255, 255, 255, 0.24);
-
-  --thc-ink: rgba(24, 24, 27, 0.96);
-  --thc-body-strong: rgba(24, 24, 27, 0.90);
-  --thc-body: rgba(24, 24, 27, 0.82);
-  --thc-meta: rgba(24, 24, 27, 0.68);
-  --thc-caption-ink: rgba(24, 24, 27, 0.62);
-
-  --thc-hairline: #e4e4e7;
-  --thc-hairline-strong: #d4d4d8;
-  --thc-input-border: #8a8a93;
-
-  --thc-positive: #10b981;
-  --thc-negative: #dc2626;
-  --thc-warning: #f59e0b;
-  --thc-neutral-flat: #9ca3af;
-
-  --thc-font-display: "Geist", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --thc-font-sans: "Geist", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --thc-font-mono: "Geist Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
-
-  --thc-size-display-2xl: 64px;
-  --thc-size-display-xl: 44px;
-  --thc-size-display-lg: 40px;
-  --thc-size-display-md: 32px;
-  --thc-size-display-sm: 22px;
-  --thc-size-display-xs: 18px;
-  --thc-size-body-xl: 24px;
-  --thc-size-body-lg: 18px;
-  --thc-size-body-md: 16px;
-  --thc-size-body-sm: 14px;
-  --thc-size-caption: 12px;
-  --thc-size-micro: 11px;
-  --thc-size-code: 13px;
-
-  --thc-leading-display-2xl: 68px;
-  --thc-leading-display-xl: 48px;
-  --thc-leading-display-lg: 44px;
-  --thc-leading-display-md: 40px;
-  --thc-leading-display-sm: 28px;
-  --thc-leading-display-xs: 24px;
-  --thc-leading-body-xl: 34px;
-  --thc-leading-body-lg: 28px;
-  --thc-leading-body-md: 24px;
-  --thc-leading-body-sm: 20px;
-  --thc-leading-caption: 16px;
-  --thc-leading-micro: 16px;
-  --thc-leading-code: 20px;
-
-  --thc-tracking-display-2xl: -0.032em;
-  --thc-tracking-display-xl: -0.03em;
-  --thc-tracking-display-lg: -0.028em;
-  --thc-tracking-display-md: -0.025em;
-  --thc-tracking-display-sm: -0.02em;
-  --thc-tracking-display-xs: -0.015em;
-  --thc-tracking-body: 0em;
-  --thc-tracking-body-sm: -0.01em;
-  --thc-tracking-label: 0.04em;
-  --thc-tracking-eyebrow: 0.12em;
-  --thc-tracking-allcaps: 0.2em;
-
+  --thc-font-sans: "Geist", "Geist Fallback", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --thc-font-mono: "Geist Mono", ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --thc-size-display: 39px;
+  --thc-size-title: 31px;
+  --thc-size-heading: 25px;
+  --thc-size-body: 20px;
+  --thc-size-ui: 16px;
+  --thc-size-caption: 16px;
+  --thc-leading-ratio-heading: 1.2;
+  --thc-leading-ratio-text: 1.5;
+  --thc-leading-none: 1;
+  --thc-leading-display: calc(var(--thc-size-display) * var(--thc-leading-ratio-heading));
+  --thc-leading-title: calc(var(--thc-size-title) * var(--thc-leading-ratio-heading));
+  --thc-leading-heading: calc(var(--thc-size-heading) * var(--thc-leading-ratio-heading));
+  --thc-leading-body: calc(var(--thc-size-body) * var(--thc-leading-ratio-text));
+  --thc-leading-ui: calc(var(--thc-size-ui) * var(--thc-leading-ratio-text));
+  --thc-leading-caption: calc(var(--thc-size-caption) * var(--thc-leading-ratio-text));
+  --thc-tracking-display: -0.03em;
+  --thc-tracking-title: -0.025em;
+  --thc-tracking-heading: -0.02em;
+  --thc-tracking-caption: 0em;
   --thc-weight-regular: 400;
-  --thc-weight-medium: 500;
-  --thc-weight-semibold: 600;
+  --thc-weight-medium: var(--thc-weight-regular);
+  --thc-weight-semibold: var(--thc-weight-regular);
 
+  --thc-space-3xs: 1px;
+  --thc-space-2xs: 2px;
   --thc-space-xxs: 4px;
   --thc-space-xs: 8px;
   --thc-space-sm: 12px;
@@ -118,39 +88,394 @@
   --thc-space-section: 192px;
 
   --thc-radius-none: 0px;
+  --thc-radius-2xs: 2px;
   --thc-radius-xs: 4px;
   --thc-radius-sm: 6px;
   --thc-radius-md: 8px;
   --thc-radius-lg: 12px;
   --thc-radius-xl: 16px;
-  --thc-radius-pill-sm: 64px;
   --thc-radius-pill: 100px;
   --thc-radius-full: 9999px;
-  --thc-radius-card: var(--thc-radius-md);
-  --thc-radius-input: var(--thc-radius-sm);
-  --thc-radius-action: var(--thc-radius-none);
-  --thc-radius-pulse: var(--thc-radius-full);
-
-  --thc-shadow-0: none;
   --thc-shadow-1: 0 0 0 1px #00000014 inset;
+
   --thc-shadow-2: 0 1px 1px #00000005, 0 2px 2px #0000000a, var(--thc-shadow-1);
-  --thc-shadow-3: 0 2px 2px #0000000a, 0 8px 8px -8px #0000000a, var(--thc-shadow-1);
   --thc-shadow-4: 0 2px 2px #0000000a, 0 8px 16px -4px #0000000a, var(--thc-shadow-1);
   --thc-shadow-5: 0 1px 1px #00000005, 0 8px 16px -4px #0000000a, 0 24px 32px -8px #0000000f, var(--thc-shadow-1);
-  --thc-shadow-float: var(--thc-shadow-4);
-  --thc-shadow-modal: var(--thc-shadow-5);
+  --thc-shadow-float: 0 28px 56px -24px #00000038, 0 0 0 1px #0000000f;
 
-  --thc-ease: cubic-bezier(0.175, 0.885, 0.32, 1.1);
-  --thc-ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --thc-ease: cubic-bezier(0.23, 1, 0.32, 1);
   --thc-ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --thc-ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --thc-ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  --thc-ease-exit: cubic-bezier(0.4, 0, 1, 1);
   --thc-duration-fast: 150ms;
   --thc-duration-medium: 200ms;
   --thc-duration-slow: 300ms;
+  --thc-duration-enter: 160ms;
+  --thc-duration-exit: 120ms;
+  --thc-duration-reveal: 500ms;
+  --thc-duration-loop: 1.2s;
+  --thc-stagger-step: 25ms;
 
-  --thc-container-max: 1200px;
-  --thc-container-wide: 1400px;
-  --thc-prose-max: 680px;
-  --thc-measure-prose: 65ch;
+  --thc-z-shell: 10;
+  --thc-z-dialog: 40;
+
+  --thc-safe-top: env(safe-area-inset-top, 0px);
+  --thc-safe-bottom: env(safe-area-inset-bottom, 0px);
+
   --thc-side-panel-max: 34rem;
-  --thc-focus-ring: 0 0 0 2px var(--thc-canvas), 0 0 0 4px var(--thc-primary);
+  --thc-focus-ring: 0 0 0 2px var(--thc-color-background-canvas), 0 0 0 4px var(--thc-color-border-brand);
+  --thc-focus-ring-field: 0 0 0 3px color-mix(in srgb, var(--thc-color-border-brand) 22%, transparent);
+  --thc-control-height-xs: 24px;
+  --thc-control-height-sm: 32px;
+  --thc-control-height-md: 40px;
+  --thc-control-height-lg: 50px;
+  --thc-control-height-xl: 60px;
+  --thc-control-height-2xl: 64px;
+  --thc-control-height-touch: 48px;
+  --thc-control-padding-xs: 8px;
+  --thc-control-padding-sm: 10px;
+  --thc-control-padding-md: 12px;
+  --thc-control-padding-lg: 16px;
+  --thc-control-padding-xl: 24px;
+  --thc-control-padding-2xl: 24px;
+  --thc-control-gap-xs: 8px;
+  --thc-control-gap-sm: 8px;
+  --thc-control-gap-md: 8px;
+  --thc-control-gap-lg: 8px;
+  --thc-control-gap-xl: 8px;
+  --thc-control-gap-2xl: 8px;
+  --thc-control-glyph-xs: 14px;
+  --thc-control-glyph-sm: 18px;
+  --thc-control-glyph-md: 20px;
+  --thc-control-glyph-lg: 20px;
+  --thc-control-glyph-xl: 24px;
+  --thc-control-glyph-2xl: 24px;
+  --thc-control-text-xs: var(--thc-size-caption);
+  --thc-control-text-sm: var(--thc-size-caption);
+  --thc-control-text-md: var(--thc-size-ui);
+  --thc-control-text-lg: var(--thc-size-ui);
+  --thc-control-text-xl: var(--thc-size-body);
+  --thc-control-text-2xl: var(--thc-size-body);
+  --thc-control-radius-xs: var(--thc-radius-xs);
+  --thc-control-radius-sm: var(--thc-radius-sm);
+  --thc-control-radius-md: var(--thc-radius-sm);
+  --thc-control-radius-lg: var(--thc-radius-md);
+  --thc-control-radius-xl: var(--thc-radius-md);
+  --thc-control-radius-2xl: var(--thc-radius-md);
+  --thc-dot-size: 8px;
+  --thc-dot-size-sm: 6px;
+  --thc-inline-icon-size: 14px;
+  --thc-avatar-size-xs: 20px;
+  --thc-kbd-size: 20px;
+  --thc-kbd-glyph: 12px;
+  --thc-avatar-size-sm: 24px;
+  --thc-avatar-size-md: 32px;
+  --thc-avatar-size-lg: 40px;
+  --thc-avatar-size-xl: 56px;
+  --thc-sign-in-card-height: 384px;
+  --thc-sign-in-card-mobile-height: 420px;
+  --thc-sign-in-card-width: 24rem;
+  --thc-confirmation-card-width: 28rem;
+  --thc-dialog-compact-width: 20rem;
+  --thc-dialog-width: 24rem;
+  --thc-dialog-wide-width: 40rem;
+  --thc-dialog-extra-wide-width: 44rem;
+  --thc-dialog-compose-width: 46rem;
+  --thc-command-width: 40rem;
+  --thc-dialog-two-pane-width: 64rem;
+  --thc-icon-size-sm: 18px;
+  --thc-icon-size: 20px;
+  --thc-icon-size-lg: 24px;
+  --thc-icon-box: 16px;
+  --thc-popover-width: 18rem;
+  --thc-popup-min-width: 8rem;
+  --thc-figure-sm: 200px;
+  --thc-figure-md: 280px;
+  --thc-figure-lg: 360px;
+  --thc-row-list-value: 6rem;
+  --thc-bar-list-label: 12rem;
+  --thc-empty-max-width: 24rem;
+  --thc-textarea-min-height: 4.5rem;
+  --thc-tab-bar-height: 56px;
+  --thc-page-header-height: 52px;
+  --thc-row-height: 48px;
+  --thc-column-focus: 40rem;
+  --thc-rail-width: 18.5rem;
+  --thc-rail-width-collapsed: 4rem;
+  --thc-space-rail-inset: calc((var(--thc-rail-width-collapsed) - 2 * var(--thc-space-xs) - var(--thc-icon-size-lg)) / 2);
+  --thc-space-rail-inset-tight: calc(var(--thc-space-rail-inset) - var(--thc-space-xxs));
+  --thc-space-gutter: 16px;
+  --thc-space-page-top: var(--thc-space-lg);
+  --thc-hit-area: 44px;
+  --thc-hit-inset: 0px;
+  --thc-size-field-touch: 16px;
+  --thc-size-field: 0px;
+  --thc-switch-height-md: 24px;
+  --thc-switch-width-md: 44px;
+  --thc-switch-height-sm: 20px;
+  --thc-switch-width-sm: 36px;
+  --thc-switch-thumb-md: 16px;
+  --thc-switch-thumb-sm: 12px;
+  --thc-skeleton-line: 12px;
+  --thc-skeleton-avatar: 36px;
+  --thc-skeleton-block: 16px;
+  --thc-checkbox-size: 16px;
+  --thc-empty-icon-tile: 48px;
+  --thc-choice-icon-tile: 40px;
+  --thc-sparkline-height: 40px;
+  --thc-note-min-height: 20px;
+  --thc-plot-height: 20px;
+  --thc-photo-tile-sm: 40px;
+  --thc-progress-min-width: 48px;
+}
+
+@media (min-width: 600px) {
+  :root {
+    --thc-space-gutter: 32px;
+  }
+}
+
+@media (min-width: 1200px) {
+  :root {
+    --thc-space-gutter: 40px;
+  }
+}
+
+@media (pointer: coarse), (max-width: 599.98px) {
+  :root {
+    --thc-size-field: var(--thc-size-field-touch);
+  }
+}
+
+@media (pointer: coarse) {
+  :root {
+    --thc-hit-inset: min(0px, calc((100% - var(--thc-hit-area)) / 2));
+  }
+}
+
+:root:has([data-thc-surface="console"]) {
+  --thc-focus-ring: 0 0 0 2px var(--thc-color-background-surface), 0 0 0 4px var(--thc-color-text-subtle);
+  --thc-size-display: 31px;
+  --thc-size-title: 25px;
+  --thc-size-heading: 20px;
+  --thc-size-ui: 16px;
+  --thc-size-body: 16px;
+  --thc-size-caption: 13px;
+  --thc-size-field: 16px;
+  --thc-tracking-display: -0.02em;
+  --thc-tracking-title: -0.015em;
+  --thc-tracking-heading: -0.01em;
+  --thc-tracking-caption: 0em;
+  --thc-control-height-xs: 24px;
+  --thc-control-height-sm: 32px;
+  --thc-control-height-md: 40px;
+  --thc-control-height-lg: 44px;
+  --thc-control-height-xl: 44px;
+  --thc-control-height-2xl: 48px;
+  --thc-control-height-touch: 44px;
+  --thc-control-padding-xs: 6px;
+  --thc-control-padding-sm: 10px;
+  --thc-control-padding-md: 14px;
+  --thc-control-padding-lg: 16px;
+  --thc-control-padding-xl: 16px;
+  --thc-control-padding-2xl: 18px;
+  --thc-control-glyph-xs: 16px;
+  --thc-control-glyph-sm: 16px;
+  --thc-control-glyph-md: 16px;
+  --thc-control-glyph-lg: 18px;
+  --thc-control-glyph-xl: 18px;
+  --thc-control-glyph-2xl: 20px;
+  --thc-control-text-xs: var(--thc-size-caption);
+  --thc-control-text-sm: var(--thc-size-body);
+  --thc-control-text-md: var(--thc-size-body);
+  --thc-control-text-lg: var(--thc-size-ui);
+  --thc-control-text-xl: var(--thc-size-ui);
+  --thc-control-text-2xl: var(--thc-size-ui);
+  --thc-control-radius-xs: var(--thc-radius-xs);
+  --thc-control-radius-sm: var(--thc-radius-sm);
+  --thc-control-radius-md: var(--thc-radius-sm);
+  --thc-control-radius-lg: var(--thc-radius-sm);
+  --thc-control-radius-xl: var(--thc-radius-md);
+  --thc-control-radius-2xl: var(--thc-radius-md);
+  --thc-icon-size-sm: 16px;
+  --thc-icon-size: 18px;
+  --thc-icon-size-lg: 20px;
+  --thc-row-height: 44px;
+  --thc-page-header-height: 56px;
+  --thc-space-gutter: 16px;
+}
+
+@media (min-width: 600px) {
+  :root:has([data-thc-surface="console"]) {
+    --thc-space-gutter: 24px;
+  }
+}
+
+@media (min-width: 1200px) {
+  :root:has([data-thc-surface="console"]) {
+    --thc-space-gutter: 32px;
+  }
+}
+
+@media (pointer: coarse) {
+  :root:has([data-thc-surface="console"]) {
+    --thc-control-height-xs: 28px;
+    --thc-control-padding-xs: 10px;
+    --thc-control-padding-sm: 12px;
+    --thc-control-glyph-xs: 16px;
+    --thc-control-glyph-sm: 16px;
+    --thc-control-glyph-lg: 20px;
+    --thc-control-glyph-xl: 20px;
+    --thc-control-text-xs: var(--thc-size-body);
+    --thc-control-text-sm: var(--thc-size-ui);
+    --thc-control-text-md: var(--thc-size-ui);
+    --thc-control-radius-xs: var(--thc-radius-sm);
+    --thc-control-radius-md: var(--thc-radius-md);
+    --thc-control-radius-lg: var(--thc-radius-md);
+  }
+}
+
+:root:has([data-thc-scale="onboarding"]) {
+  --thc-size-display: 39px;
+  --thc-size-title: 31px;
+  --thc-size-heading: 25px;
+  --thc-size-ui: 20px;
+  --thc-size-body: 20px;
+  --thc-size-caption: 16px;
+  --thc-size-field: 20px;
+  --thc-control-height-xs: 30px;
+  --thc-control-height-sm: 42px;
+  --thc-control-height-md: 50px;
+  --thc-control-height-lg: 56px;
+  --thc-control-height-xl: 56px;
+  --thc-control-height-2xl: 60px;
+  --thc-control-height-touch: 56px;
+  --thc-control-padding-xs: 8px;
+  --thc-control-padding-sm: 13px;
+  --thc-control-padding-md: 18px;
+  --thc-control-padding-lg: 20px;
+  --thc-control-padding-xl: 20px;
+  --thc-control-padding-2xl: 23px;
+  --thc-control-glyph-xs: 20px;
+  --thc-control-glyph-sm: 20px;
+  --thc-control-glyph-md: 20px;
+  --thc-control-glyph-lg: 23px;
+  --thc-control-glyph-xl: 23px;
+  --thc-control-glyph-2xl: 25px;
+  --thc-radius-2xs: 3px;
+  --thc-radius-xs: 5px;
+  --thc-radius-sm: 8px;
+  --thc-radius-md: 10px;
+  --thc-radius-lg: 15px;
+  --thc-radius-xl: 20px;
+  --thc-icon-size-sm: 20px;
+  --thc-icon-size: 23px;
+  --thc-icon-size-lg: 25px;
+  --thc-space-2xs: 3px;
+  --thc-space-xxs: 5px;
+  --thc-space-xs: 10px;
+  --thc-space-sm: 15px;
+  --thc-space-md: 20px;
+  --thc-space-lg: 30px;
+  --thc-space-xl: 40px;
+  --thc-space-2xl: 50px;
+  --thc-space-3xl: 60px;
+  --thc-space-4xl: 80px;
+  --thc-space-5xl: 120px;
+  --thc-space-6xl: 160px;
+  --thc-space-gutter: 20px;
+  --thc-row-height: 56px;
+  --thc-column-focus: 50rem;
+}
+
+:root,
+[data-thc-step='md'] {
+  --thc-step-height: var(--thc-control-height-md);
+  --thc-step-padding: var(--thc-control-padding-md);
+  --thc-step-gap: var(--thc-control-gap-md);
+  --thc-step-glyph: var(--thc-control-glyph-md);
+  --thc-step-text: var(--thc-control-text-md);
+  --thc-step-radius: var(--thc-control-radius-md);
+  --thc-step-inset: calc((var(--thc-step-height) - var(--thc-step-glyph)) / 2 - 1px);
+}
+
+[data-thc-step='xs'] {
+  --thc-step-height: var(--thc-control-height-xs);
+  --thc-step-padding: var(--thc-control-padding-xs);
+  --thc-step-gap: var(--thc-control-gap-xs);
+  --thc-step-glyph: var(--thc-control-glyph-xs);
+  --thc-step-text: var(--thc-control-text-xs);
+  --thc-step-radius: var(--thc-control-radius-xs);
+  --thc-step-inset: calc((var(--thc-step-height) - var(--thc-step-glyph)) / 2 - 1px);
+}
+
+[data-thc-step='sm'] {
+  --thc-step-height: var(--thc-control-height-sm);
+  --thc-step-padding: var(--thc-control-padding-sm);
+  --thc-step-gap: var(--thc-control-gap-sm);
+  --thc-step-glyph: var(--thc-control-glyph-sm);
+  --thc-step-text: var(--thc-control-text-sm);
+  --thc-step-radius: var(--thc-control-radius-sm);
+  --thc-step-inset: calc((var(--thc-step-height) - var(--thc-step-glyph)) / 2 - 1px);
+}
+
+[data-thc-step='lg'] {
+  --thc-step-height: var(--thc-control-height-lg);
+  --thc-step-padding: var(--thc-control-padding-lg);
+  --thc-step-gap: var(--thc-control-gap-lg);
+  --thc-step-glyph: var(--thc-control-glyph-lg);
+  --thc-step-text: var(--thc-control-text-lg);
+  --thc-step-radius: var(--thc-control-radius-lg);
+  --thc-step-inset: calc((var(--thc-step-height) - var(--thc-step-glyph)) / 2 - 1px);
+}
+
+[data-thc-step='xl'] {
+  --thc-step-height: var(--thc-control-height-xl);
+  --thc-step-padding: var(--thc-control-padding-xl);
+  --thc-step-gap: var(--thc-control-gap-xl);
+  --thc-step-glyph: var(--thc-control-glyph-xl);
+  --thc-step-text: var(--thc-control-text-xl);
+  --thc-step-radius: var(--thc-control-radius-xl);
+  --thc-step-inset: calc((var(--thc-step-height) - var(--thc-step-glyph)) / 2 - 1px);
+}
+
+[data-thc-step='2xl'] {
+  --thc-step-height: var(--thc-control-height-2xl);
+  --thc-step-padding: var(--thc-control-padding-2xl);
+  --thc-step-gap: var(--thc-control-gap-2xl);
+  --thc-step-glyph: var(--thc-control-glyph-2xl);
+  --thc-step-text: var(--thc-control-text-2xl);
+  --thc-step-radius: var(--thc-control-radius-2xl);
+  --thc-step-inset: calc((var(--thc-step-height) - var(--thc-step-glyph)) / 2 - 1px);
+}
+
+[data-thc-typeface="geist"] {
+  font-family: var(--thc-font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[data-side] {
+  --thc-transform-origin: var(--transform-origin);
+  --thc-anchor-width: var(--anchor-width);
+  --thc-available-height: var(--available-height);
+}
+
+[data-slot='grouped-table-rows'] {
+}
+
+[data-slot='accordion-panel'] {
+}
+
+[data-thc-weight="400"] {
+  --thc-weight-regular: 400;
+}
+
+[data-thc-weight="500"] {
+  --thc-weight-regular: 500;
+}
+
+[data-thc-weight="600"] {
+  --thc-weight-regular: 600;
 }

@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#USAGE: pre-commit — the commit gate (scripts/git-hooks/pre-commit runs it): ./c check --staged
+
+set -euo pipefail
+
+exec "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/check" --staged "$@"

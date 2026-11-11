@@ -1,6 +1,6 @@
 import * as stylex from '@stylexjs/stylex'
 
-import { color, radius, space, text } from '@/tokens/token-consts.stylex'
+import { color, radius, space, text } from '@/tokens/website-token-consts.stylex'
 
 export const navStyles = stylex.create({
   navbar: {

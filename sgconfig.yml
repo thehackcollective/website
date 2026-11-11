@@ -1,4 +1,6 @@
 ruleDirs:
   - sg-rules
+languageGlobs:
+  tsx: ["*.ts"]
 testConfigs:
   - testDir: sg-rule-tests

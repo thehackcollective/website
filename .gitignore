@@ -13,3 +13,5 @@ dist/
 .wrangler/
 
 /local
+/.c-runtime
+/dist-work

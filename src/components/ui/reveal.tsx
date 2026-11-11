@@ -1,17 +1,17 @@
-import { m, useReducedMotion } from "motion/react";
-import type { ReactNode } from "react";
+import { m, useReducedMotion } from 'motion/react'
+import type { ReactNode } from 'react'
 
 export interface RevealProps {
-  children: ReactNode;
-  delay?: number;
-  className?: string;
+  children: ReactNode
+  delay?: number
+  className?: string
 }
 
 export function Reveal({ children, delay = 0, className }: RevealProps) {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useReducedMotion()
 
   if (reduceMotion) {
-    return <div className={className}>{children}</div>;
+    return <div className={className}>{children}</div>
   }
 
   return (
@@ -24,5 +24,5 @@ export function Reveal({ children, delay = 0, className }: RevealProps) {
     >
       {children}
     </m.div>
-  );
+  )
 }

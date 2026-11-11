@@ -1,0 +1,19 @@
+id: parses-as-tsx
+language: Tsx
+severity: error
+rule:
+  kind: ERROR
+message: |
+  ast-grep cannot parse this code. sgconfig.yml reads .ts files as TSX, so every rule sees every file with one grammar.
+  A rule does not see code that does not parse. An angle-bracket type assertion (<T>value) does not parse as TSX, and type assertions are not permitted. Narrow the type with a type guard.
+files:
+  - "src/**/*.ts"
+  - "internal/**/*.ts"
+  - "workers/**/*.ts"
+  - "scripts/**/*.ts"
+  - "src/**/*.tsx"
+  - "internal/**/*.tsx"
+  - "workers/**/*.tsx"
+  - "scripts/**/*.tsx"
+ignores:
+  - "**/node_modules/**"

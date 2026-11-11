@@ -33,7 +33,7 @@ Event-specific blocks (a hack with a date and a Luma link) are temporary by natu
 
 ## Dark mode (revamp target)
 
-Dark is a token change, not a component change. Tokens in `design-tokens.css` get `prefers-color-scheme: dark` values from the table in `DESIGN.md`; components never branch on theme. The logo swaps to the white variants through the same mechanism (CSS `picture`/`prefers-color-scheme` or a token-driven mask), never through JavaScript theme detection.
+The site ships light only. If dark returns, it is a token change, not a component change. Tokens in `website-tokens.css` get `prefers-color-scheme: dark` values from the table in `DESIGN.md`; components never branch on theme. The logo swaps to the white variants through the same mechanism (CSS `picture`/`prefers-color-scheme` or a token-driven mask), never through JavaScript theme detection.
 
 ## Honest risks to name
 

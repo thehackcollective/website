@@ -1,6 +1,6 @@
 import * as stylex from '@stylexjs/stylex'
 
-import { color, space, text } from '@/tokens/token-consts.stylex'
+import { color, space, text } from '@/tokens/website-token-consts.stylex'
 
 export const statsStyles = stylex.create({
   section: {
@@ -12,24 +12,6 @@ export const statsStyles = stylex.create({
       default: space.lg,
       '@media (min-width: 1200px)': space.x4xl,
     },
-  },
-  heading: {
-    color: color.ink,
-    fontFamily: text.fontDisplay,
-    fontSize: {
-      default: text.sizeDisplayMd,
-      '@media (min-width: 960px)': text.sizeDisplayXl,
-    },
-    fontWeight: text.weightSemibold,
-    letterSpacing: {
-      default: text.trackingDisplayMd,
-      '@media (min-width: 960px)': text.trackingDisplayXl,
-    },
-    lineHeight: {
-      default: text.leadingDisplayMd,
-      '@media (min-width: 960px)': text.leadingDisplayXl,
-    },
-    textWrap: 'balance',
   },
   grid: {
     display: 'grid',

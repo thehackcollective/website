@@ -1,14 +1,29 @@
 id: no-vh-units
-message: Use dvh not vh. Mobile browser chrome makes vh taller than the visible viewport.
-severity: error
 language: Tsx
+severity: error
+message: |
+  Use dvh, not vh: 100dvh in StyleX, h-dvh / min-h-dvh in a class name, not h-screen / min-h-screen.
+  On mobile, the browser chrome makes 100vh taller than the visible viewport.
+  dvh follows the visible viewport.
+  See rule/dvh-not-vh in product-design/references/interface-quality.md.
 rule:
-  all:
-    - kind: string_fragment
-    - regex: '\dvh'
-    - inside:
-        kind: call_expression
-        stopBy: end
+  any:
+    - all:
+        - kind: string_fragment
+        - regex: '\dvh'
+        - inside:
+            kind: call_expression
+            stopBy: end
+    - all:
+        - kind: string_fragment
+        - regex: "\\bh-screen\\b|\\bmin-h-screen\\b"
+        - inside:
+            stopBy: end
+            any:
+              - kind: jsx_attribute
+              - kind: arguments
 files:
   - "src/**/*.ts"
   - "src/**/*.tsx"
+  - "internal/**/*.ts"
+  - "internal/**/*.tsx"

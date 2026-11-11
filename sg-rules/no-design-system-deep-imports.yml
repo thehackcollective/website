@@ -1,0 +1,36 @@
+id: no-design-system-deep-imports
+language: Tsx
+severity: error
+message: |
+  This import goes deep into the design-system source.
+  The code is in `src/components/ui/` and `src/tokens/`.
+  Import through the public aliases. Do not import their internal paths.
+
+    import { Button } from '@/ui/button'
+    import { color, space } from '@/tokens/token-consts.stylex'
+    import '@/tokens/design-tokens.css'
+
+  A deep import into `src/components/ui/…` ties the call site to a file layout that can change.
+  It also goes around the closed component API.
+rule:
+  all:
+    - kind: string_fragment
+    - regex: '^@/ui/.+/'
+    - inside:
+        stopBy: end
+        kind: import_statement
+files:
+  - "internal/**/*.ts"
+  - "workers/internal/**/*.ts"
+  - "src/components/ui/**/*.ts"
+  - "src/lib/**/*.ts"
+  - "internal/**/*.tsx"
+  - "workers/internal/**/*.tsx"
+  - "src/components/ui/**/*.tsx"
+  - "src/lib/**/*.tsx"
+ignores:
+  - "**/node_modules/**"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts"
+  - "src/lib/hairline-*"

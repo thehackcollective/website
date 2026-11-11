@@ -1,0 +1,29 @@
+id: stylex-consts-single-module
+language: Tsx
+rule:
+  any:
+    - pattern: stylex.defineConsts($$$)
+    - pattern: defineConsts($$$)
+message: |
+  Declare `stylex.defineConsts` only in src/tokens/token-consts.stylex.ts.
+  StyleX changes consts to literals when it compiles the collected rules to CSS.
+  Thus the dev server must transform the declaring module before it serves /virtual:stylex.css.
+  A media-query const that is still an unresolved `var(--hash)` compiles to invalid CSS, and the page returns a 500 error.
+  The dev-only `stylex-consts-before-css` plugin in vite.config.ts makes sure of this order for one module.
+  A second declaring module brings back the intermittent 500 error on first load.
+severity: error
+files:
+  - "internal/**/*.ts"
+  - "workers/internal/**/*.ts"
+  - "src/components/ui/**/*.ts"
+  - "src/lib/**/*.ts"
+  - "internal/**/*.tsx"
+  - "workers/internal/**/*.tsx"
+  - "src/components/ui/**/*.tsx"
+  - "src/lib/**/*.tsx"
+ignores:
+  - "**/tokens/token-consts.stylex.ts"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts"
+  - "src/lib/hairline-*"

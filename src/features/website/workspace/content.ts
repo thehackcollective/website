@@ -17,4 +17,3 @@ export const STATS = [
   { value: '#2', label: 'On Google when searching for Hackathons in London' },
   { value: '2026', label: 'UCL Campaign of the Year nominee' },
 ]
-

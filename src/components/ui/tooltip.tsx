@@ -1,94 +1,110 @@
-import * as React from "react"
-import { Tooltip as TooltipPrimitive } from "@base-ui/react/tooltip"
-import * as stylex from "@stylexjs/stylex"
+import { Tooltip as TooltipPrimitive } from '@base-ui/react/tooltip'
+import * as stylex from '@stylexjs/stylex'
 
-import { color, radius, shadow, space, text } from "@/tokens/token-consts.stylex"
+import {
+  breakpoint,
+  color,
+  hostContract,
+  motion,
+  radius,
+  shadow,
+  space,
+  text,
+} from '@/tokens/token-consts.stylex'
+import { primitiveStyles } from '@/ui/primitive-styles.stylex'
 
-const styles = stylex.create({
-  arrow: {
-    backgroundColor: color.ink,
-    borderRadius: radius.xs,
-    height: "10px",
-    transform: "rotate(45deg)",
-    width: "10px",
-    zIndex: 50,
-  },
-  popup: {
-    backgroundColor: color.ink,
-    borderRadius: radius.md,
-    boxShadow: shadow.s3,
-    color: color.surfaceCard,
-    fontFamily: text.fontSans,
-    fontSize: text.sizeBodyLg,
-    lineHeight: text.leadingBodyLg,
-    maxWidth: "20rem",
-    opacity: 1,
-    outline: "none",
-    paddingBlock: space.xs,
-    paddingInline: space.sm,
-    textAlign: "center",
-    textWrap: "balance",
-    transform: "scale(1)",
-    transformOrigin: "var(--transform-origin)",
-    transitionProperty: "opacity, transform",
-    transitionDuration: "150ms",
-    transitionTimingFunction: "ease-in-out",
-    width: "fit-content",
-    zIndex: 50,
-  },
-  popupHidden: {
-    opacity: 0,
-    transform: "scale(0.95)",
-  },
-})
+export type TooltipProviderProps = Omit<
+  TooltipPrimitive.Provider.Props,
+  'className' | 'style' | 'render'
+>
 
-const isHidden = (status: string | undefined) =>
-  status === "starting" || status === "ending"
-
-function Tooltip(props: React.ComponentProps<typeof TooltipPrimitive.Root>) {
-  return (
-    <TooltipPrimitive.Provider data-slot="tooltip-provider">
-      <TooltipPrimitive.Root data-slot="tooltip" {...props} />
-    </TooltipPrimitive.Provider>
-  )
+export function TooltipProvider(props: TooltipProviderProps) {
+  return <TooltipPrimitive.Provider {...props} />
 }
 
-function TooltipTrigger(
-  props: React.ComponentProps<typeof TooltipPrimitive.Trigger>
-) {
+export type TooltipProps = Omit<TooltipPrimitive.Root.Props, 'className' | 'style' | 'render'>
+
+export function Tooltip(props: TooltipProps) {
+  return <TooltipPrimitive.Root data-slot="tooltip" {...props} />
+}
+
+export type TooltipTriggerProps = Omit<TooltipPrimitive.Trigger.Props, 'className' | 'style'>
+
+export function TooltipTrigger(props: TooltipTriggerProps) {
   return <TooltipPrimitive.Trigger data-slot="tooltip-trigger" {...props} />
 }
 
-function TooltipContent({
-  align = "center",
-  children,
-  side = "top",
-  sideOffset = 4,
-  ...props
-}: Omit<React.ComponentProps<typeof TooltipPrimitive.Popup>, "className"> & {
-  align?: "start" | "center" | "end"
-  side?: "top" | "bottom" | "left" | "right"
-  sideOffset?: number
-}) {
-  const arrowSx = stylex.props(styles.arrow)
+export type TooltipContentProps = Omit<
+  TooltipPrimitive.Popup.Props,
+  'className' | 'style' | 'render'
+> &
+  Pick<TooltipPrimitive.Positioner.Props, 'align' | 'alignOffset' | 'side' | 'sideOffset'>
 
+export function TooltipContent({
+  side = 'top',
+  sideOffset = 4,
+  align = 'center',
+  alignOffset = 0,
+  children,
+  ...props
+}: TooltipContentProps) {
   return (
     <TooltipPrimitive.Portal>
-      <TooltipPrimitive.Positioner align={align} side={side} sideOffset={sideOffset}>
+      <TooltipPrimitive.Positioner
+        align={align}
+        alignOffset={alignOffset}
+        side={side}
+        sideOffset={sideOffset}
+        {...stylex.props(styles.positioner)}
+      >
         <TooltipPrimitive.Popup
           data-slot="tooltip-content"
-          className={(state: { transitionStatus?: string }) =>
-            stylex.props(styles.popup, isHidden(state.transitionStatus) && styles.popupHidden)
-              .className
-          }
           {...props}
+          {...stylex.props(styles.content, primitiveStyles.forcedEdge)}
         >
           {children}
-          <TooltipPrimitive.Arrow className={arrowSx.className} style={arrowSx.style} />
         </TooltipPrimitive.Popup>
       </TooltipPrimitive.Positioner>
     </TooltipPrimitive.Portal>
   )
 }
 
-export { Tooltip, TooltipContent, TooltipTrigger }
+const styles = stylex.create({
+  positioner: {
+    isolation: 'isolate',
+    zIndex: 60,
+  },
+
+  content: {
+    alignItems: 'center',
+    backgroundColor: color.backgroundSurface,
+    borderRadius: radius.md,
+    boxShadow: shadow['4'],
+    color: color.textDefault,
+    display: 'inline-flex',
+    fontFamily: text.fontSans,
+    fontSize: text.sizeCaption,
+    gap: space.xs,
+    opacity: {
+      default: 1,
+      ':is([data-starting-style])': 0,
+      ':is([data-ending-style])': 0,
+    },
+    paddingBlock: space.xs,
+    paddingInline: space.sm,
+    transform: {
+      default: 'none',
+      ':is([data-starting-style])': 'scale(0.96)',
+      ':is([data-ending-style])': 'scale(0.96)',
+      [breakpoint.reducedMotion]: 'none',
+    },
+    transformOrigin: hostContract.transformOrigin,
+    transitionDuration: {
+      default: motion.durationFast,
+      ':is([data-instant])': '0ms',
+    },
+    transitionProperty: 'opacity, transform',
+    transitionTimingFunction: motion.ease,
+    zIndex: 60,
+  },
+})

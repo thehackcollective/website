@@ -3,8 +3,9 @@ import * as stylex from '@stylexjs/stylex'
 import { DiaHeading } from '@/components/ui/dia-text'
 import { Reveal } from '@/components/ui/reveal'
 import { buttonStyles } from '@/features/website/workspace/button.stylex'
-import { hackStyles } from '@/features/website/workspace/hack-section.stylex'
 import { HACK, LINKS } from '@/features/website/workspace/content'
+import { hackStyles } from '@/features/website/workspace/hack-section.stylex'
+import { sectionHeadingStyles } from '@/features/website/workspace/section-heading.stylex'
 
 export function HackSection() {
   return (
@@ -12,7 +13,9 @@ export function HackSection() {
       <div {...stylex.props(hackStyles.intro)}>
         <div {...stylex.props(hackStyles.headingBlock)}>
           <DiaHeading
-            className={stylex.props(hackStyles.heading).className}
+            className={
+              stylex.props(sectionHeadingStyles.heading, hackStyles.headingFlush).className
+            }
           >
             {HACK.title}
           </DiaHeading>
@@ -41,11 +44,9 @@ export function HackSection() {
           </Reveal>
           <Reveal>
             <p {...stylex.props(hackStyles.body)}>
-              <strong {...stylex.props(hackStyles.bodyStrong)}>
-                The Hack Collective
-              </strong>{' '}
-              is a community partner with its own track on the night, and the
-              top 5 teams demo live for 3 minutes each.
+              <strong {...stylex.props(hackStyles.bodyStrong)}>The Hack Collective</strong> is a
+              community partner with its own track on the night, and the top 5 teams demo live for 3
+              minutes each.
             </p>
           </Reveal>
           <div {...stylex.props(hackStyles.actions)}>
@@ -53,10 +54,7 @@ export function HackSection() {
               href={LINKS.hack}
               target="_blank"
               rel="noopener noreferrer"
-              {...stylex.props(
-                buttonStyles.buttonBase,
-                buttonStyles.buttonPrimary,
-              )}
+              {...stylex.props(buttonStyles.buttonBase, buttonStyles.buttonPrimary)}
             >
               Request to join on Luma
             </a>
@@ -65,10 +63,7 @@ export function HackSection() {
 
         <Reveal className={stylex.props(hackStyles.posterCol).className}>
           <picture>
-            <source
-              srcSet="/events/grok-bot-ldn-community-hack.webp"
-              type="image/webp"
-            />
+            <source srcSet="/events/grok-bot-ldn-community-hack.webp" type="image/webp" />
             <img
               src="/events/grok-bot-ldn-community-hack.jpg"
               alt="Grok Bot LDN Community Hack poster for Thursday 22 October with the partner communities' mascots"

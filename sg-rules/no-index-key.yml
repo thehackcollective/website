@@ -1,8 +1,12 @@
 id: no-index-key
-message: Do not use array index as React key. Use a stable id.
-severity: warning
 language: Tsx
 rule:
-  pattern: key={$INDEX}
-  inside:
-    kind: jsx_element
+  any:
+    - pattern: "key={index}"
+    - pattern: "key={i}"
+    - pattern: "key={idx}"
+    - pattern: "key={_index}"
+    - pattern: "key={_i}"
+message: "Do not use the array index as a React key. Use a stable, unique identifier from the data (for example item.id, item.slug)."
+severity: error
+note: "Index keys cause React reconciliation bugs when the list changes order, when you filter it, or when you delete items. Use a field that stays the same across renders: item.id, item.key, item.symbol and similar. If the data has no natural key, make one from its content (for example `${item.name}-${item.date}`)."

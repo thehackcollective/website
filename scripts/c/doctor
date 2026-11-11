@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+#USAGE: doctor — is this checkout set up the way the repo says?
+
+set -uo pipefail
+
+THC_ROOT="${THC_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
+cd "$THC_ROOT"
+
+FAIL=0
+pass() { printf '✓ %s\n' "$1"; }
+fail() { printf '✗ %s\n' "$1"; FAIL=1; }
+note() { printf '· %s\n' "$1"; }
+
+(( BASH_VERSINFO[0] >= 5 )) && pass "bash ${BASH_VERSION}" || fail "./c needs bash 5 or later. Run brew install bash."
+
+want_bun="$(jq -r '.packageManager | split("@")[1]' package.json)"
+have_bun="$(bun --version 2>/dev/null || echo none)"
+[[ "$have_bun" == "$want_bun" ]] && pass "bun $have_bun (packageManager)" || fail "bun is $have_bun, and package.json pins $want_bun. Workers Builds uses packageManager."
+
+python3 -c "import yaml" 2>/dev/null && pass "python3 with pyyaml (./c check structure)" || fail "python3 cannot import yaml. Run pip3 install pyyaml."
+command -v jq >/dev/null 2>&1 && pass "jq" || fail "jq is not installed. Run brew install jq."
+
+[[ "$(git config --get core.hooksPath)" == "scripts/git-hooks" ]] && pass "the pre-commit and pre-push hooks are wired" || fail "The hooks are not wired. Run ./c hooks."
+
+[[ -d node_modules ]] && pass "node_modules is there" || fail "The dependencies are not installed. Run bun install."
+
+source "$THC_ROOT/scripts/c/_lib/op-environments.sh"
+if [[ "$THC_OP_DEV" == "$THC_OP_DEV_PLACEHOLDER" ]]; then
+  fail "The 1Password dev Environment id is a placeholder. Put it in scripts/c/_lib/op-environments.sh."
+elif ! command -v op >/dev/null 2>&1; then
+  fail "The 1Password CLI (op) is not installed. ./c up runs under op run."
+elif op run --environment "$THC_OP_DEV" -- true >/dev/null 2>&1; then
+  pass "op run --environment reads the dev Environment"
+else
+  fail "op run --environment $THC_OP_DEV failed. Sign in to 1Password (op signin)."
+fi
+[[ "$THC_OP_PROD" == "$THC_OP_PROD_PLACEHOLDER" ]] && fail "The 1Password prod Environment id is a placeholder. Put it in scripts/c/_lib/op-environments.sh." || pass "the 1Password prod Environment id is set"
+
+for stale in .dev.vars .env .env.local workers/internal/.dev.vars; do
+  [[ -e "$stale" ]] && fail "$stale exists. Secrets live in 1Password only. Remove the file."
+done
+
+note "Production ships through Workers Builds on a merge to main. Do not deploy by hand."
+exit "$FAIL"

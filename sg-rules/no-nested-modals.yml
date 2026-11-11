@@ -1,0 +1,35 @@
+id: no-nested-modals
+language: Tsx
+severity: error
+message: |
+  A Dialog, Sheet or AlertDialog opens inside another Dialog, Sheet or AlertDialog.
+  This breaks focus management. The two focus traps conflict. Escape closes the wrong one.
+  Screen-reader users lose the navigation context.
+
+  Do not put a modal surface inside another modal surface.
+  Close the outer modal before you open the inner one, or show the inner surface as a non-modal dropdown or popover.
+note: "This pattern comes from the Vercel product-design enforcement (vercel.com/blog/teaching-agents-product-design-at-vercel). The rule finds a modal component (Dialog, Sheet or AlertDialog) inside another modal."
+rule:
+  all:
+    - kind: jsx_element
+    - any:
+        - pattern: "<Dialog>$$$</Dialog>"
+        - pattern: "<Sheet>$$$</Sheet>"
+        - pattern: "<AlertDialog>$$$</AlertDialog>"
+    - inside:
+        stopBy: end
+        any:
+          - pattern: "<Dialog>$$$</Dialog>"
+          - pattern: "<Sheet>$$$</Sheet>"
+          - pattern: "<AlertDialog>$$$</AlertDialog>"
+files:
+  - "internal/**/*.tsx"
+  - "workers/internal/**/*.tsx"
+  - "src/components/ui/**/*.tsx"
+  - "src/lib/**/*.tsx"
+ignores:
+  - "**/node_modules/**"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts"
+  - "src/lib/hairline-*"

@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+NO_COMMIT="0000000000000000000000000000000000000000"
+
+while read -r _ local_sha remote_ref _; do
+  [[ "$local_sha" == "$NO_COMMIT" ]] && continue
+  if [[ "$remote_ref" == "refs/heads/main" ]]; then
+    echo "✗ pre-push: no push goes to main. Push a branch and open a PR with gh pr create, then merge it with ./c merge <PR>." >&2
+    exit 1
+  fi
+done
+
+exec "$(git rev-parse --show-toplevel)/c" check

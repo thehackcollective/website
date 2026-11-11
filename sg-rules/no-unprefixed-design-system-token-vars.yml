@@ -1,0 +1,33 @@
+id: no-unprefixed-design-system-token-vars
+language: Tsx
+severity: error
+message: |
+  Design-system source has a CSS custom property without a prefix.
+
+  The `--thc-` prefix stops name collisions between the design-system tokens and the host app.
+  An unprefixed `--primary` or `--radius` hides the host variable, or the host variable hides it.
+  Stylesheet order decides which one wins. This bug shows only in the app, never in the source files.
+
+  Design-system tokens are `--thc-*`. The source cannot use an unprefixed variable.
+rule:
+  all:
+    - kind: string_fragment
+    - regex: '--[a-zA-Z][\w-]*'
+    - not:
+        regex: 'thc-'
+note: |
+  `files` includes the StyleX style modules (`*.stylex.ts`) in `components/ui/`. They are the design-system `.ts` source.
+  CVA and Tailwind helpers such as `button-variants.ts` are not StyleX source. The `.stylex.ts` extension keeps them out.
+
+  `sonner.stylex.ts` maps the theme variables of the sonner library to the work app tokens.
+  This component sets those variables for the third-party toaster. They are not part of the public `--thc-*` token namespace.
+files:
+  - "src/tokens/token-consts.stylex.ts"
+  - "src/components/ui/**/*.stylex.ts"
+ignores:
+  - "src/components/ui/sonner.stylex.ts"
+  - "**/node_modules/**"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts"
+  - "src/lib/hairline-*"

@@ -1,0 +1,45 @@
+id: refresh-failure-uses-refresh-toast
+language: Tsx
+severity: error
+message: |
+  A toast.error call has an id option. A toast with an id marks a refresh that failed while data shows.
+
+    toast.error(message, { id: 'mailboxes-load' })
+      ->  showRefreshFailed({ id: 'mailboxes-load', message, onRetry: () => void reload() })
+
+  A plain toast.error closes after a few seconds and has no Retry. Use showRefreshFailed from `@/ui/refresh-toast`.
+  It stays until a refresh works and has a Retry action. Call clearRefreshFailed(id) when the load works and when the owner unmounts.
+
+  A one-off action failure is not a refresh. Call toast.error(message) with no id.
+rule:
+  pattern: toast.error($MSG, $OPTS)
+  has:
+    field: arguments
+    has:
+      kind: object
+      has:
+        any:
+          - kind: shorthand_property_identifier
+            regex: '^id$'
+          - kind: pair
+            has:
+              field: key
+              regex: "^['\"]?id['\"]?$"
+note: |
+  The rule reads the second argument of toast.error. If the object has an id key, the rule fails. Only `src/components/ui/refresh-toast.tsx` may set the id.
+  DESIGN.md › States names showRefreshFailed for a refresh that fails while data shows.
+files:
+  - "internal/**/*.ts"
+  - "workers/internal/**/*.ts"
+  - "src/components/ui/**/*.ts"
+  - "src/lib/**/*.ts"
+  - "internal/**/*.tsx"
+  - "workers/internal/**/*.tsx"
+  - "src/components/ui/**/*.tsx"
+  - "src/lib/**/*.tsx"
+ignores:
+  - "src/components/ui/refresh-toast.tsx"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts"
+  - "src/lib/hairline-*"

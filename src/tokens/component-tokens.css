@@ -1,0 +1,35 @@
+:root {
+  --thc-button-primary-background: var(--thc-color-background-brand);
+  --thc-button-primary-background-hover: var(--thc-color-background-brand-hover);
+  --thc-button-primary-background-active: var(--thc-color-background-brand-active);
+  --thc-button-primary-text: var(--thc-color-text-on-brand);
+  --thc-button-strong-background: var(--thc-color-background-inverse);
+  --thc-button-strong-background-hover: var(--thc-color-background-inverse-hover);
+  --thc-button-strong-text: var(--thc-color-text-inverse);
+  --thc-button-secondary-background: var(--thc-color-background-surface);
+  --thc-button-secondary-background-hover: var(--thc-color-background-surface-hover);
+  --thc-button-secondary-border: var(--thc-color-border-default);
+  --thc-button-secondary-text: var(--thc-color-text-default);
+  --thc-button-ghost-background-hover: var(--thc-color-background-surface-hover);
+  --thc-button-ghost-text: var(--thc-color-text-body);
+  --thc-button-overlay-background: var(--thc-color-background-overlay);
+  --thc-button-overlay-background-hover: var(--thc-color-background-on-overlay-hover);
+  --thc-button-overlay-text: var(--thc-color-text-on-overlay);
+  --thc-button-destructive-background: var(--thc-color-background-danger-tint);
+  --thc-button-outline-background-hover: var(--thc-color-background-surface-hover);
+  --thc-button-outline-border: var(--thc-color-border-bold);
+  --thc-button-outline-text: var(--thc-color-text-default);
+  --thc-button-link-text: var(--thc-color-text-brand);
+
+  --thc-input-default-background-disabled: var(--thc-color-background-surface-subtle);
+  --thc-input-default-border: var(--thc-color-border-default);
+  --thc-input-default-border-focus: var(--thc-color-border-brand);
+  --thc-input-default-border-invalid: var(--thc-color-border-danger);
+  --thc-input-default-text: var(--thc-color-text-default);
+  --thc-input-default-placeholder: var(--thc-color-text-subtle);
+  --thc-input-radius: var(--thc-radius-sm);
+
+  --thc-card-background: var(--thc-color-background-surface);
+  --thc-card-text: var(--thc-color-text-body);
+  --thc-card-radius: var(--thc-radius-md);
+}

@@ -1,0 +1,40 @@
+id: no-raw-hugeicons-in-app
+snapshots:
+  ? |
+    import { HugeiconsIcon } from '@hugeicons/react'
+  : labels:
+    - source: HugeiconsIcon
+      style: primary
+      start: 9
+      end: 22
+    - source: '''@hugeicons/react'''
+      style: secondary
+      start: 30
+      end: 48
+    - source: import { HugeiconsIcon } from '@hugeicons/react'
+      style: secondary
+      start: 0
+      end: 48
+    - source: HugeiconsIcon
+      style: secondary
+      start: 9
+      end: 22
+  ? |
+    import { HugeiconsIcon, type IconSvgElement } from '@hugeicons/react'
+  : labels:
+    - source: HugeiconsIcon
+      style: primary
+      start: 9
+      end: 22
+    - source: '''@hugeicons/react'''
+      style: secondary
+      start: 51
+      end: 69
+    - source: import { HugeiconsIcon, type IconSvgElement } from '@hugeicons/react'
+      style: secondary
+      start: 0
+      end: 69
+    - source: HugeiconsIcon
+      style: secondary
+      start: 9
+      end: 22

@@ -1,0 +1,44 @@
+id: no-empty-catch-return
+language: Tsx
+severity: error
+message: |
+  A catch that returns [] or {}, or pushes [], changes a failed scan into a clean result.
+
+  The caller must see the difference between found, clean and could-not-run (SYN-02).
+  If every scan in a health cycle gets a 404, the cycle must not report success with zero findings.
+  That error made dead synthesis look "healthy" for months.
+
+  Return a three-valued outcome (status: 'could_not_run'), throw the error again, or record the failure on a run record.
+  Do not return an empty collection for a failure.
+rule:
+  kind: catch_clause
+  all:
+    - has:
+        any:
+          - pattern: return []
+          - pattern: return {}
+          - pattern: $OBJ.push([])
+        stopBy: end
+    - not:
+        inside:
+          kind: try_statement
+          has:
+            field: body
+            has:
+              any:
+                - pattern: JSON.parse($$$)
+                - pattern: parseYaml($$$)
+              stopBy: end
+note: |
+  A try body that calls JSON.parse() or parseYaml() is exempt. That code reads config that people write by hand. It is not a scan.
+  If the parse throws, the input is malformed, not unreachable.
+  For the caller, "" and "{}" are the same document, so an empty result is the correct answer, not a hidden failure.
+  The rule reads only the try body. A parse inside the catch does not make the catch exempt.
+  Before you trust this rule, make sure that it fails on a known bad site.
+files:
+  - "src/**/*.ts"
+  - "internal/**/*.ts"
+  - "workers/**/*.ts"
+  - "scripts/**/*.ts"
+ignores:
+  - "**/node_modules/**"

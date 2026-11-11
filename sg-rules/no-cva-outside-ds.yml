@@ -1,0 +1,30 @@
+id: no-cva-outside-ds
+language: Tsx
+severity: error
+message: |
+  `cva()` (class-variance-authority) defines component variants as class strings.
+  Put variants in `src/components/ui/` as StyleX style objects. Do not put them at call sites as strings:
+
+    const styles = stylex.create({ primary: { ... }, ghost: { ... } })
+    const variantStyles = { primary: styles.primary, ghost: styles.ghost }
+
+  A `cva()` outside `src/components/ui/` makes a second, competing definition of "primary".
+  That is how the work app got three button systems.
+rule:
+  pattern: cva($$$)
+files:
+  - "internal/**/*.ts"
+  - "workers/internal/**/*.ts"
+  - "src/components/ui/**/*.ts"
+  - "src/lib/**/*.ts"
+  - "internal/**/*.tsx"
+  - "workers/internal/**/*.tsx"
+  - "src/components/ui/**/*.tsx"
+  - "src/lib/**/*.tsx"
+ignores:
+  - "src/components/ui/**"
+  - "**/node_modules/**"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts"
+  - "src/lib/hairline-*"

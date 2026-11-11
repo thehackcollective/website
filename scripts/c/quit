@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+#USAGE: quit — stop the dev servers that ./c up started: ./c quit [site|work]
+
+set -euo pipefail
+
+THC_ROOT="${THC_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
+source "$THC_ROOT/scripts/c/_lib/services.sh"
+
+SERVICES=("$@")
+(( ${#SERVICES[@]} > 0 )) || SERVICES=("${KNOWN_SERVICES[@]}")
+for svc in "${SERVICES[@]}"; do
+  require_known_service "$svc"
+  pid_file="$RUNTIME_DIR/pids/$svc.pid"
+  if [[ ! -f "$pid_file" ]]; then
+    echo "· $svc is not running."
+    continue
+  fi
+  pid="$(cat "$pid_file" 2>/dev/null || true)"
+  if [[ -n "$pid" ]] && kill -0 "$pid" 2>/dev/null; then
+    stop_pid_gracefully "$pid"
+    echo "✓ $svc stopped."
+  else
+    echo "· $svc was not running."
+  fi
+  rm -f "$pid_file"
+done

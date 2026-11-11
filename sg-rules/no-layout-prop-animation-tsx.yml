@@ -1,0 +1,27 @@
+id: no-layout-prop-animation-tsx
+language: Tsx
+severity: error
+message: |
+  A motion animate, initial or exit object animates a layout property (top, left, right, bottom, width or height).
+  Animate only transform and opacity.
+  Measure one time and scale, or let the element reflow without animation.
+rule:
+  kind: pair
+  all:
+    - has:
+        field: key
+        regex: '^(top|left|right|bottom|width|height)$'
+    - inside:
+        kind: jsx_attribute
+        regex: '^(animate|initial|exit)\s*='
+        stopBy: end
+files:
+  - "internal/**/*.tsx"
+  - "workers/internal/**/*.tsx"
+  - "src/components/ui/**/*.tsx"
+  - "src/lib/**/*.tsx"
+ignores:
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts"
+  - "src/lib/hairline-*"

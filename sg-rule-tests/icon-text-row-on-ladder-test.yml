@@ -1,0 +1,11 @@
+id: icon-text-row-on-ladder
+valid:
+  - |
+    <dt><IconLabel icon={Home01Icon} size="xs">{label}</IconLabel></dt>
+  - |
+    <span><Icon icon={Home01Icon} /></span>
+invalid:
+  - |
+    <dt><Icon icon={Home01Icon} size="sm" />{label}</dt>
+  - |
+    <p><Icon icon={Home01Icon} />Done</p>

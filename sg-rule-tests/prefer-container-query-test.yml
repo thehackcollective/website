@@ -1,0 +1,11 @@
+id: prefer-container-query
+valid:
+  - |
+    stylex.create({
+      board: { [container.wide]: { gridTemplateColumns: '1fr 1fr' } },
+    })
+invalid:
+  - |
+    stylex.create({
+      board: { [breakpoint.desktop]: { gridTemplateColumns: '1fr 1fr' } },
+    })

@@ -1,0 +1,164 @@
+:root {
+  --thc-website-brand-50: #f0f7ff;
+  --thc-website-brand-600: #005ff2;
+  --thc-website-brand-700: #006bff;
+  --thc-website-brand-800: #005ff2;
+  --thc-website-brand-900: #002359;
+
+  --thc-website-dia-1: #c679c4;
+  --thc-website-dia-2: #fa3d1d;
+  --thc-website-dia-3: #ffb005;
+  --thc-website-dia-4: #e1e1fe;
+  --thc-website-dia-5: #0358f7;
+
+  --thc-website-gray-50: #fafafa;
+  --thc-website-gray-100: #f4f4f5;
+  --thc-website-gray-200: #e4e4e7;
+  --thc-website-gray-300: #d4d4d8;
+  --thc-website-gray-400: #a1a1aa;
+  --thc-website-gray-500: #71717a;
+  --thc-website-gray-600: #52525b;
+  --thc-website-gray-700: #3f3f46;
+  --thc-website-gray-800: #27272a;
+  --thc-website-gray-900: #18181b;
+  --thc-website-gray-950: #09090b;
+
+  --thc-website-primary: var(--thc-website-brand-700);
+  --thc-website-primary-active: var(--thc-website-brand-600);
+  --thc-website-primary-tint: var(--thc-website-brand-50);
+  --thc-website-primary-deep: var(--thc-website-brand-900);
+  --thc-website-on-primary: #ffffff;
+
+  --thc-website-canvas: #f5f5f5;
+  --thc-website-surface-card: #ffffff;
+  --thc-website-surface-soft: #fafafa;
+  --thc-website-surface-hover: #f0f0f0;
+  --thc-website-surface-nav: rgba(24, 24, 27, 0.06);
+
+  --thc-website-overlay-scrim: rgba(17, 17, 17, 0.72);
+  --thc-website-overlay-ink: #ffffff;
+  --thc-website-overlay-muted: rgba(255, 255, 255, 0.7);
+  --thc-website-overlay-hover: rgba(255, 255, 255, 0.16);
+  --thc-website-overlay-track: rgba(255, 255, 255, 0.24);
+
+  --thc-website-ink: rgba(24, 24, 27, 0.96);
+  --thc-website-body-strong: rgba(24, 24, 27, 0.9);
+  --thc-website-body: rgba(24, 24, 27, 0.82);
+  --thc-website-meta: rgba(24, 24, 27, 0.68);
+  --thc-website-caption-ink: rgba(24, 24, 27, 0.62);
+
+  --thc-website-hairline: #e4e4e7;
+  --thc-website-hairline-strong: #d4d4d8;
+  --thc-website-input-border: #8a8a93;
+
+  --thc-website-positive: #10b981;
+  --thc-website-negative: #dc2626;
+  --thc-website-warning: #f59e0b;
+  --thc-website-neutral-flat: #9ca3af;
+
+  --thc-website-font-display:
+    "Geist", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --thc-website-font-sans:
+    "Geist", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --thc-website-font-mono:
+    "Geist Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  --thc-website-size-display-2xl: 64px;
+  --thc-website-size-display-xl: 44px;
+  --thc-website-size-display-lg: 40px;
+  --thc-website-size-display-md: 32px;
+  --thc-website-size-display-sm: 22px;
+  --thc-website-size-display-xs: 18px;
+  --thc-website-size-body-xl: 24px;
+  --thc-website-size-body-lg: 18px;
+  --thc-website-size-body-md: 16px;
+  --thc-website-size-body-sm: 14px;
+  --thc-website-size-caption: 12px;
+  --thc-website-size-micro: 11px;
+  --thc-website-size-code: 13px;
+
+  --thc-website-leading-display-2xl: 68px;
+  --thc-website-leading-display-xl: 48px;
+  --thc-website-leading-display-lg: 44px;
+  --thc-website-leading-display-md: 40px;
+  --thc-website-leading-display-sm: 28px;
+  --thc-website-leading-display-xs: 24px;
+  --thc-website-leading-body-xl: 34px;
+  --thc-website-leading-body-lg: 28px;
+  --thc-website-leading-body-md: 24px;
+  --thc-website-leading-body-sm: 20px;
+  --thc-website-leading-caption: 16px;
+  --thc-website-leading-micro: 16px;
+  --thc-website-leading-code: 20px;
+
+  --thc-website-tracking-display-2xl: -0.032em;
+  --thc-website-tracking-display-xl: -0.03em;
+  --thc-website-tracking-display-lg: -0.028em;
+  --thc-website-tracking-display-md: -0.025em;
+  --thc-website-tracking-display-sm: -0.02em;
+  --thc-website-tracking-display-xs: -0.015em;
+  --thc-website-tracking-body: 0em;
+  --thc-website-tracking-body-sm: -0.01em;
+  --thc-website-tracking-label: 0.04em;
+  --thc-website-tracking-eyebrow: 0.12em;
+  --thc-website-tracking-allcaps: 0.2em;
+
+  --thc-website-weight-regular: 400;
+  --thc-website-weight-medium: 500;
+  --thc-website-weight-semibold: 600;
+
+  --thc-website-space-xxs: 4px;
+  --thc-website-space-xs: 8px;
+  --thc-website-space-sm: 12px;
+  --thc-website-space-md: 16px;
+  --thc-website-space-lg: 24px;
+  --thc-website-space-xl: 32px;
+  --thc-website-space-2xl: 40px;
+  --thc-website-space-3xl: 48px;
+  --thc-website-space-4xl: 64px;
+  --thc-website-space-5xl: 96px;
+  --thc-website-space-6xl: 128px;
+  --thc-website-space-section: 192px;
+
+  --thc-website-radius-none: 0px;
+  --thc-website-radius-xs: 4px;
+  --thc-website-radius-sm: 6px;
+  --thc-website-radius-md: 8px;
+  --thc-website-radius-lg: 12px;
+  --thc-website-radius-xl: 16px;
+  --thc-website-radius-pill-sm: 64px;
+  --thc-website-radius-pill: 100px;
+  --thc-website-radius-full: 9999px;
+  --thc-website-radius-card: var(--thc-website-radius-md);
+  --thc-website-radius-input: var(--thc-website-radius-sm);
+  --thc-website-radius-action: var(--thc-website-radius-none);
+  --thc-website-radius-pulse: var(--thc-website-radius-full);
+
+  --thc-website-shadow-0: none;
+  --thc-website-shadow-1: 0 0 0 1px #00000014 inset;
+  --thc-website-shadow-2: 0 1px 1px #00000005, 0 2px 2px #0000000a, var(--thc-website-shadow-1);
+  --thc-website-shadow-3:
+    0 2px 2px #0000000a, 0 8px 8px -8px #0000000a, var(--thc-website-shadow-1);
+  --thc-website-shadow-4:
+    0 2px 2px #0000000a, 0 8px 16px -4px #0000000a, var(--thc-website-shadow-1);
+  --thc-website-shadow-5:
+    0 1px 1px #00000005, 0 8px 16px -4px #0000000a, 0 24px 32px -8px #0000000f,
+    var(--thc-website-shadow-1);
+  --thc-website-shadow-float: var(--thc-website-shadow-4);
+  --thc-website-shadow-modal: var(--thc-website-shadow-5);
+
+  --thc-website-ease: cubic-bezier(0.175, 0.885, 0.32, 1.1);
+  --thc-website-ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --thc-website-ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --thc-website-duration-fast: 150ms;
+  --thc-website-duration-medium: 200ms;
+  --thc-website-duration-slow: 300ms;
+
+  --thc-website-container-max: 1200px;
+  --thc-website-container-wide: 1400px;
+  --thc-website-prose-max: 680px;
+  --thc-website-measure-prose: 65ch;
+  --thc-website-side-panel-max: 34rem;
+  --thc-website-focus-ring:
+    0 0 0 2px var(--thc-website-canvas), 0 0 0 4px var(--thc-website-primary);
+}

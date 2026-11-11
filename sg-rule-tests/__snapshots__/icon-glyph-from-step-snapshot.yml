@@ -1,0 +1,64 @@
+id: icon-glyph-from-step
+snapshots:
+  ? |
+    <Badge variant="outline"><Icon icon={Home01Icon} size="sm" />{label}</Badge>
+  : labels:
+    - source: <Icon icon={Home01Icon} size="sm" />
+      style: primary
+      start: 25
+      end: 61
+    - source: Icon
+      style: secondary
+      start: 26
+      end: 30
+    - source: size
+      style: secondary
+      start: 49
+      end: 53
+    - source: size="sm"
+      style: secondary
+      start: 49
+      end: 58
+    - source: Badge
+      style: secondary
+      start: 1
+      end: 6
+    - source: Badge
+      style: secondary
+      start: 1
+      end: 6
+    - source: <Badge variant="outline"><Icon icon={Home01Icon} size="sm" />{label}</Badge>
+      style: secondary
+      start: 0
+      end: 76
+  ? |
+    <Button size="sm"><Icon icon={Add01Icon} size="sm" />Add</Button>
+  : labels:
+    - source: <Icon icon={Add01Icon} size="sm" />
+      style: primary
+      start: 18
+      end: 53
+    - source: Icon
+      style: secondary
+      start: 19
+      end: 23
+    - source: size
+      style: secondary
+      start: 41
+      end: 45
+    - source: size="sm"
+      style: secondary
+      start: 41
+      end: 50
+    - source: Button
+      style: secondary
+      start: 1
+      end: 7
+    - source: Button
+      style: secondary
+      start: 1
+      end: 7
+    - source: <Button size="sm"><Icon icon={Add01Icon} size="sm" />Add</Button>
+      style: secondary
+      start: 0
+      end: 65

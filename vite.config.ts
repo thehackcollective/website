@@ -17,6 +17,7 @@ export default defineConfig(({ mode }) => ({
         rootDir: path.resolve(__dirname),
       },
       aliases: {
+        "@/ui/*": path.resolve(__dirname, "src/components/ui/*"),
         "@/*": path.resolve(__dirname, "src/*"),
       },
       cssInjectionTarget: (fileName: string) =>
@@ -25,7 +26,10 @@ export default defineConfig(({ mode }) => ({
   ],
   clearScreen: false,
   resolve: {
-    alias: [{ find: "@", replacement: path.resolve(__dirname, "./src") }],
+    alias: [
+      { find: "@/ui", replacement: path.resolve(__dirname, "./src/components/ui") },
+      { find: "@", replacement: path.resolve(__dirname, "./src") },
+    ],
   },
   build: {
     target: "es2022",

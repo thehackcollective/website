@@ -1,0 +1,1 @@
+# web-hover-only-on-hover-devices — shrink-only: entries leave, counts fall, nothing joins or grows.

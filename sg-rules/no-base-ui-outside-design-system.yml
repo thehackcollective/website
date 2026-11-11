@@ -1,0 +1,31 @@
+id: no-base-ui-outside-design-system
+language: Tsx
+severity: error
+message: |
+  `@base-ui/react` is imported outside `src/components/ui/`.
+
+  Each Base UI primitive has a wrapper in the design system.
+  The wrapper applies the tokens, the closed prop API and the accessibility defaults one time.
+  Without the wrapper, each call site must do this work again.
+  Import the wrapper from `src/components/ui/`:
+
+    import { Dialog } from '@/ui/dialog'
+rule:
+  all:
+    - kind: string_fragment
+    - regex: '^@base-ui/react'
+    - inside:
+        stopBy: end
+        kind: import_statement
+files:
+  - "internal/**/*.tsx"
+  - "workers/internal/**/*.tsx"
+  - "src/components/ui/**/*.tsx"
+  - "src/lib/**/*.tsx"
+ignores:
+  - "src/components/ui/**"
+  - "**/node_modules/**"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts"
+  - "src/lib/hairline-*"

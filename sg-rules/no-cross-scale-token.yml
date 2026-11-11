@@ -1,0 +1,77 @@
+id: no-cross-scale-token
+language: Tsx
+severity: error
+message: |
+  A design token comes from the wrong scale.
+
+  Each property family reads one token group only:
+
+    fontSize / lineHeight / letterSpacing / fontWeight  ->  text.*
+    padding* / margin* / gap / rowGap / columnGap       ->  space.*
+    border*Radius                                       ->  radius.*, card.radius, input.radius
+
+  `fontSize: space.md` is a real `--thc-` token. It has a correct type and it is not a raw value.
+  The StyleX ESLint plugin `propLimits` cannot find it.
+  That check compares literals, and it cannot resolve an imported `defineConsts` member.
+  Spacing steps and type steps are different scales with the same units.
+  A step from the other scale shows text at a size that DESIGN.md does not define.
+
+  Use the step from the scale of the property (`text.sizeUi`, `space.md`, `radius.md`).
+  If the step does not exist, add it in `src/tokens/`. Do not use a step from a different scale.
+rule:
+  any:
+    - kind: pair
+      all:
+        - has:
+            field: key
+            regex: '^(fontSize|lineHeight|letterSpacing|fontWeight)$'
+        - has:
+            field: value
+            kind: member_expression
+            not:
+              has:
+                field: object
+                regex: '^text$'
+    - kind: pair
+      all:
+        - has:
+            field: key
+            regex: '^(padding|paddingBlock|paddingInline|paddingTop|paddingBottom|paddingLeft|paddingRight|paddingInlineStart|paddingInlineEnd|margin|marginBlock|marginInline|marginTop|marginBottom|marginLeft|marginRight|marginInlineStart|marginInlineEnd|gap|rowGap|columnGap)$'
+        - has:
+            field: value
+            kind: member_expression
+            not:
+              has:
+                field: object
+                regex: '^space$'
+    - kind: pair
+      all:
+        - has:
+            field: key
+            regex: '^(borderRadius|borderTopLeftRadius|borderTopRightRadius|borderBottomLeftRadius|borderBottomRightRadius|borderStartStartRadius|borderStartEndRadius|borderEndStartRadius|borderEndEndRadius)$'
+        - has:
+            field: value
+            kind: member_expression
+            not:
+              any:
+                - has:
+                    field: object
+                    regex: '^radius$'
+                - regex: '^(card|input)\.radius$'
+files:
+  - "src/components/ui/**/*.tsx"
+  - "src/components/ui/**/*.ts"
+  - "internal/**/*.stylex.tsx"
+  - "workers/internal/**/*.stylex.tsx"
+  - "src/components/ui/**/*.stylex.tsx"
+  - "src/lib/**/*.stylex.tsx"
+  - "internal/**/*.stylex.ts"
+  - "workers/internal/**/*.stylex.ts"
+  - "src/components/ui/**/*.stylex.ts"
+  - "src/lib/**/*.stylex.ts"
+ignores:
+  - "**/node_modules/**"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts"
+  - "src/lib/hairline-*"

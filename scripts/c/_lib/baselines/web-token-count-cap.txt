@@ -1,0 +1,4 @@
+# web-token-count-cap — shrink-only: entries leave, counts fall, nothing joins or grows.
+src/tokens/component-tokens.css 31
+src/tokens/design-tokens.css 36
+src/tokens/semantic-tokens.css 65

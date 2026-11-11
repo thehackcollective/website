@@ -1,0 +1,11 @@
+id: no-raw-hugeicons-in-app
+valid:
+  - |
+    import { Icon } from '@/ui/icon'
+  - |
+    import type { IconSvgElement } from '@hugeicons/react'
+invalid:
+  - |
+    import { HugeiconsIcon } from '@hugeicons/react'
+  - |
+    import { HugeiconsIcon, type IconSvgElement } from '@hugeicons/react'

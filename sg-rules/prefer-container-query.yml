@@ -1,0 +1,27 @@
+id: prefer-container-query
+language: Tsx
+severity: error
+message: |
+  A component in the app column must respond to its container. Use `container.*`, not `breakpoint.*`.
+  See DESIGN.md, Page kinds.
+
+    [breakpoint.desktop]: styles -> [container.wide]: styles
+rule:
+  kind: pair
+  all:
+    - has:
+        field: key
+        regex: '.*breakpoint\.(mobile|tablet|desktop|wide).*'
+    - inside:
+        stopBy: end
+        pattern: stylex.create($$$)
+files:
+  - "internal/work/features/**/*-board.stylex.ts"
+  - "internal/work/features/**/*-table.stylex.ts"
+  - "internal/work/features/**/*-list.stylex.ts"
+  - "src/components/ui/*table*"
+ignores:
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts"
+  - "src/lib/hairline-*"

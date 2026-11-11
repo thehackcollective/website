@@ -1,0 +1,38 @@
+id: nested-radius-from-nest
+language: Tsx
+rule:
+  pattern:
+    context: "({ borderRadius: radius.$R })"
+    selector: pair
+  inside:
+    kind: pair
+    stopBy: end
+    has:
+      field: key
+      regex: "^(item|option|row|rowContent)$"
+    inside:
+      kind: object
+      has:
+        kind: pair
+        all:
+          - has:
+              field: key
+              regex: "^(track|popup|list|panel|surface)$"
+          - has:
+              field: value
+              all:
+                - has: { kind: pair, regex: "^borderRadius: radius\\.(2xs|xs|sm|md|lg|xl|step)$" }
+                - has: { kind: pair, regex: "^padding(Inline|Block)?: " }
+  not:
+    has: { field: value, regex: "^radius\\.(none|full|nest\\w+)$" }
+message: "This item sits in a padded rounded container in the same file. Its radius is the container radius minus the padding. Use a radius.nest* token (nestStep2xs, nestMdXxs, nestLgXs), or add the pair to token-consts.stylex.ts."
+severity: error
+note: "Decision: docs/decisions/2026-11-11-work-neutral-theme.md, clause Nested radius. A child with the radius of its parent shows a wider gap at the corner than at the sides."
+files:
+  - "src/components/ui/**"
+  - "internal/work/shell/**"
+ignores:
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts"
+  - "src/lib/hairline-*"

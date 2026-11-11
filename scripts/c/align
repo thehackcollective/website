@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+#USAGE: align — measure app alignment, spacing and rhythm: ./c align [path…] [--phone] [--out DIR | --round DIR]
+set -euo pipefail
+
+THC_ROOT="${THC_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
+export THC_ROOT
+
+usage() {
+  cat <<'HELP'
+Usage: ./c align [path…] [--origin URL] [--width N] [--phone] [--scale N] [--out DIR | --round DIR]
+                 [--near-min PX] [--near-max PX] [--icon-max PX] [--hit-target PX]
+
+  Start the work app with ./c up work first. In dev with no Clerk keys the app opens signed in, so align does not sign in.
+  The command opens each path in Chrome. It measures icons, images, controls and text runs.
+  With no path, it measures every sidebar route declared in internal/work/features/*/entrypoint.ts:
+  the nav `to`, or the feature's first route path when the nav has no `to`.
+
+  Checks:
+    row         nearby boxes in one row have different top, bottom and centre positions. Mixed-size text uses its baseline.
+    column      nearby boxes in one column have different left, right and centre positions.
+    icon-text   the centre of an icon is more than 1px from the cap-height centre of the text next to it.
+    fractional  the left or top of a box is not on a whole device pixel.
+    hit-target  the area that clicks an interactive element is smaller than 44px by 44px around its centre.
+                It is also a finding when a point in that square clicks a different interactive element.
+                A pseudo target must not cover a neighbour's visible box.
+    spacing     sibling gaps, centred padding and gaps near a spacing token.
+    rhythm      repeated row insets, icon-label gaps, media insets and gaps between text lines.
+    shared-edge leading content across row roles in one sidebar or card. Trailing items share a right edge.
+                Shared-edge measurements are part of rhythm. Each group uses its most frequent value as the expected value.
+
+  --origin    the web origin. The default is http://localhost:5281 (./c up work).
+  --width     the viewport width. The default is 1440. --phone also runs 390.
+  --scale     the device pixel ratio. The default is 2.
+  --out       the output folder. The default is .c-runtime/logs/align.
+  --round     write the next round-NN folder inside DIR. Keep all earlier rounds.
+
+  Each run writes report.json, viewer.html and clean, skeleton and guide screenshots.
+  The viewer hides noise by default. It has check filters, rulers, selection and a rhythm overlay.
+  The rhythm overlay shows every measured value. Blue means matching. Red means different.
+  Round runs also write diff.json with stable IDs, fixed findings, new findings and changed values.
+  The viewer links the rounds and compares the previous screenshot with the current screenshot.
+  Align also writes rhythm-<page>-<width>.png and rhythm-<page>-<width>-sidebar.png.
+
+  Commands from the repo root:
+    ./c align /audits --round ~/research/ui-loop/audits
+    bun scripts/align-images.ts ~/research/ui-loop/audits/round-01
+    bun scripts/align-compare.ts ~/research/ui-loop/audits
+    bun scripts/align-reel.ts ~/research/ui-loop/audits
+
+  The images command rebuilds the PNGs from an existing viewer.
+  The compare command writes before-after.html from the first and last round. Send this file as the main proof.
+  Keep false-positive and intended findings in audit.json. The compare view includes this audit and the git diff stat.
+  The reel command needs ffmpeg. It writes reel.html and reel.mp4 from the saved rounds.
+  Each page and width has up to eight scroll steps. A phone run uses a touch screen.
+  A path that shows the not-found page stops the run.
+  Exit codes: 0 means no real findings, 1 means real findings remain, and 2 means a usage error.
+  Align uses ALIGN_CDP_URL when set, or agent-browser's Chrome when it is running.
+  Otherwise, it launches the installed Google Chrome through playwright-core.
+HELP
+}
+
+for arg in "$@"; do
+  case "$arg" in
+    -h|--help) usage; exit 0 ;;
+  esac
+done
+
+if [[ -z "${ALIGN_CDP_URL:-}" ]] && command -v agent-browser >/dev/null 2>&1; then
+  cdp_url=$(agent-browser get cdp-url 2>/dev/null || true)
+  case "$cdp_url" in
+    ws://*|http*) export ALIGN_CDP_URL="$cdp_url" ;;
+  esac
+fi
+
+cd "$THC_ROOT"
+exec bun scripts/align-check.ts "$@"

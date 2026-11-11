@@ -1,0 +1,25 @@
+id: no-unprefixed-design-system-token-vars-tsx
+language: Tsx
+severity: error
+message: |
+  Design-system component source has a CSS custom property without a prefix.
+
+  The `--thc-` prefix stops name collisions between the design-system tokens and the host app.
+  An unprefixed `--primary` or `--radius` hides the host variable, or the host variable hides it.
+  Stylesheet order decides which one wins. This bug shows only in the app, never in the source files.
+
+  Design-system tokens are `--thc-*`. The source cannot use an unprefixed variable.
+rule:
+  all:
+    - kind: string_fragment
+    - regex: '--[a-zA-Z][\w-]*'
+    - not:
+        regex: 'thc-'
+files:
+  - "src/components/ui/**/*.tsx"
+ignores:
+  - "**/node_modules/**"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts"
+  - "src/lib/hairline-*"

@@ -1,0 +1,34 @@
+id: no-motion-duration-literal-tsx
+language: Tsx
+severity: error
+message: |
+  A motion/react `transition` prop has a hand-written `duration`.
+  Use a tier from '@/lib/motion' (spring.fast/moderate/slow, exitTween.*).
+rule:
+  kind: pair
+  all:
+    - has:
+        field: key
+        regex: '^duration$'
+    - has:
+        field: value
+        all:
+          - kind: number
+          - not:
+              regex: '^0(\.0*)?$'
+    - inside:
+        kind: jsx_attribute
+        regex: '^transition\s*='
+        stopBy: end
+files:
+  - "internal/**/*.tsx"
+  - "workers/internal/**/*.tsx"
+  - "src/components/ui/**/*.tsx"
+  - "src/lib/**/*.tsx"
+ignores:
+  - "src/lib/motion.ts"
+  - "src/components/ui/text-shimmer-wave.tsx"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts"
+  - "src/lib/hairline-*"

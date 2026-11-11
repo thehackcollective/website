@@ -1,0 +1,7 @@
+id: no-nested-ternary
+language: Tsx
+rule:
+  pattern: "$A ? $B : $C ? $D : $E"
+message: "Do not nest ternaries. They are hard to read and cause errors. Move the value into a variable or a helper function, or use if/else."
+severity: error
+note: "In JSX, calculate the value before the return statement. Nested ternaries in render logic are very difficult to maintain."

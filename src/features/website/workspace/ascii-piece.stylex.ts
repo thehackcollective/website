@@ -1,6 +1,6 @@
 import * as stylex from '@stylexjs/stylex'
 
-import { color, text } from '@/tokens/token-consts.stylex'
+import { color, text } from '@/tokens/website-token-consts.stylex'
 
 export const asciiPieceStyles = stylex.create({
   frame: {

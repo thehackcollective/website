@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#USAGE: hooks — point git at scripts/git-hooks (pre-commit and pre-push)
+
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+cd "$ROOT"
+chmod +x scripts/git-hooks/* scripts/c/* 2>/dev/null || true
+git config core.hooksPath scripts/git-hooks
+printf 'pre-commit and pre-push installed: core.hooksPath=scripts/git-hooks\n'

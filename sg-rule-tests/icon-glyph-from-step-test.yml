@@ -1,0 +1,11 @@
+id: icon-glyph-from-step
+valid:
+  - |
+    <Button size="sm"><Icon icon={Add01Icon} />Add</Button>
+  - |
+    <EmptyState><Icon icon={Add01Icon} size="lg" /></EmptyState>
+invalid:
+  - |
+    <Button size="sm"><Icon icon={Add01Icon} size="sm" />Add</Button>
+  - |
+    <Badge variant="outline"><Icon icon={Home01Icon} size="sm" />{label}</Badge>

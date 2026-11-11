@@ -1,0 +1,31 @@
+id: no-hard-width-cap
+valid:
+  - |
+    stylex.create({
+      page: { maxWidth: '68ch' },
+    })
+  - |
+    stylex.create({
+      bubble: { maxWidth: '85%' },
+    })
+  - |
+    stylex.create({
+      popover: { maxWidth: `min(${layout.popoverWidth}, 100%)` },
+    })
+  - |
+    stylex.create({
+      icon: { width: '16px' },
+    })
+invalid:
+  - |
+    stylex.create({
+      page: { maxWidth: '1120px' },
+    })
+  - |
+    stylex.create({
+      page: { maxWidth: layout.pageFrame },
+    })
+  - |
+    stylex.create({
+      page: { maxWidth: { default: '1120px', [container.wide]: '64rem' } },
+    })
