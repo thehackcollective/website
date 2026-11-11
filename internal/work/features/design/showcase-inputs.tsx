@@ -10,7 +10,7 @@ import { FilterMiss } from '@/ui/empty-state'
 import { Field } from '@/ui/field'
 import { Icon } from '@/ui/icon'
 import { icons } from '@/ui/icons'
-import { FileInput } from '@/ui/input'
+import { Input } from '@/ui/input'
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/ui/input-group'
 import { Menu, MenuCheckboxItem, MenuRadioGroup, MenuRadioItem } from '@/ui/menu'
 import { Section } from '@/ui/page'
@@ -42,7 +42,7 @@ function Composed() {
         </InputGroup>
       </Field>
       <Field label="Team logo" htmlFor="showcase-team-logo">
-        <FileInput id="showcase-team-logo" accept="image/*" />
+        <Input id="showcase-team-logo" type="file" accept="image/*" />
       </Field>
       <Select items={roles} value={role} onValueChange={setRole}>
         <SelectTrigger aria-label="Role">

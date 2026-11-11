@@ -19,7 +19,7 @@ import { assignFindingIds, diffRounds, nextRound, saveDiff } from './align-round
 import { measureSpacing } from './align-spacing'
 import { writeViewer } from './align-viewer'
 
-const DEFAULT_ORIGIN = 'http://localhost:5174'
+const DEFAULT_ORIGIN = 'http://localhost:5281'
 const DESKTOP_WIDTH = 1440
 const PHONE_WIDTH = 390
 const VIEW_HEIGHT = 900
@@ -72,9 +72,10 @@ const spacingSource = readFileSync(join(repoRoot, 'src/tokens/token-consts.style
 const spacingBlock =
   spacingSource.split('export const space =')[1]?.split('})')[0] ??
   stop('Spacing tokens are not defined.')
-const spacingTokens = [...spacingBlock.matchAll(/var\((--webapp-space-[a-z0-9-]+)\)/g)]
+const spacingTokens = [...spacingBlock.matchAll(/var\((--thc-space-[a-z0-9-]+)\)/g)]
   .map((match) => match[1])
   .filter((name): name is string => name !== undefined)
+if (spacingTokens.length === 0) stop('Spacing tokens are not defined.')
 const scale = numberOption(values.scale, 2, 'scale')
 const widths = [numberOption(values.width, DESKTOP_WIDTH, 'width')]
 if (values.phone) widths.push(PHONE_WIDTH)

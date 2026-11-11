@@ -2,7 +2,7 @@ import { Input as InputPrimitive } from '@base-ui/react/input'
 import * as stylex from '@stylexjs/stylex'
 import type * as React from 'react'
 
-import { color, cursor, layout, space, text } from '@/tokens/token-consts.stylex'
+import { color, layout, space, text } from '@/tokens/token-consts.stylex'
 import { fieldStyles } from '@/ui/field.stylex'
 import { primitiveStyles } from '@/ui/primitive-styles.stylex'
 
@@ -57,15 +57,6 @@ const styles = stylex.create({
       paddingInlineEnd: space.xs,
       paddingInlineStart: 0,
     },
-  },
-  cover: {
-    cursor: cursor.pointer,
-    height: '100%',
-    insetBlockStart: 0,
-    insetInlineStart: 0,
-    opacity: 0,
-    position: 'absolute',
-    width: '100%',
   },
 })
 
@@ -125,22 +116,6 @@ export function Textarea({ ...props }: TextareaProps) {
         props.readOnly === true && fieldStyles.readOnly,
         invalid && fieldStyles.invalid,
       )}
-    />
-  )
-}
-
-export type FileInputProps = Omit<React.ComponentProps<'input'>, 'className' | 'style' | 'type'> & {
-  variant?: 'cover' | 'hidden'
-}
-
-export function FileInput({ variant = 'cover', ...props }: FileInputProps) {
-  return (
-    <input
-      data-slot="file-input"
-      type="file"
-      hidden={variant === 'hidden'}
-      {...props}
-      {...stylex.props(variant === 'cover' && styles.cover)}
     />
   )
 }

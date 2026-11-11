@@ -71,8 +71,7 @@ const subscribeMinute = (tick: () => void) => {
 }
 const currentMinute = () => Math.floor(Date.now() / 60_000)
 
-const localNow = (minute: number, timeZone: string | undefined) => {
-  const at = minute * 60_000
+const toWallClock = (at: number, timeZone: string | undefined) => {
   if (timeZone !== undefined) return wallClockMs(at, timeZone)
   return at - new Date(at).getTimezoneOffset() * 60_000
 }
@@ -393,10 +392,18 @@ export function CalendarGrid({
   timeZone?: string | undefined
 }) {
   const compact = useSyncExternalStore(subscribeCompact, readCompact, serverCompact)
-  const now = localNow(
-    useSyncExternalStore(subscribeMinute, currentMinute, currentMinute),
+  const now = toWallClock(
+    useSyncExternalStore(subscribeMinute, currentMinute, currentMinute) * 60_000,
     timeZone,
   )
+  const wallEvents = events.map((event) => ({
+    ...event,
+    start: toWallClock(event.start, timeZone),
+    end: toWallClock(event.end, timeZone),
+  }))
+  const originals = new Map(events.map((event) => [event.id, event]))
+  const wallDetails: Details = (event, close) =>
+    details(originals.get(event.id) ?? event, close)
   const today = dayNumber(now)
   const [picked, setPicked] = useState<CalendarView | null>(null)
   const [anchor, setAnchor] = useState(today)
@@ -405,7 +412,7 @@ export function CalendarGrid({
   const days = visibleDays(view, anchor, compact)
   const from = dayStartMs(days[0] ?? anchor)
   const to = dayStartMs((days[days.length - 1] ?? anchor) + 1)
-  const shown = events.filter((event) => event.start < to && event.end > from)
+  const shown = wallEvents.filter((event) => event.start < to && event.end > from)
 
   const goTo = (day: number, next: CalendarView = view) => {
     setOpenId(null)
@@ -486,12 +493,12 @@ export function CalendarGrid({
           view={view}
           days={days}
           anchor={anchor}
-          events={view === 'month' ? events : shown}
+          events={view === 'month' ? wallEvents : shown}
           now={now}
           openId={openId}
           onOpen={setOpenId}
           onPick={(day) => goTo(day, 'day')}
-          details={details}
+          details={wallDetails}
         />
       )}
     </section>
