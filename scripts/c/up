@@ -49,6 +49,10 @@ start_command() {
   case "$1" in
     site) echo "cd '$THC_ROOT' && exec bunx vite --port $SITE_PORT --strictPort" ;;
     work)
+      if [[ ! -d "$THC_ROOT/workers/internal/migrations" ]]; then
+        echo "cd '$THC_ROOT/internal' && exec bunx vite --port $WORK_PORT --strictPort"
+        return 0
+      fi
       local db
       db="$(sed -nE "s/.*id: '([0-9a-f-]{36})'.*/\\1/p" "$THC_ROOT/internal/cloudflare.config.ts" | head -1)"
       [[ -n "$db" ]] || { echo "✗ internal/cloudflare.config.ts has no D1 id." >&2; return 1; }
