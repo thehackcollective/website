@@ -514,7 +514,7 @@ rules:
     bad: ['@media (prefers-color-scheme: dark) {', '[data-theme=''dark''] {', 'color-scheme: dark;', 'colorScheme: ''dark'',']
     good: [<meta name="color-scheme" content="light" />, 'background: var(--thc-color-background-canvas);']
   message: >
-    The work app has one light theme. Do not add dark mode or a theme switch. The neutral tokens are tuned and checked for contrast on light surfaces only. Decision: docs/decisions/2026-11-11-work-neutral-theme.md.
+    The App has one light theme. Do not add dark mode or a theme switch. The neutral tokens are tuned and checked for contrast on light surfaces only. Decision: docs/decisions/2026-11-11-work-neutral-theme.md.
   exempt: ['src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
 - id: web-token-used
   catalog: 62
@@ -787,7 +787,7 @@ rules:
     bad: ['fontFamily: ''Geist''']
     good: ['fontFamily: text.fontSans']
   message: >
-    Do not write a font name. The font comes only from the text.fontSans token (src/tokens/). All Work pages use Geist (docs/decisions/2026-11-11-work-type-ladder.md).
+    Do not write a font name. The font comes only from the text.fontSans token (src/tokens/). All App pages use Geist (docs/decisions/2026-11-11-work-type-ladder.md).
 - id: web-no-shadcn-theme-vars
   catalog: 62
   check: regex
@@ -813,7 +813,7 @@ rules:
     bad: ['fontWeight: 600', fontWeight="700", 'font-weight: 700;']
     good: ['fontWeight: text.weightRegular', 'fontWeight={text.weightRegular}', 'font-weight: var(--thc-weight-regular);']
   message: >
-    Use the weight token: text.weightRegular in StyleX and var(--thc-weight-regular) in CSS. Work text has one weight, which each member picks. Hierarchy comes from size. See docs/decisions/2026-11-11-work-font-weight-preference.md.
+    Use the weight token: text.weightRegular in StyleX and var(--thc-weight-regular) in CSS. App text has one weight, which each member picks. Hierarchy comes from size. See docs/decisions/2026-11-11-work-font-weight-preference.md.
 - id: migration-numbers
   catalog: 63
   check: migration-numbers

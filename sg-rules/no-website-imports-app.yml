@@ -2,7 +2,7 @@ id: no-website-imports-app
 language: Tsx
 severity: error
 message: |
-  A file in `website/` imports an `app/` module or the work app (`@internal/`).
+  A file in `website/` imports an `app/` module or the App (`@internal/`).
 
   The public website and the authenticated app are different surfaces with different owners.
   The website must not depend on app-domain code.

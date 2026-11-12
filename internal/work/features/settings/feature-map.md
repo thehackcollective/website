@@ -1,6 +1,6 @@
 # Settings
 
-Settings holds the per-member preferences of the work app at `/settings`: the text weight and the click sounds.
+Settings holds the per-member preferences of the App at `/settings`: the text weight and the click sounds.
 
 ## Sub-features
 

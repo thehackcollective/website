@@ -14,28 +14,28 @@ The repo has two surfaces and two token tiers (`docs/decisions/2026-11-11-two-to
 | Code | Imports | Variables |
 | --- | --- | --- |
 | The landing (`src/features/website/`, `src/app/`) and the public-only kit files | `@/tokens/website-token-consts.stylex` | `--thc-website-*` from `src/tokens/website-tokens.css` |
-| Work (`internal/`, `workers/internal/`) and the shared kit (`src/components/ui/`, `src/lib/`) | `@/tokens/token-consts.stylex` | `--thc-*` from `src/tokens/design-tokens.css`, `semantic-tokens.css` and `component-tokens.css` |
+| App (`internal/`, `workers/internal/`) and the shared kit (`src/components/ui/`, `src/lib/`) | `@/tokens/token-consts.stylex` | `--thc-*` from `src/tokens/design-tokens.css`, `semantic-tokens.css` and `component-tokens.css` |
 
 The public-only kit files are `count-up`, `dia-text`, `reveal` and `stagger-reveal` in `src/components/ui/`, and `src/lib/hairline-*`. Do not mix the tiers in one file.
 
 ## Conventions
 
 - Use longhand properties, or a single-value shorthand, over a multi-value shorthand. Use `null` to unset a property.
-- Do not write a colour literal outside `src/tokens/` (`no-hardcoded-colors`, `web-color-literal-in-token-source`). In Work and the kit, a literal size, radius, duration or shadow also fails (`no-arbitrary-stylex-value`, `web-size-literal-is-token`, `web-size-number-is-token`, `web-motion-is-token`, `web-ui-shadow-is-token`). Unitless `0` and percentages are permitted. When no token fits, add one in its tier file and its accessor in the consts module, in the change that first reads it (`web-token-used`).
+- Do not write a colour literal outside `src/tokens/` (`no-hardcoded-colors`, `web-color-literal-in-token-source`). In App and the kit, a literal size, radius, duration or shadow also fails (`no-arbitrary-stylex-value`, `web-size-literal-is-token`, `web-size-number-is-token`, `web-motion-is-token`, `web-ui-shadow-is-token`). Unitless `0` and percentages are permitted. When no token fits, add one in its tier file and its accessor in the consts module, in the change that first reads it (`web-token-used`).
 - Take each scale property from its own token family:
-  - `fontSize`, `lineHeight` and `letterSpacing` from `text.*`. `fontWeight` from `text.weightRegular` in Work.
+  - `fontSize`, `lineHeight` and `letterSpacing` from `text.*`. `fontWeight` from `text.weightRegular` in App.
   - `padding*`, `margin*`, `gap`, `rowGap` and `columnGap` from `space.*`.
   - `border*Radius` from `radius.*`: `radius.step` on a control, `radius.nest*` inside a padded container.
   - Durations and easings from `motion.*`. Shadows from `shadow.*`. Box, icon and border sizes from `layout.*`.
 
-  A token from the wrong family is still well-typed, so the compiler cannot catch it. In Work and the kit, `no-cross-scale-token` catches it.
+  A token from the wrong family is still well-typed, so the compiler cannot catch it. In App and the kit, `no-cross-scale-token` catches it.
 - Space between siblings comes from `gap`, `rowGap` or `columnGap` on a flex or grid parent, never from a margin on a child (`web-sibling-space-is-gap`). When siblings need different spaces, wrap a sub-group in an element with its own gap. Keep a margin only for `'auto'` alignment.
-- `stylex.defineConsts()` and `stylex.defineVars()` live only in a `.stylex.ts` file with only named exports. Work and kit consts live only in `src/tokens/token-consts.stylex.ts` (`stylex-consts-single-module`). The landing consts live only in `src/tokens/website-token-consts.stylex.ts`. The reason:
+- `stylex.defineConsts()` and `stylex.defineVars()` live only in a `.stylex.ts` file with only named exports. App and kit consts live only in `src/tokens/token-consts.stylex.ts` (`stylex-consts-single-module`). The landing consts live only in `src/tokens/website-token-consts.stylex.ts`. The reason:
   - StyleX resolves consts to literals at compile time.
   - So the dev server must transform the declaring module before it serves `virtual:stylex.css`.
   - A new declaring module races that order. The page then fails with a 500 and an unresolved `var(--hash)` in the generated CSS.
 - Do not use `vh`. Use `dvh` (`no-vh-units`).
-- Write conditions as values: `{ default: ..., '@media (min-width: ...)': ... }`. In Work, take the media query from `breakpoint.*`.
+- Write conditions as values: `{ default: ..., '@media (min-width: ...)': ... }`. In App, take the media query from `breakpoint.*`.
 - Prefer JS state changes over `:first-child` and `:nth-child`. Prefer real HTML elements over `::before` and `::after`.
 
 ## Traps (verified against @stylexjs/babel-plugin@0.19.0)
@@ -88,7 +88,7 @@ const styles = stylex.create({
 })
 ```
 
-In Work, the palette is private to `design-tokens.css`. Code reads the semantic `color.*` roles and the component `button.*`, `input.*` and `card.*` tokens.
+In App, the palette is private to `design-tokens.css`. Code reads the semantic `color.*` roles and the component `button.*`, `input.*` and `card.*` tokens.
 
 ### 5. `animation` shorthand with `keyframes()` objects
 

@@ -20,7 +20,7 @@ Usage: ./c up                     start site and work
 
   ./c up runs under op run --environment with the 1Password dev Environment
   (scripts/c/_lib/op-environments.sh). Secrets live in process.env only: no .env or .dev.vars file.
-  The Environment holds the Clerk dev keys, so the work app asks for a sign-in to the
+  The Environment holds the Clerk dev keys, so the App asks for a sign-in to the
   invite-only Clerk dev instance. With dev-member, it opens signed in as the dev member.
   Logs and pids go to .c-runtime/. ./c status shows the servers. ./c quit stops them.
 HELP
@@ -101,7 +101,7 @@ start_service() {
 
 if [[ -n "$MOCK_DATA" ]]; then
   if [[ ! -f "$THC_ROOT/scripts/mock-data.ts" ]]; then
-    echo "✗ scripts/mock-data.ts is not there. The work app has no mock data yet." >&2
+    echo "✗ scripts/mock-data.ts is not there. The App has no mock data yet." >&2
     exit 1
   fi
   bun "$THC_ROOT/scripts/mock-data.ts" "$MOCK_DATA"

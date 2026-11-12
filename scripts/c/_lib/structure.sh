@@ -150,17 +150,17 @@ if [[ -d "$WORK/features" ]]; then
       continue
     fi
     for required in $WORK_FEATURE_REQUIRED; do
-      [[ -f "$entry/$required" ]] || fail "internal/work/features/$name/ does not have $required. A work feature has entrypoint.ts, index.ts (its one public edge) and feature-map.md, and flat files."
+      [[ -f "$entry/$required" ]] || fail "internal/work/features/$name/ does not have $required. An App feature has entrypoint.ts, index.ts (its one public edge) and feature-map.md, and flat files."
     done
     for sub in "$entry"/*; do
-      [[ -d "$sub" ]] && fail "internal/work/features/$name/ contains the directory '$(basename "$sub")'. A work feature is flat."
+      [[ -d "$sub" ]] && fail "internal/work/features/$name/ contains the directory '$(basename "$sub")'. An App feature is flat."
     done
     while IFS= read -r hit; do
       fail "${hit} imports its own index '@internal/work/features/$name'. Inside a feature, import the file by its full path."
     done < <(grep -rlE "from[[:space:]]+['\"]@internal/work/features/$name['\"]" "$entry" 2>/dev/null | sed "s#^$THC_ROOT/##" || true)
   done
 elif [[ -d "$THC_ROOT/internal" ]]; then
-  fail "internal/ exists, but internal/work/features/ does not. The work app keeps each feature in internal/work/features/<name>/."
+  fail "internal/ exists, but internal/work/features/ does not. The App keeps each feature in internal/work/features/<name>/."
 fi
 
 python3 "$THC_ROOT/scripts/c/_lib/scanner.py" "$THC_ROOT" ${SCANNER_FLAGS[@]+"${SCANNER_FLAGS[@]}"} || FAIL=1

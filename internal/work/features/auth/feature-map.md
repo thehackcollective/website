@@ -1,6 +1,6 @@
 # Auth
 
-Auth signs a member in to the work app. It is invite-only: Clerk holds the members, and only an invited email can finish sign-up. Every other part of the app reads the session through `@internal/work/features/auth`.
+Auth signs a member in to the App. It is invite-only: Clerk holds the members, and only an invited email can finish sign-up. Every other part of the app reads the session through `@internal/work/features/auth`.
 
 ## Sub-features
 

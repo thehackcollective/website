@@ -23,8 +23,7 @@ function ShellFrame() {
   const { pathname } = useLocation()
   const phone = variant === 'bar'
   const pageLabel = pageLabelAt(pathname)
-  const title =
-    pageLabel === null ? 'The Hack Collective Work' : `${pageLabel} · The Hack Collective Work`
+  const title = pageLabel === null ? 'App' : `${pageLabel} · App`
   return (
     <div
       data-slot="property-shell"

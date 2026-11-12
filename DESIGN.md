@@ -1,6 +1,6 @@
 ---
 name: hack-collective-design
-description: Design system for The Hack Collective. The landing spec (hackcollective.uk) behind the product-design skill (.agents/skills/product-design), modelled on vercel.com/design.md, plus a pointer to the Work foundations (app.hackcollective.uk). Names tokens and reasoning; landing values live in src/tokens/website-tokens.css.
+description: Design system for The Hack Collective. The landing spec (hackcollective.uk) behind the product-design skill (.agents/skills/product-design), modelled on vercel.com/design.md, plus a pointer to the App foundations (app.hackcollective.uk). Names tokens and reasoning; landing values live in src/tokens/website-tokens.css.
 ---
 
 # Design like The Hack Collective
@@ -8,9 +8,9 @@ description: Design system for The Hack Collective. The landing spec (hackcollec
 The repo has two surfaces with two token tiers (`docs/decisions/2026-11-11-two-token-tiers.md`).
 
 - The landing page, hackcollective.uk, in `src/features/website/`. This file is its spec. It reads `--thc-website-*` variables from `src/tokens/website-tokens.css` through `src/tokens/website-token-consts.stylex.ts`.
-- Work, app.hackcollective.uk, in `internal/` and `workers/internal/`. It reads `--thc-*` variables from cf0's three tiers through `src/tokens/token-consts.stylex.ts`. Its spec is the Work section at the end of this file.
+- App, app.hackcollective.uk, in `internal/` and `workers/internal/`. It reads `--thc-*` variables from cf0's three tiers through `src/tokens/token-consts.stylex.ts`. Its spec is the App section at the end of this file.
 
-The sections up to Work are the landing spec.
+The sections before `## App` are the landing spec.
 
 Act as a restrained design engineer. The site is a community surface, not a startup landing page: precise, calm, direct, technically literate. Build confidence through clarity and proof (members, calendar, recognition), never through hype, decoration or novelty.
 
@@ -104,15 +104,15 @@ Every paragraph is one sentence. Plain words a first-year can repeat; keep exact
 5. **Restraint:** can any border, surface, icon, label or section be removed without losing meaning? Remove it.
 6. **Gates:** `./c check` is green.
 
-## Work (app.hackcollective.uk)
+## App (app.hackcollective.uk)
 
-Work does not use this landing spec. It takes cf0.ai's design foundations whole, with THC blue as the one accent and Geist as the type.
+App does not use this landing spec. It takes cf0.ai's design foundations whole, with THC blue as the one accent and Geist as the type.
 
-- The index of the rules, with cf0's rule numbers, is `docs/decisions/2026-11-11-work-design-foundations.md`. Read it before a Work change.
+- The index of the rules, with cf0's rule numbers, is `docs/decisions/2026-11-11-work-design-foundations.md`. Read it before an App change.
 - The detail records hold the values and the reasons: `docs/decisions/2026-11-11-work-type-ladder.md`, `docs/decisions/2026-11-11-work-neutral-theme.md`, `docs/decisions/2026-11-11-work-control-ladder.md`, `docs/decisions/2026-11-11-work-shell.md` and `docs/decisions/2026-11-11-work-font-weight-preference.md`.
-- Values live only in `src/tokens/design-tokens.css`, `src/tokens/semantic-tokens.css` and `src/tokens/component-tokens.css`. Code reads them through `src/tokens/token-consts.stylex.ts`. This file names no Work value.
-- The shared kit in `src/components/ui/` and `src/lib/` reads the Work tier. The public-only kit files (`count-up`, `dia-text`, `reveal`, `stagger-reveal`, `hairline-*`) read the landing tier.
+- Values live only in `src/tokens/design-tokens.css`, `src/tokens/semantic-tokens.css` and `src/tokens/component-tokens.css`. Code reads them through `src/tokens/token-consts.stylex.ts`. This file names no App value.
+- The shared kit in `src/components/ui/` and `src/lib/` reads the App tier. The public-only kit files (`count-up`, `dia-text`, `reveal`, `stagger-reveal`, `hairline-*`) read the landing tier.
 
 ### Surfaces and elevation
 
-Work surfaces are opaque: `color.backgroundSurface` or `color.backgroundCanvas`, with a `color.borderDefault` hairline. Only kit components take depth, from the `shadow.*` tokens. A feature writes no shadow, no glass and no blur. A primary action is a `Button` with `variant="primary"` (`docs/decisions/2026-11-11-work-neutral-theme.md`).
+App surfaces are opaque: `color.backgroundSurface` or `color.backgroundCanvas`, with a `color.borderDefault` hairline. Only kit components take depth, from the `shadow.*` tokens. A feature writes no shadow, no glass and no blur. A primary action is a `Button` with `variant="primary"` (`docs/decisions/2026-11-11-work-neutral-theme.md`).

@@ -18,7 +18,7 @@ STEPS=(
   "syntax;hook;.;every ast-grep rule in sg-rules/ and its tests in sg-rule-tests/"
   "styles;hook;.;ESLint: StyleX values come from tokens, and the typescript-eslint recommended rules hold"
   "deps;hook;.;one declared version per dependency (syncpack)"
-  "types;hook;^(src|internal|workers|scripts)/|^tsconfig|^package\.json$|^vite\.config\.ts$;tsc --noEmit for the site, the work app, the Worker and the scripts"
+  "types;hook;^(src|internal|workers|scripts)/|^tsconfig|^package\.json$|^vite\.config\.ts$;tsc --noEmit for the site, the App, the Worker and the scripts"
   "format;hook;^(src|internal|workers|scripts)/|^biome\.json$;biome: 0 errors, 0 warnings (the hook reads only the staged files)"
   "cycles;hook;^(src|internal|workers)/|^import-cycles\.biome\.json$|^scripts/c/_lib/import;no import cycle in src, internal or workers, type imports included (biome)"
   "clones;hook;^(src|internal)/|^\.jscpd\.json$;jscpd: clones, lines and tokens under the jscpd limits in base.rules.yaml"
@@ -258,7 +258,7 @@ step_health() {
 step_schema() {
   local d1 rc=0 db
   if [[ ! -d workers/internal/migrations ]]; then
-    echo "  workers/internal/migrations is not there. The work app has no migrations yet."
+    echo "  workers/internal/migrations is not there. The App has no migrations yet."
     return 0
   fi
   [[ -f internal/cloudflare.config.ts ]] || { echo "✗ workers/internal/migrations is there, but internal/cloudflare.config.ts is not. The migrations need the D1 binding."; return 1; }

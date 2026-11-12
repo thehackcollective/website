@@ -9,10 +9,10 @@ This repo has two surfaces of The Hack Collective (THC), a London hackathon comm
 | Surface | Domain | Code | Spec |
 | --- | --- | --- | --- |
 | The public site | hackcollective.uk | `src/features/website/`, `src/app/` | `DESIGN.md` |
-| Work, the THC CRM | app.hackcollective.uk | `internal/`, `workers/internal/` | `docs/decisions/2026-11-11-work-design-foundations.md` |
+| App, the THC CRM | app.hackcollective.uk | `internal/`, `workers/internal/` | `docs/decisions/2026-11-11-work-design-foundations.md` |
 
 1. The public site is an assets-only Cloudflare Worker. Its `cf` project is the repo root: `cloudflare.config.ts` and `vite.config.ts`.
-2. Work is a second Worker. Its `cf` project is `internal/`: `internal/cloudflare.config.ts` and `internal/vite.config.ts`, with the Worker code in `workers/internal/`. Each build goes to `.cloudflare/output/v0/` next to its config, which git ignores. Work has its shell and the auth, home, settings, changelog, design, people and person features. People and Person are the first CRM modules, on D1. The plan for the rest is `docs/work-platform/map.md`.
+2. App is a second Worker. Its `cf` project is `internal/`: `internal/cloudflare.config.ts` and `internal/vite.config.ts`, with the Worker code in `workers/internal/`. Each build goes to `.cloudflare/output/v0/` next to its config, which git ignores. App has its shell and the auth, home, settings, changelog, design, people and person features. People and Person are the first CRM modules, on D1. The plan for the rest is `docs/work-platform/map.md`.
 3. The cf0 port plan is `docs/plans/2026-11-11-cf0-port.md`. The decision records are in `docs/decisions/`. Their index is `docs/decisions/README.md`.
 
 ## 2. Stack
@@ -48,10 +48,10 @@ Run all project commands through `./c`. `./c help` shows the list.
 2. The 1Password Environment `hackcollective` (`escb5g6qj6obx3ozvjtixcczkq`) holds `CLERK_DEV_SECRET_KEY`, `CLERK_DEV_PUBLISHABLE_KEY`, `CLERK_PROD_SECRET_KEY` and `CLERK_PROD_PUBLISHABLE_KEY`. Under `./c up`, `scripts/c/_lib/with-dev-clerk-keys.sh` passes the dev pair on as `CLERK_SECRET_KEY` and `CLERK_PUBLISHABLE_KEY` and drops the prod pair.
 3. The dev pair is set, so `./c up work` signs in through the Clerk dev instance, which is invite-only. `./c up work dev-member` skips the keys and opens signed in as the dev member.
 4. Logs and pids go to `.c-runtime/`. Copy a log before you read it, because the next run writes over it.
-5. `bun run build` builds the site. `cd internal && bunx vite build` builds Work. Neither runs the check.
+5. `bun run build` builds the site. `cd internal && bunx vite build` builds App. Neither runs the check.
 6. Production ships through Workers Builds on a merge to main, with `cf deploy --prebuilt --mode production`. Do not deploy by hand.
 7. Use the `cf` CLI (`node_modules/.bin/cf`), never Wrangler. The record is `docs/decisions/2026-11-12-cf-cli.md`.
-8. Work's D1 migrations live in `workers/internal/migrations`. Apply them from `internal/` with `cf d1 migrations apply <id> --dir ../workers/internal/migrations`. Add `--local --persist-to <dir>` for local data. `cf` defaults to the remote database.
+8. App's D1 migrations live in `workers/internal/migrations`. Apply them from `internal/` with `cf d1 migrations apply <id> --dir ../workers/internal/migrations`. Add `--local --persist-to <dir>` for local data. `cf` defaults to the remote database.
 
 ## 4. Structure
 
@@ -66,28 +66,28 @@ src/
   components/ui/        the shared kit, flat
   lib/                  shared helpers, flat, plus lib/hooks/
   tokens/               both token tiers
-internal/               the Work client
-  work/features/<name>/ one folder per Work feature
-workers/internal/       the Work Worker
+internal/               the App client
+  work/features/<name>/ one folder per App feature
+workers/internal/       the App Worker
 ```
 
 1. A site feature folder has exactly `entrypoint.ts`, `index.ts`, `feature-map.md` and `workspace/`. `workspace/` is flat.
 2. A site feature map has the sections Sub-features, How to get to it, Gotchas and Verify.
-3. A Work feature folder (`internal/work/features/<name>/`) has `entrypoint.ts`, `index.ts` and `feature-map.md`, and flat files.
-4. A Work feature map has the sections Sub-features, How to get to it (user POV), Driving it with agent-browser and Gotchas, in this order.
+3. An App feature folder (`internal/work/features/<name>/`) has `entrypoint.ts`, `index.ts` and `feature-map.md`, and flat files.
+4. An App feature map has the sections Sub-features, How to get to it (user POV), Driving it with agent-browser and Gotchas, in this order.
 5. `internal/work/features/` holds only feature folders, `catalog.tsx` and `entrypoint.ts` at its top level.
 6. A site route has a surface. `public` renders under the app root. `app` is reserved for a future app shell (`src/features/entrypoint.ts`).
 7. New product work is a new feature folder. Do not add a branch to an existing feature. The catalog finds the new folder. There is no route list to edit.
 8. Other code imports a site feature only through `@/features/<name>` (its `index.ts`). Inside a feature, a file imports another file by its full `@/features/<name>/workspace/...` path.
-9. In `src/`, every import uses `@/`. In `internal/` and `workers/`, use `@internal/` for Work files and `@/` for `src/`.
+9. In `src/`, every import uses `@/`. In `internal/` and `workers/`, use `@internal/` for App files and `@/` for `src/`.
 10. `components/ui/`, `lib/` and `tokens/` never import `features/` or `app/`.
 11. The website never imports `@/app/` modules or `@internal/`.
 
 ## 5. Tokens and design
 
 1. The landing reads `--thc-website-*` variables from `src/tokens/website-tokens.css` through `src/tokens/website-token-consts.stylex.ts`.
-2. Work reads `--thc-*` variables from `src/tokens/design-tokens.css`, `src/tokens/semantic-tokens.css` and `src/tokens/component-tokens.css` through `src/tokens/token-consts.stylex.ts`.
-3. The shared kit reads the Work tier. The public-only kit files are `count-up`, `dia-text`, `reveal`, `stagger-reveal` and `src/lib/hairline-*`. They read the landing tier.
+2. App reads `--thc-*` variables from `src/tokens/design-tokens.css`, `src/tokens/semantic-tokens.css` and `src/tokens/component-tokens.css` through `src/tokens/token-consts.stylex.ts`.
+3. The shared kit reads the App tier. The public-only kit files are `count-up`, `dia-text`, `reveal`, `stagger-reveal` and `src/lib/hairline-*`. They read the landing tier.
 4. The reason for the split is in `docs/decisions/2026-11-11-two-token-tiers.md`.
 5. Load `.agents/skills/product-design/SKILL.md` before you shape, edit or review anything a visitor or a member sees. This includes the logo placement.
 6. Load `.agents/skills/stylex-authoring/SKILL.md` before you write a `.stylex.ts` file.

@@ -9,7 +9,7 @@ message: |
     const variantStyles = { primary: styles.primary, ghost: styles.ghost }
 
   A `cva()` outside `src/components/ui/` makes a second, competing definition of "primary".
-  That is how the work app got three button systems.
+  That is how the App got three button systems.
 rule:
   pattern: cva($$$)
 files:

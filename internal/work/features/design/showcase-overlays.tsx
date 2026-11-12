@@ -47,7 +47,7 @@ export function ShowcaseDialogs() {
         <ConfirmDialog
           trigger={<Button variant="outline">Remove member</Button>}
           title="Remove this member?"
-          description="They lose access to the work app until you invite them again."
+          description="They lose access to the App until you invite them again."
           confirmLabel="Remove"
           onConfirm={() => setLog('Remove confirmed')}
         />
@@ -56,7 +56,7 @@ export function ShowcaseDialogs() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Invite a member</DialogTitle>
-            <DialogDescription>An invite is the only way into the work app.</DialogDescription>
+            <DialogDescription>An invite is the only way into the App.</DialogDescription>
           </DialogHeader>
           <DialogFooter showCloseButton>
             <Button

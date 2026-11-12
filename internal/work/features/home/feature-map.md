@@ -1,6 +1,6 @@
 # Home
 
-Home is the landing page of the work app at `/`. Today it holds one empty state that says the CRM comes next.
+Home is the landing page of the App at `/`. Today it holds one empty state that says the CRM comes next.
 
 ## Sub-features
 

@@ -2,7 +2,7 @@ id: no-ui-imports-features
 language: Tsx
 severity: error
 message: |
-  `components/ui`, `lib` or `tokens` imported a feature, an app module or the work app (`@internal/`).
+  `components/ui`, `lib` or `tokens` imported a feature, an app module or the App (`@internal/`).
   General-purpose code must not depend on product surfaces. Move the dependency into the feature that owns it.
   UI primitives can import only from `tokens/`, `lib/` and other `components/ui/` files.
 rule:

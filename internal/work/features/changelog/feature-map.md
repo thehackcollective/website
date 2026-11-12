@@ -1,6 +1,6 @@
 # Changelog
 
-Changelog is the release history of the work app at `/changelog`. The entries are static code in `internal/work/features/changelog/entries.ts`, newest first.
+Changelog is the release history of the App at `/changelog`. The entries are static code in `internal/work/features/changelog/entries.ts`, newest first.
 
 ## Sub-features
 
