@@ -1511,15 +1511,15 @@ loosened = [] if ONLY else tamper_errors()
 if os.environ.get('GITHUB_ACTIONS') == 'true':
     if loosened and os.environ.get('GITHUB_STEP_SUMMARY'):
         with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as fh:
-            fh.write("## This PR loosens Base rules\n\nRead the reason in the PR description. If you agree, set the rules-approved commit status on the head.\n\n")
+            fh.write("## This PR loosens Base rules\n\nList each loosened rule and its reason in the PR description.\n\n")
             fh.writelines(f"- {e}\n" for e in loosened)
     if os.environ.get('BASE_RULES_LOOSEN') != 'human-approved':
-        errors += [f"{e} Or approve it: after the last push, an Opus review sub-agent approves the loosening and the orchestrator sets the rules-approved commit status on the head." for e in loosened]
+        errors += [f"{e} Or loosen it in its own PR, with the reason in the PR description." for e in loosened]
 elif branch() in ('main', 'HEAD') or os.environ.get('BASE_RULES_TARGET') == 'main':
-    errors += [f"{e} Or loosen it on a branch and open a PR. After an Opus review approves the loosening, the orchestrator sets the rules-approved commit status on the head." for e in loosened]
+    errors += [f"{e} Or loosen it on a branch and open a PR that lists the reason." for e in loosened]
 else:
     for e in loosened:
-        print(f"⚠ {e} ./c merge passes it only with a rules-approved commit status on the head.", file=sys.stderr)
+        print(f"⚠ {e} List it and its reason in the PR description.", file=sys.stderr)
 for rule in SPEC['rules']:
     if ONLY and rule['id'] != ONLY:
         continue

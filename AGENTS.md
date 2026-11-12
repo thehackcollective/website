@@ -168,16 +168,13 @@ The rules only get stricter. An agent can make a rule stricter at any time. Each
 
 The `guarded` list at the top of `base.rules.yaml` names these files.
 
-To get a loosening approved:
+To ship a loosening:
 
 1. Put the loosening in its own PR. Do not mix it with a feature change.
 2. In the PR description, list each loosened rule and its reason.
-3. Run `./c review <PR>` on the last head.
-4. After the last push, an Opus review sub-agent reads the loosening and approves it or refuses it.
-5. If the review approves it, the orchestrator sets the `rules-approved` commit status on the reviewed head: `gh api -X POST repos/{owner}/{repo}/statuses/<head> -f state=success -f context=rules-approved`. The status belongs to that commit, so a later push needs a new review and a new status.
-6. Run `./c merge <PR>`.
+3. The PR's `./c review` reads it with the rest of the change. `./c check structure` reports the loosening as a warning, and `./c merge` does not block on it.
 
-A builder agent does not set the status. No agent sets `BASE_RULES_LOOSEN`.
+No agent sets `BASE_RULES_LOOSEN`.
 
 ## 12. Hard rules
 

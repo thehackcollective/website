@@ -83,7 +83,7 @@ Discovery is mechanical. Each catalog globs the entrypoints. Never register a fe
 
 A failure names `./c check <step>`, so you can run that step again alone. `./c explain <rule-id>` prints a rule, its reason, its files and its fix. Where the gate runs, and how a change reaches main, is in `docs/decisions/2026-11-11-gate-placement.md`.
 
-Every rule is at zero violations. The only baseline is `web-token-count-cap`, and it only goes down. An agent can make a rule stricter at any time. A loosening needs its own PR, an Opus review after the last push and the `rules-approved` commit status on the head, which the orchestrator sets (`AGENTS.md`, section 11).
+Every rule is at zero violations. The only baseline is `web-token-count-cap`, and it only goes down. An agent can make a rule stricter at any time. A loosening needs its own PR that lists each loosened rule and its reason (`AGENTS.md`, section 11).
 
 ## Meta-rule
 
