@@ -1,5 +1,6 @@
 import { serveAsset, serveVersion } from './assets-api'
 import type { Env } from './env'
+import { listPeople, personById } from './people-api'
 import { checkSession } from './session'
 
 const json = (body: unknown, status = 200) =>
@@ -16,8 +17,23 @@ async function handleApi(request: Request, env: Env, pathname: string): Promise<
       session.status,
     )
   }
-  if (pathname === '/api/me' && request.method === 'GET') return json(session.member)
-  return json({ error: 'not_found' }, 404)
+  if (request.method !== 'GET') return json({ error: 'not_found' }, 404)
+  if (pathname === '/api/me') return json(session.member)
+  if (pathname === '/api/people') return json(await listPeople(env))
+  const personId = pathname.match(/^\/api\/people\/([^/]+)$/)?.[1]
+  if (personId === undefined) return json({ error: 'not_found' }, 404)
+  const id = decodedPathPart(personId)
+  if (id === null) return json({ error: 'not_found' }, 404)
+  const person = await personById(env, id)
+  return person === null ? json({ error: 'not_found' }, 404) : json(person)
+}
+
+function decodedPathPart(part: string): string | null {
+  try {
+    return decodeURIComponent(part)
+  } catch {
+    return null
+  }
 }
 
 function route(request: Request, env: Env): Promise<Response> {

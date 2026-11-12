@@ -1,6 +1,6 @@
 # Map: work.hackcollective.uk
 
-Status: Next. The CRM modules are not built.
+Status: People is a prototype. The other CRM modules are not built.
 
 ## Destination
 
@@ -15,8 +15,8 @@ A PRD (`docs/work-platform/prd.md`) with every product decision made, so Work ca
 
 ## Open questions
 
-1. Events: which fields does an event have, and does Work read the Luma calendar or keep its own list?
-2. People: who is a person in Work (members, organisers, judges, sponsor contacts), and which fields does each have?
+1. Events: which fields does an event have beyond the THC co-hosted list? Work keeps its own list (PRD decision 4).
+2. People: answered in PRD decisions 1 to 3 and 5. Judges are not yet a tie kind.
 3. Sponsors: which stages does a sponsor go through, and who owns each sponsor?
 4. Follow-ups: what is a follow-up, who gets it, and when is it due?
 5. Access: who gets an invite, and do roles differ?
