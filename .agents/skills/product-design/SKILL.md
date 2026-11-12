@@ -3,7 +3,7 @@ name: product-design
 description: >-
   Single entry point for product design and user-facing implementation in
   hack-collective, on both surfaces: the public site (hackcollective.uk) and
-  Work, the THC CRM (work.hackcollective.uk). Use whenever work changes what a
+  Work, the THC CRM (app.hackcollective.uk). Use whenever work changes what a
   visitor or a member sees, understands, chooses, or does: shaping a new section or flow;
   building or redesigning pages and components; reviewing URLs, screenshots,
   diffs, or agent findings; improving copy, hierarchy, layout, interaction,
@@ -21,7 +21,7 @@ The repo has two surfaces. Name the surface first, because each has its own spec
 | Surface | Who | Code | Spec | Tokens |
 | --- | --- | --- | --- | --- |
 | The public site, hackcollective.uk | A London builder who lands once | `src/features/website/` | `DESIGN.md` | `--thc-website-*` through `src/tokens/website-token-consts.stylex.ts` |
-| Work, work.hackcollective.uk | The THC team, every day | `internal/`, `workers/internal/` | `docs/decisions/2026-11-11-work-design-foundations.md` and its detail records | `--thc-*` through `src/tokens/token-consts.stylex.ts` |
+| Work, app.hackcollective.uk | The THC team, every day | `internal/`, `workers/internal/` | `docs/decisions/2026-11-11-work-design-foundations.md` and its detail records | `--thc-*` through `src/tokens/token-consts.stylex.ts` |
 
 On the public site, make the page right for a London builder who lands on it once: they should know what THC is, believe the numbers, and join in one click. In Work, follow cf0's foundations: the rule numbers, the type ladder, the control ladder, the shell and the neutral theme with THC blue. Do not decide a settled Work rule again on a screen.
 

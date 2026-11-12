@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#USAGE: up — start the dev servers in the background: ./c up [site|work] [mock-data:empty|mock-data:full]
+#USAGE: up — start the dev servers in the background: ./c up [site|work] [mock-data:empty|mock-data:full] [dev-member]
 
 set -euo pipefail
 
@@ -13,13 +13,15 @@ usage() {
   cat <<'HELP'
 Usage: ./c up                     start site and work
        ./c up site                hackcollective.uk on :5173
-       ./c up work                work.hackcollective.uk (client and Worker) on :5281
+       ./c up work                app.hackcollective.uk (client and Worker) on :5281
        ./c up work mock-data:empty|mock-data:full
                                   reset the local work data first
+       ./c up work dev-member     skip the Clerk dev keys and open signed in as the dev member
 
   ./c up runs under op run --environment with the 1Password dev Environment
   (scripts/c/_lib/op-environments.sh). Secrets live in process.env only: no .env or .dev.vars file.
-  With no Clerk keys in the Environment, the work app opens signed in as the dev member.
+  The Environment holds the Clerk dev keys, so the work app asks for a sign-in to the
+  invite-only Clerk dev instance. With dev-member, it opens signed in as the dev member.
   Logs and pids go to .c-runtime/. ./c status shows the servers. ./c quit stops them.
 HELP
 }
@@ -31,6 +33,7 @@ for arg in "$@"; do
     -h|--help) usage; exit 0 ;;
     site|work) SERVICES+=("$arg") ;;
     mock-data:empty|mock-data:full) MOCK_DATA="${arg#mock-data:}" ;;
+    dev-member) export THC_DEV_MEMBER=1 ;;
     *) echo "✗ $arg is not an argument of ./c up." >&2; usage >&2; exit 2 ;;
   esac
 done

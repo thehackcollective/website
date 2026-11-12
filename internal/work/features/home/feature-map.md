@@ -14,7 +14,7 @@ Home is the landing page of the work app at `/`. Today it holds one empty state 
 
 ## Driving it with agent-browser
 
-1. Run `./c up work`. With no Clerk keys the app opens signed in as the dev member.
+1. Run `./c up work dev-member`. The app opens signed in as the dev member.
 2. Open `http://localhost:5281/`. Expect the heading "Home" and the text "The CRM comes next".
 3. On a first visit the coachmark shows on the empty state. Click through it, reload, and expect it not to show again.
 4. Click "Open the changelog". Expect `/changelog`.

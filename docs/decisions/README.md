@@ -44,5 +44,6 @@ Open decisions:
 | `docs/decisions/2026-11-11-gate-placement.md` | Where `./c check` runs, and how a change reaches main |
 | `docs/decisions/2026-11-12-cf-cli.md` | Both Workers on the `cf` CLI and the Vite plugin 2.0 beta |
 | `docs/decisions/2026-11-12-claude-review-replaces-greptile.md` | One Claude code-review near the end of each PR, read by the agent; `./c merge` checks only facts; Greptile is gone |
+| `docs/decisions/2026-11-12-work-on-app-subdomain.md` | Work moves to app.hackcollective.uk, where the Clerk production instance is; the 1Password Environment holds both Clerk key pairs |
 
 The port plan that produced these records is `docs/plans/2026-11-11-cf0-port.md`.

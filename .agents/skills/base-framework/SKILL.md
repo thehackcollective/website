@@ -25,7 +25,7 @@ If you are about to break one "just this once", stop. The answer is a different 
 
 Answer in this order. Each question has one right answer.
 
-1. **Which surface?** The public site (hackcollective.uk) is `src/features/website/` and `src/app/`. Work (work.hackcollective.uk) is `internal/` (the client) and `workers/internal/` (the Worker). Shared code that both surfaces need is `src/components/ui/` (visual) or `src/lib/` (not visual).
+1. **Which surface?** The public site (hackcollective.uk) is `src/features/website/` and `src/app/`. Work (app.hackcollective.uk) is `internal/` (the client) and `workers/internal/` (the Worker). Shared code that both surfaces need is `src/components/ui/` (visual) or `src/lib/` (not visual).
 2. **Which feature owns the behaviour?** A site feature is `src/features/<name>/`. A Work feature is `internal/work/features/<name>/`. If no feature owns it, add a new feature folder. It is never a branch inside the file of another feature.
 3. **Which slot does the code go in?** Do not invent layout. The anatomy is fixed (below).
 4. **Does anything cross a boundary?** A site feature is reachable only through `@/features/<name>` (its `index.ts`). A Work feature is reachable only through its `index.ts` (`web-cross-feature-via-index`). The Work framework files never import a feature (`web-framework-never-imports-features`). `src/components/ui/`, `src/lib/` and `src/tokens/` never import `features/` or `app/` (`no-ui-imports-features`). The website never imports `@/app/` or `@internal/` (`no-website-imports-app`).

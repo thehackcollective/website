@@ -1,6 +1,6 @@
 ---
 name: hack-collective-design
-description: Design system for The Hack Collective. The landing spec (hackcollective.uk) behind the product-design skill (.agents/skills/product-design), modelled on vercel.com/design.md, plus a pointer to the Work foundations (work.hackcollective.uk). Names tokens and reasoning; landing values live in src/tokens/website-tokens.css.
+description: Design system for The Hack Collective. The landing spec (hackcollective.uk) behind the product-design skill (.agents/skills/product-design), modelled on vercel.com/design.md, plus a pointer to the Work foundations (app.hackcollective.uk). Names tokens and reasoning; landing values live in src/tokens/website-tokens.css.
 ---
 
 # Design like The Hack Collective
@@ -8,7 +8,7 @@ description: Design system for The Hack Collective. The landing spec (hackcollec
 The repo has two surfaces with two token tiers (`docs/decisions/2026-11-11-two-token-tiers.md`).
 
 - The landing page, hackcollective.uk, in `src/features/website/`. This file is its spec. It reads `--thc-website-*` variables from `src/tokens/website-tokens.css` through `src/tokens/website-token-consts.stylex.ts`.
-- Work, work.hackcollective.uk, in `internal/` and `workers/internal/`. It reads `--thc-*` variables from cf0's three tiers through `src/tokens/token-consts.stylex.ts`. Its spec is the Work section at the end of this file.
+- Work, app.hackcollective.uk, in `internal/` and `workers/internal/`. It reads `--thc-*` variables from cf0's three tiers through `src/tokens/token-consts.stylex.ts`. Its spec is the Work section at the end of this file.
 
 The sections up to Work are the landing spec.
 
@@ -104,7 +104,7 @@ Every paragraph is one sentence. Plain words a first-year can repeat; keep exact
 5. **Restraint:** can any border, surface, icon, label or section be removed without losing meaning? Remove it.
 6. **Gates:** `./c check` is green.
 
-## Work (work.hackcollective.uk)
+## Work (app.hackcollective.uk)
 
 Work does not use this landing spec. It takes cf0.ai's design foundations whole, with THC blue as the one accent and Geist as the type.
 

@@ -11,7 +11,7 @@ export default defineConfig({
     entrypoint: '../workers/internal/index.ts',
     workersDev: false,
     previewUrls: false,
-    domains: ['work.hackcollective.uk'],
+    domains: ['app.hackcollective.uk'],
     observability: { enabled: true },
     assets: {
       notFoundHandling: 'single-page-application',
@@ -20,6 +20,7 @@ export default defineConfig({
     env: {
       ASSETS: bindings.assets(),
       DB: bindings.d1(WORK_DB),
+      CLERK_SECRET_KEY: bindings.secret(),
     },
   },
 })

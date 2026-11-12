@@ -9,7 +9,7 @@ This repo has two surfaces of The Hack Collective (THC), a London hackathon comm
 | Surface | Domain | Code | Spec |
 | --- | --- | --- | --- |
 | The public site | hackcollective.uk | `src/features/website/`, `src/app/` | `DESIGN.md` |
-| Work, the THC CRM | work.hackcollective.uk | `internal/`, `workers/internal/` | `docs/decisions/2026-11-11-work-design-foundations.md` |
+| Work, the THC CRM | app.hackcollective.uk | `internal/`, `workers/internal/` | `docs/decisions/2026-11-11-work-design-foundations.md` |
 
 1. The public site is an assets-only Cloudflare Worker. Its `cf` project is the repo root: `cloudflare.config.ts` and `vite.config.ts`.
 2. Work is a second Worker. Its `cf` project is `internal/`: `internal/cloudflare.config.ts` and `internal/vite.config.ts`, with the Worker code in `workers/internal/`. Each build goes to `.cloudflare/output/v0/` next to its config, which git ignores. Work has its shell and the auth, home, settings, changelog, design, people and person features. People and Person are the first CRM modules, on D1. The plan for the rest is `docs/work-platform/map.md`.
@@ -45,12 +45,13 @@ Run all project commands through `./c`. `./c help` shows the list.
 | `./c merge <PR>` | Squash-merges a PR when its head has main and the rules hold. |
 
 1. `./c up` runs under `op run --environment` with the 1Password dev Environment (`scripts/c/_lib/op-environments.sh`).
-2. With no Clerk keys in that Environment, the work app opens signed in as the dev member.
-3. Logs and pids go to `.c-runtime/`. Copy a log before you read it, because the next run writes over it.
-4. `bun run build` builds the site. `cd internal && bunx vite build` builds Work. Neither runs the check.
-5. Production ships through Workers Builds on a merge to main, with `cf deploy --prebuilt --mode production`. Do not deploy by hand.
-6. Use the `cf` CLI (`node_modules/.bin/cf`), never Wrangler. The record is `docs/decisions/2026-11-12-cf-cli.md`.
-7. Work's D1 migrations live in `workers/internal/migrations`. Apply them from `internal/` with `cf d1 migrations apply <id> --dir ../workers/internal/migrations`. Add `--local --persist-to <dir>` for local data. `cf` defaults to the remote database.
+2. The 1Password Environment `hackcollective` (`escb5g6qj6obx3ozvjtixcczkq`) holds `CLERK_DEV_SECRET_KEY`, `CLERK_DEV_PUBLISHABLE_KEY`, `CLERK_PROD_SECRET_KEY` and `CLERK_PROD_PUBLISHABLE_KEY`. Under `./c up`, `scripts/c/_lib/with-dev-clerk-keys.sh` passes the dev pair on as `CLERK_SECRET_KEY` and `CLERK_PUBLISHABLE_KEY` and drops the prod pair.
+3. The dev pair is set, so `./c up work` signs in through the Clerk dev instance, which is invite-only. `./c up work dev-member` skips the keys and opens signed in as the dev member.
+4. Logs and pids go to `.c-runtime/`. Copy a log before you read it, because the next run writes over it.
+5. `bun run build` builds the site. `cd internal && bunx vite build` builds Work. Neither runs the check.
+6. Production ships through Workers Builds on a merge to main, with `cf deploy --prebuilt --mode production`. Do not deploy by hand.
+7. Use the `cf` CLI (`node_modules/.bin/cf`), never Wrangler. The record is `docs/decisions/2026-11-12-cf-cli.md`.
+8. Work's D1 migrations live in `workers/internal/migrations`. Apply them from `internal/` with `cf d1 migrations apply <id> --dir ../workers/internal/migrations`. Add `--local --persist-to <dir>` for local data. `cf` defaults to the remote database.
 
 ## 4. Structure
 
