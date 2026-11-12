@@ -172,7 +172,7 @@ To ship a loosening:
 
 1. Put the loosening in its own PR. Do not mix it with a feature change.
 2. In the PR description, list each loosened rule and its reason.
-3. The PR's `./c review` reads it with the rest of the change. `./c check structure` reports the loosening as a warning, and `./c merge` does not block on it.
+3. The PR's `./c review` reads it with the rest of the change. `./c check structure` warns about a loosened rule. A change to gate code gets no script check. `./c merge` blocks on neither.
 
 No agent sets `BASE_RULES_LOOSEN`.
 
