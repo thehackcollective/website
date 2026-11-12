@@ -68,7 +68,7 @@ while parents=($(git rev-list --parents -n 1 "$REVIEWED_SHA")) && (( ${#parents[
   REVIEWED_SHA="${parents[1]}"
   WALK+=("$REVIEWED_SHA")
 done
-REVIEWS="$(gh api "repos/{owner}/{repo}/issues/$PR/comments" --paginate -q '.[] | select(.author_association == "OWNER" or .author_association == "MEMBER" or .author_association == "COLLABORATOR") | . as $c | ([.body | capture("<!-- thc-review sha=(?<sha>[0-9a-f]{40}) -->"; "g")] | last) | select(. != null) | "\($c.created_at) \(.sha)"')" \
+REVIEWS="$(gh api "repos/{owner}/{repo}/issues/$PR/comments" --paginate -q '.[] | select(.author_association == "OWNER" or .author_association == "MEMBER" or .author_association == "COLLABORATOR") | . as $c | ([.body | capture("<!-- thc-review sha=(?<sha>[0-9a-f]{40}) -->"; "g")] | last) | select(. != null) | "\($c.updated_at) \(.sha)"')" \
   || fail "gh could not read the comments of PR #$PR. Check the network, then run ./c merge $PR again."
 REVIEWED_AT=""
 for sha in "${WALK[@]}"; do
