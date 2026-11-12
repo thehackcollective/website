@@ -262,7 +262,7 @@ function measureMetrics(root: HTMLElement): TableMetrics {
   root.appendChild(probe)
   const lead = probe.getBoundingClientRect().width
   probe.remove()
-  const row = root.querySelector<HTMLElement>('[data-row][role="row"]')
+  const row = root.querySelector<HTMLElement>('[data-row][role="row"]:not([data-column-header])')
   if (row === null) return { lead, gap: 0, padding: 0, fromRow: false }
   const style = getComputedStyle(row)
   const px = (value: string) => Number.parseFloat(value) || 0
@@ -316,15 +316,27 @@ type ResolvedColumn<Row> = TableColumn<Row> & { width: number; tier: number; doc
 type SortState = { column: string; dir: 1 | -1 } | null
 type Selection = ReturnType<typeof useTableSelection>
 
+function headerKindOf<Row>(
+  config: TableConfig<Row>,
+  own: readonly ResolvedColumn<Row>[],
+  hasRows: boolean,
+): 'search' | 'columns' | 'none' {
+  if (config.search !== undefined || config.searchPlaceholder !== undefined) return 'search'
+  if (config.showHeader !== false && own.length > 0 && hasRows) return 'columns'
+  return 'none'
+}
+
+function headerRowCount<Row>(markup: TableMarkupProps<Row>): number {
+  return headerKindOf(markup.config, markup.own, markup.ids.length > 0) === 'none' ? 0 : 1
+}
+
 function groupToFold<Row>(
   config: TableConfig<Row>,
   own: readonly ResolvedColumn<Row>[],
   items: readonly Item<Row>[],
   hasRows: boolean,
 ): Extract<Item<Row>, { kind: 'group' }> | null {
-  const hasSearch = config.search !== undefined || config.searchPlaceholder !== undefined
-  const hasColumnHeader = config.showHeader !== false && !hasSearch && own.length > 0 && hasRows
-  if (!hasColumnHeader || config.groups?.fold === false) return null
+  if (headerKindOf(config, own, hasRows) !== 'columns' || config.groups?.fold === false) return null
   const groups = items.filter(
     (item): item is Extract<Item<Row>, { kind: 'group' }> => item.kind === 'group',
   )
@@ -550,6 +562,7 @@ function ColumnHeaderCell<Row>({
   }
   return (
     <div
+      role={scope === 'columns' ? 'columnheader' : 'gridcell'}
       data-column-id={column.id}
       {...stylex.props(
         styles.iconCell,
@@ -797,7 +810,7 @@ function TableRow<Row>({
       data-row={id}
       data-coachmark={id === markup.ids[0] ? markup.firstRowCoachmark : undefined}
       role="row"
-      aria-rowindex={index + 1}
+      aria-rowindex={index + 1 + headerRowCount(markup)}
       aria-selected={isPicked}
       tabIndex={focusTarget === id ? 0 : -1}
       onPointerDown={(event) => pick.onPointerDown(id, event)}
@@ -926,11 +939,13 @@ function ColumnHeaderRow<Row>({
 }) {
   return (
     <div
+      role="row"
+      aria-rowindex={1}
       data-row="h:columns"
       data-column-header=""
       {...stylex.props(styles.grid, markup.config.compact && styles.gridCompact, styles.header)}
     >
-      <div data-column-lead="" {...stylex.props(styles.headerLead)}>
+      <div role="columnheader" data-column-lead="" {...stylex.props(styles.headerLead)}>
         {headerGroup === null ? null : (
           <>
             {headerGroup.group.mark}
@@ -970,11 +985,13 @@ function SearchHeaderRow<Row>({
   }
   return (
     <div
+      role="row"
+      aria-rowindex={1}
       data-row="h:search"
       data-column-header=""
       {...stylex.props(styles.grid, config.compact && styles.gridCompact, styles.header)}
     >
-      <div data-column-lead="" {...stylex.props(styles.headerLead)}>
+      <div role="gridcell" data-column-lead="" {...stylex.props(styles.headerLead)}>
         <label {...stylex.props(styles.searchLabel)}>
           <input
             ref={markup.searchRef}
@@ -1019,7 +1036,7 @@ function GroupRow<Row>({
       data-index={index}
       data-row={`h:${item.group.id}`}
       role="row"
-      aria-rowindex={index + 1}
+      aria-rowindex={index + 1 + headerRowCount(markup)}
       {...stylex.props(
         styles.groupRow,
         virtualized && virtualStyles.item,
@@ -1136,12 +1153,13 @@ function TableFooter<Row>({ markup }: { markup: TableMarkupProps<Row> }) {
 
 function TableMarkup<Row>(markup: TableMarkupProps<Row>) {
   const { config, own, ids, empty } = markup
-  const hasSearch = config.search !== undefined || config.searchPlaceholder !== undefined
+  const headerKind = headerKindOf(config, own, ids.length > 0)
+  const hasSearch = headerKind === 'search'
+  const headerRows = headerRowCount(markup)
   const firstRow = config.rows[0]
   const searchMark = firstRow === undefined ? null : config.mark(firstRow)
   const hasSearchMark = searchMark !== null && searchMark !== undefined && searchMark !== false
-  const showColumnHeader =
-    config.showHeader !== false && !hasSearch && own.length > 0 && ids.length > 0
+  const showColumnHeader = headerKind === 'columns'
   const view = windowOf(markup)
   return (
     <div ref={markup.root} {...stylex.props(styles.root)}>
@@ -1153,7 +1171,7 @@ function TableMarkup<Row>(markup: TableMarkupProps<Row>) {
         role="grid"
         aria-label={config.ariaLabel ?? config.title ?? 'Data table'}
         aria-multiselectable="true"
-        aria-rowcount={view.renderedItems.length}
+        aria-rowcount={headerRows + view.renderedItems.length + (ids.length === 0 ? 1 : 0)}
         {...stylex.props(styles.body, config.compact && styles.bodyCompact)}
       >
         {showColumnHeader ? (
@@ -1161,7 +1179,9 @@ function TableMarkup<Row>(markup: TableMarkupProps<Row>) {
         ) : null}
         {hasSearch ? <SearchHeaderRow markup={markup} hasSearchMark={hasSearchMark} /> : null}
         {ids.length === 0 ? (
-          <div {...stylex.props(styles.empty)}>{empty === undefined ? 'No matches' : empty}</div>
+          <div role="row" aria-rowindex={headerRows + 1} {...stylex.props(styles.empty)}>
+            <span role="gridcell">{empty === undefined ? 'No matches' : empty}</span>
+          </div>
         ) : null}
         <TableItems markup={markup} view={view} />
       </div>
@@ -1395,15 +1415,17 @@ function ghostOf(layer: HTMLDivElement | null, snap: Snapshot) {
 
 function rowsInView(el: HTMLElement) {
   const viewport = el.querySelector<HTMLElement>('[role="grid"]')?.getBoundingClientRect()
-  return Array.from(el.querySelectorAll('[data-row][role="row"]')).filter((row) => {
-    const box = row.getBoundingClientRect()
-    return (
-      box.bottom > Math.max(0, viewport?.top ?? 0) &&
-      box.top < Math.min(window.innerHeight, viewport?.bottom ?? window.innerHeight) &&
-      box.right > Math.max(0, viewport?.left ?? 0) &&
-      box.left < Math.min(window.innerWidth, viewport?.right ?? window.innerWidth)
-    )
-  })
+  return Array.from(el.querySelectorAll('[data-row][role="row"]:not([data-column-header])')).filter(
+    (row) => {
+      const box = row.getBoundingClientRect()
+      return (
+        box.bottom > Math.max(0, viewport?.top ?? 0) &&
+        box.top < Math.min(window.innerHeight, viewport?.bottom ?? window.innerHeight) &&
+        box.right > Math.max(0, viewport?.left ?? 0) &&
+        box.left < Math.min(window.innerWidth, viewport?.right ?? window.innerWidth)
+      )
+    },
+  )
 }
 
 function removeAfter(animation: Animation, copy: HTMLElement) {
