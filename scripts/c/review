@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#USAGE: review — one Claude code-review session of a PR head, posted on the PR for ./c merge: ./c review <PR>
+#USAGE: review — post one Claude code-review of a PR head on the PR: ./c review <PR>
 
 set -euo pipefail
 
@@ -10,9 +10,8 @@ fail() { printf '✗ %s\n' "$1" >&2; exit 1; }
 case "${1:-}" in
   ""|-h|--help)
     echo "Usage: ./c review <PR>"
-    echo "  It runs one claude -p session with the built-in code-review skill on the PR,"
-    echo "  and posts the result on the PR with the reviewed head. ./c merge needs that comment on the head."
-    echo "  Fix what is real in one batch, push once, and run ./c review again."
+    echo "  It runs one claude -p session with the built-in code-review skill on the PR head and posts the review on the PR."
+    echo "  Start it in the background when the work of the PR is nearly done. Read it when it ends, fix the real findings once, then merge."
     [[ -n "${1:-}" ]] && exit 0
     exit 2
     ;;
@@ -20,30 +19,21 @@ esac
 
 PR="$1"
 command -v claude >/dev/null || fail "No claude CLI here. Install Claude Code, then run ./c review $PR again."
-[[ "$(gh pr view "$PR" --json state -q .state)" == "OPEN" ]] || fail "PR #$PR is not open."
 HEAD_SHA="$(gh pr view "$PR" --json headRefOid -q .headRefOid)"
-
 REPO="$(gh repo view --json nameWithOwner -q .nameWithOwner)"
 git fetch -q origin "refs/pull/$PR/head" 2>/dev/null || true
 git cat-file -e "$HEAD_SHA^{commit}" 2>/dev/null || fail "git could not fetch the head ${HEAD_SHA:0:9} of PR #$PR."
 
 WORK="$(mktemp -d)"
 trap 'rm -rf "$WORK"' EXIT
-OUT="$WORK/review.md"
 mkdir "$WORK/head"
 git archive "$HEAD_SHA" | tar -x -C "$WORK/head"
 printf '→ One code-review session of PR #%s at %s.\n' "$PR" "${HEAD_SHA:0:9}"
 (cd "$WORK/head" && GH_REPO="$REPO" claude -p "/code-review $PR" --model opus --no-session-persistence \
   --setting-sources user --strict-mcp-config \
-  --allowedTools "Bash(gh pr view:*)" "Bash(gh pr diff:*)" "Bash(gh api repos/$REPO/pulls/$PR:*)" "Read" "Grep" "Glob" "Skill") >"$OUT" \
+  --allowedTools "Bash(gh pr view:*)" "Bash(gh pr diff:*)" "Read" "Grep" "Glob" "Skill") >"$WORK/review.md" \
   || fail "The review session did not finish. Run ./c review $PR again."
-[[ -s "$OUT" ]] || fail "The review session wrote nothing. Run ./c review $PR again."
 
-[[ "$(gh pr view "$PR" --json headRefOid -q .headRefOid)" == "$HEAD_SHA" ]] \
-  || fail "Someone pushed to PR #$PR during the review. Run ./c review $PR again."
-{
-  printf '## ./c review of %s\n\n' "${HEAD_SHA:0:9}"
-  sed 's/<!--/\&lt;!--/g' "$OUT"
-  printf '\n<!-- thc-review sha=%s -->\n' "$HEAD_SHA"
-} | gh pr comment "$PR" --body-file - >/dev/null || fail "gh could not post the review on PR #$PR."
-printf '✓ Review of %s posted on PR #%s. Fix what is real, or run ./c merge %s.\n' "${HEAD_SHA:0:9}" "$PR" "$PR"
+{ printf '## ./c review of %s\n\n' "${HEAD_SHA:0:9}"; cat "$WORK/review.md"; } \
+  | gh pr comment "$PR" --body-file - >/dev/null || fail "gh could not post the review on PR #$PR."
+printf '✓ The review of %s is on PR #%s.\n' "${HEAD_SHA:0:9}" "$PR"

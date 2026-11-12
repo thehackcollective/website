@@ -41,8 +41,8 @@ Run all project commands through `./c`. `./c help` shows the list.
 | `./c explain <rule-id>` | Prints the message, reason, files and fix of one rule. |
 | `./c align [path…]` | Measures alignment, spacing and hit areas on a running page. |
 | `./c hooks` | Points git at `scripts/git-hooks`. |
-| `./c review <PR>` | Runs one Claude code-review session of the PR head and posts it on the PR. |
-| `./c merge <PR>` | Squash-merges a PR when `./c review` reviewed its head and the rules hold. |
+| `./c review <PR>` | Posts one Claude code-review of the PR head on the PR. |
+| `./c merge <PR>` | Squash-merges a PR when its head has main and the rules hold. |
 
 1. `./c up` runs under `op run --environment` with the 1Password dev Environment (`scripts/c/_lib/op-environments.sh`).
 2. With no Clerk keys in that Environment, the work app opens signed in as the dev member.
@@ -141,8 +141,8 @@ The record is `docs/decisions/2026-11-11-gate-placement.md`.
 1. `./c check` is the one gate. Every rule is at zero violations. The only baseline is `web-token-count-cap`, and it only goes down.
 2. The pre-commit hook (`scripts/git-hooks/pre-commit`) runs `./c check --staged`.
 3. The pre-push hook (`scripts/git-hooks/pre-push`) refuses a push to `main` and runs the full `./c check`.
-4. `./c review <PR>` runs one `claude -p` session with the built-in code-review skill on the final head and posts the result on the PR. Fix what is real in one batch, push once and review again. The record is `docs/decisions/2026-11-12-claude-review-replaces-greptile.md`.
-5. `./c merge <PR>` needs a `./c review` of the head, runs `./c check structure` on the head and squash-merges. A red step stops the merge.
+4. A PR merges only after a clean review. The review is one of the last steps of a PR, and it does not block the work. When the work of the PR is nearly done, push it and start `./c review <PR>` in the background. Keep working on the proof while it runs. When it ends, read it, fix the real findings in one batch and push once. Then merge. The record is `docs/decisions/2026-11-12-claude-review-replaces-greptile.md`.
+5. `./c merge <PR>` checks only facts: it brings main into the head, runs `./c check structure` on the head and squash-merges. A red step stops the merge.
 6. Before you say a check is clean, run it. Report what passes and what fails.
 
 ## 10. How a change reaches main

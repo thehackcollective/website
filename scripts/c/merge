@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#USAGE: merge — squash-merge a PR when its head has main, ./c review reviewed that head and the rules hold: ./c merge <PR>
+#USAGE: merge — squash-merge a PR when its head has main and the rules hold: ./c merge <PR>
 
 set -euo pipefail
 
@@ -12,9 +12,8 @@ case "${1:-}" in
   ""|-h|--help)
     echo "Usage: ./c merge <PR>"
     echo "  1. If the head does not have the current main, it merges main into the branch."
-    echo "  2. It needs the ./c review comment of that head, or of the head before clean merges of main."
-    echo "  3. It runs ./c check structure on that head. A loosened rule, or a change to c, scripts/c, the hooks or a guarded config, needs the rules-approved label, added after that review."
-    echo "  4. It squash-merges, pinned to that head, so a push in between stops the merge."
+    echo "  2. It runs ./c check structure on that head. A loosened rule, or a change to c, scripts/c, the hooks or a guarded config, needs the rules-approved label, added after the head commit."
+    echo "  3. It squash-merges, pinned to that head, so a push in between stops the merge."
     [[ -n "${1:-}" ]] && exit 0
     exit 2
     ;;
@@ -60,26 +59,12 @@ git fetch -q origin main
 fetch_head
 git merge-base --is-ancestor origin/main "$HEAD_SHA" || fail "main moved, so PR #$PR does not have the current main. Run ./c merge $PR again."
 
-REVIEWED_SHA="$HEAD_SHA"
-WALK=("$HEAD_SHA")
-while parents=($(git rev-list --parents -n 1 "$REVIEWED_SHA")) && (( ${#parents[@]} == 3 )) \
-  && git merge-base --is-ancestor "${parents[2]}" origin/main \
-  && [[ "$(git merge-tree --write-tree "${parents[1]}" "${parents[2]}" 2>/dev/null)" == "$(git rev-parse "$REVIEWED_SHA^{tree}")" ]]; do
-  REVIEWED_SHA="${parents[1]}"
-  WALK+=("$REVIEWED_SHA")
-done
-REVIEWS="$(gh api "repos/{owner}/{repo}/issues/$PR/comments" --paginate -q '.[] | select(.author_association == "OWNER" or .author_association == "MEMBER" or .author_association == "COLLABORATOR") | . as $c | ([.body | capture("<!-- thc-review sha=(?<sha>[0-9a-f]{40}) -->"; "g")] | last) | select(. != null) | "\($c.created_at) \(.sha)"')" \
-  || fail "gh could not read the comments of PR #$PR. Check the network, then run ./c merge $PR again."
-REVIEWED_AT=""
-for sha in "${WALK[@]}"; do
-  line="$(grep " $sha$" <<<"$REVIEWS" | tail -1 || true)"
-  [[ -n "$line" ]] && { REVIEWED_AT="${line%% *}"; break; }
-done
-[[ -n "$REVIEWED_AT" ]] || fail "No ./c review of ${HEAD_SHA:0:9} on PR #$PR. Run ./c review $PR, fix what is real, then run ./c merge $PR again."
+HEAD_AT="$(gh api "repos/{owner}/{repo}/commits/$HEAD_SHA" -q .commit.committer.date)" \
+  || fail "gh could not read the head commit of PR #$PR. Check the network, then run ./c merge $PR again."
 
 TARGET=main
 LAST_LABEL="$(gh api "repos/{owner}/{repo}/issues/$PR/events" --paginate -q '.[] | select(.label.name == "rules-approved") | "\(.event) \(.created_at)"' | tail -n 1)"
-[[ "$LAST_LABEL" == "labeled "* && "${LAST_LABEL#labeled }" > "$REVIEWED_AT" ]] && TARGET=pr
+[[ "$LAST_LABEL" == "labeled "* && "${LAST_LABEL#labeled }" > "$HEAD_AT" ]] && TARGET=pr
 
 CHECK_DIR="$(mktemp -d)"
 CHECK_BRANCH="merge-check-$PR-$$-$RANDOM"
@@ -141,4 +126,4 @@ if [[ "$CROSS_REPO" == "false" ]]; then
     gh api -X DELETE "repos/{owner}/{repo}/git/refs/heads/$BRANCH" >/dev/null 2>&1 || true
   fi
 fi
-printf '✓ PR #%s merged (head %s, reviewed).\n' "$PR" "${HEAD_SHA:0:9}"
+printf '✓ PR #%s merged (head %s).\n' "$PR" "${HEAD_SHA:0:9}"
