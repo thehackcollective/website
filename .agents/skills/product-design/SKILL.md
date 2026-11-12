@@ -88,7 +88,7 @@ A material decision changes the visitor's task, section order, the primary actio
    | Need | Load |
    |---|---|
    | Rules the linters enforce | `references/rules.md` and `./c explain <rule-id>` |
-| A App rule | `docs/decisions/2026-11-11-work-design-foundations.md` |
+| An App rule | `docs/decisions/2026-11-11-work-design-foundations.md` |
    | Section or flow decision | `references/product-judgment.md` |
    | Layout, type, colour, motion, logo placement | `DESIGN.md` + `references/interface-quality.md` |
    | Copy or accessible names | `references/copy.md` |

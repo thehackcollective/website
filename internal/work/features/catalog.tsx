@@ -28,7 +28,7 @@ function collect(): readonly CatalogEntry[] {
     })
     .filter(({ feature }) => import.meta.env.DEV || feature.devOnly !== true)
   const paths = entries.map((entry) => entry.feature.path)
-  if (new Set(paths).size !== paths.length) fail('two work features declare the same path')
+  if (new Set(paths).size !== paths.length) fail('two App features declare the same path')
   return entries
 }
 

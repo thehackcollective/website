@@ -10,7 +10,7 @@ cat <<'USAGE'
                          start the dev servers in the background: site on :5173, work on :5281.
                          Runs under op run --environment (the 1Password dev Environment id is in
                          scripts/c/_lib/op-environments.sh). No .env or .dev.vars file.
-                         With no Clerk keys, the work app opens signed in.
+                         With dev-member, the App opens signed in as the dev member.
   ./c status             which dev servers run, where, and for how long
   ./c quit [site|work]   stop the dev servers that ./c up started
   ./c doctor             is this checkout set up the way the repo says?

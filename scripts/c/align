@@ -10,7 +10,7 @@ usage() {
 Usage: ./c align [path…] [--origin URL] [--width N] [--phone] [--scale N] [--out DIR | --round DIR]
                  [--near-min PX] [--near-max PX] [--icon-max PX] [--hit-target PX]
 
-  Start the work app with ./c up work first. In dev with no Clerk keys the app opens signed in, so align does not sign in.
+  Start the App with ./c up work dev-member first. It then opens signed in as the dev member, so align does not sign in.
   The command opens each path in Chrome. It measures icons, images, controls and text runs.
   With no path, it measures every sidebar route declared in internal/work/features/*/entrypoint.ts:
   the nav `to`, or the feature's first route path when the nav has no `to`.

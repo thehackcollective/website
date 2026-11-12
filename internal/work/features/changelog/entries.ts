@@ -21,7 +21,7 @@ export const changelog: readonly [ChangelogEntry, ...ChangelogEntry[]] = [
     kind: 'new',
     title: 'cf0 design foundation',
     items: [
-      'The work app opens with a sidebar, a phone dock and a command palette on Cmd K or Ctrl K.',
+      'The App opens with a sidebar, a phone dock and a command palette on Cmd K or Ctrl K.',
       'Sign-in is invite-only, and every API call checks your session.',
       'Settings lets you pick a text weight and mute the click sounds.',
     ],

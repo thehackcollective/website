@@ -2,7 +2,7 @@
 
 Status: accepted
 Date: 2026-11-11
-Scope: every change to the repo: the public site, App, the kit, the tokens, the docs and the toolchain.
+Scope: every change to the repo: the public site, Work, the kit, the tokens, the docs and the toolchain.
 Decision: the gate runs as in elearning (`elearning/docs/decisions/2026-11-09-merge-through-c-merge.md`, ported from `cf0.ai/docs/decisions/2026-10-30-pr-only-shipping.md`).
 1. `build` is `vite build` only. It does not run the check. A deploy does not run the check either. The gate sits on the commit, the push and the merge instead.
 2. The pre-commit hook (`scripts/git-hooks/pre-commit`) runs `./c check --staged`. Each hook step whose path pattern matches a staged path runs on a copy of the staged files. `./c pre-commit` runs the same gate by hand.

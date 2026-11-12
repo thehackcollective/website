@@ -13,7 +13,7 @@ rule:
           - kind: jsx_attribute
 message: |
   Do not refer to the Google Fonts CDN.
-  the work app hosts all fonts itself as woff2 in public/fonts/.
+  the App hosts all fonts itself as woff2 in public/fonts/.
   Register fonts with @font-face in src/tokens/design-tokens.css.
   The Google Fonts CDN sends user IP addresses to Google and adds an external dependency.
   See product-design/references/interface-quality.md.

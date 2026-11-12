@@ -1,11 +1,11 @@
-# App: the shell, page header, page kinds, centred dialogs and coachmarks
+# Work: the shell, page header, page kinds, centred dialogs and coachmarks
 
 Status: accepted
 Date: 2026-11-11
-Scope: the App shell, every App route in `internal/work/features/<id>/`, and the `PageHeader`, `Dialog`, `Command`, `SharedAxis` and `Coachmark` components in `src/components/ui/`. Indexed as rules 19, 44 and 45 of `docs/decisions/2026-11-11-work-design-foundations.md`.
-Decision: App takes cf0's shell (`cf0.ai/docs/decisions/2026-11-01-canonical-sidebar.md`, `cf0.ai/docs/decisions/2026-11-01-sidebar-white-surface.md`, `cf0.ai/docs/decisions/2026-11-02-spatial-command-palette.md`, `cf0.ai/docs/decisions/2026-10-26-centered-modals-replace-side-sheets.md`, `cf0.ai/docs/decisions/2026-11-04-coachmarks-replace-the-page-tour.md`) with one portal.
+Scope: the Work shell, every Work route in `internal/work/features/<id>/`, and the `PageHeader`, `Dialog`, `Command`, `SharedAxis` and `Coachmark` components in `src/components/ui/`. Indexed as rules 19, 44 and 45 of `docs/decisions/2026-11-11-work-design-foundations.md`.
+Decision: Work takes cf0's shell (`cf0.ai/docs/decisions/2026-11-01-canonical-sidebar.md`, `cf0.ai/docs/decisions/2026-11-01-sidebar-white-surface.md`, `cf0.ai/docs/decisions/2026-11-02-spatial-command-palette.md`, `cf0.ai/docs/decisions/2026-10-26-centered-modals-replace-side-sheets.md`, `cf0.ai/docs/decisions/2026-11-04-coachmarks-replace-the-page-tour.md`) with one portal.
 - Sidebar. One sidebar, composed by the shell. Do not add a second sidebar. Its width is `layout.railWidth` (18.5rem), and collapsed it is `layout.railWidthCollapsed`. The phone header and the dock keep their own shell roles. Top to bottom:
-  1. A static brand row: the THC mark (`public/brand/icon.svg`) and the name, or the mark only when collapsed. It is not a button and has no menu, because App has one portal. cf0's portal menu is not ported. The collapse toggle sits in the same row.
+  1. A static brand row: the THC mark (`public/brand/icon.svg`) and the name, or the mark only when collapsed. It is not a button and has no menu, because Work has one portal. cf0's portal menu is not ported. The collapse toggle sits in the same row.
   2. Search: a field that opens the command palette. ⌘K or Ctrl+K, and `/` outside a text field, open it too.
   3. The page list.
   4. The footer: the profile, the mute toggle (icon) and sign out (icon), in one row. Collapsed, the footer icons stack.
@@ -16,9 +16,9 @@ Decision: App takes cf0's shell (`cf0.ai/docs/decisions/2026-11-01-canonical-sid
 - Command palette. A `Command` (`src/components/ui/command.tsx`) in a `Dialog` with `variant="palette"`. The root has drill rows (pages, commands). `SharedAxis` (`src/components/ui/shared-axis.tsx`) slides a deeper view in from the right and back from the left, and only fades under reduced motion. Key hints use `Kbd`.
 - Coachmarks. Each rail page has one to three coachmark steps: a popover with a spotlight on one real element (`src/components/ui/coachmark.tsx`), a title and one line. A step that names a control uses the label the control shows. Steps show once per member and page, after the page settles with its anchors in place, and skip an anchor that does not show. The steps live in `internal/work/features/<id>/coachmarks.ts` and anchor with `data-coachmark` (`web-coachmark-coverage`, `web-coachmark-anchors`). There is no page-wide tour dialog.
 - Login and public pages have no coachmarks. The login page shows the real THC mark.
-Rationale: cf0 is the spec for App. cf0's portal switch has no job in App, which has one portal, so the brand row is static. The footer keeps cf0's one-row profile, mute and sign-out layout. The details here come from the cf0 records and from cf0's shell code (`PageKind`, the ⌘K and `/` keys in its command palette). The App shell is `internal/work/shell/shell.tsx`, with the sidebar in `internal/work/shell/nav.tsx` and the palette in `internal/work/shell/command-palette.tsx`.
+Rationale: cf0 is the spec for Work. cf0's portal switch has no job in Work, which has one portal, so the brand row is static. The footer keeps cf0's one-row profile, mute and sign-out layout. The details here come from the cf0 records and from cf0's shell code (`PageKind`, the ⌘K and `/` keys in its command palette). The Work shell is `internal/work/shell/shell.tsx`, with the sidebar in `internal/work/shell/nav.tsx` and the palette in `internal/work/shell/command-palette.tsx`.
 Evidence: the cf0.ai records above (cf0.ai main @ a0538ec33); `docs/plans/2026-11-11-cf0-port.md` (Brand: "The real mark on login. No coachmarks on public or login pages."); senvielab `webapp-shell.md`, which makes the brand row static for one portal.
 Exceptions: the public site has no shell. Its nav is `site-nav.tsx` in `src/features/website/workspace/`.
 Bad example: a right-side sheet for a create form; a `maxWidth` and `margin: 0 auto` on a page root; a page title with its own `paddingTop`; a coachmark on the login page.
 Good example: `<Dialog><DialogContent variant="compose">…</DialogContent></Dialog>` for a create form; `kind: 'focus'` on a form route's entrypoint; `<PageHeader title="Events" actions={…} sticky />`.
-Open decisions: the App page list and its groups wait for the CRM PRD (`docs/work-platform/prd.md`).
+Open decisions: the Work page list and its groups wait for the CRM PRD (`docs/work-platform/prd.md`).

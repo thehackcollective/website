@@ -26,10 +26,10 @@ If you are about to break one "just this once", stop. The answer is a different 
 Answer in this order. Each question has one right answer.
 
 1. **Which surface?** The public site (hackcollective.uk) is `src/features/website/` and `src/app/`. App (app.hackcollective.uk) is `internal/` (the client) and `workers/internal/` (the Worker). Shared code that both surfaces need is `src/components/ui/` (visual) or `src/lib/` (not visual).
-2. **Which feature owns the behaviour?** A site feature is `src/features/<name>/`. A App feature is `internal/work/features/<name>/`. If no feature owns it, add a new feature folder. It is never a branch inside the file of another feature.
+2. **Which feature owns the behaviour?** A site feature is `src/features/<name>/`. An App feature is `internal/work/features/<name>/`. If no feature owns it, add a new feature folder. It is never a branch inside the file of another feature.
 3. **Which slot does the code go in?** Do not invent layout. The anatomy is fixed (below).
-4. **Does anything cross a boundary?** A site feature is reachable only through `@/features/<name>` (its `index.ts`). A App feature is reachable only through its `index.ts` (`web-cross-feature-via-index`). The App framework files never import a feature (`web-framework-never-imports-features`). `src/components/ui/`, `src/lib/` and `src/tokens/` never import `features/` or `app/` (`no-ui-imports-features`). The website never imports `@/app/` or `@internal/` (`no-website-imports-app`).
-5. **Who writes the durable value?** Each value has one writer. A design value lives in one token file of its tier (`docs/decisions/2026-11-11-two-token-tiers.md`). A App schema change is a numbered migration (`migration-numbers`). The `schema` step of `./c check` applies the migrations to a fresh D1. A App write goes through the write helpers (`web-write-through-helpers`). A secret lives only in 1Password.
+4. **Does anything cross a boundary?** A site feature is reachable only through `@/features/<name>` (its `index.ts`). An App feature is reachable only through its `index.ts` (`web-cross-feature-via-index`). The App framework files never import a feature (`web-framework-never-imports-features`). `src/components/ui/`, `src/lib/` and `src/tokens/` never import `features/` or `app/` (`no-ui-imports-features`). The website never imports `@/app/` or `@internal/` (`no-website-imports-app`).
+5. **Who writes the durable value?** Each value has one writer. A design value lives in one token file of its tier (`docs/decisions/2026-11-11-two-token-tiers.md`). An App schema change is a numbered migration (`migration-numbers`). The `schema` step of `./c check` applies the migrations to a fresh D1. An App write goes through the write helpers (`web-write-through-helpers`). A secret lives only in 1Password.
 
 ## Anatomy
 
@@ -42,7 +42,7 @@ Answer in this order. Each question has one right answer.
 | `feature-map.md` | Product knowledge, with Sub-features, How to get to it, Gotchas and Verify. |
 | `workspace/` | Flat: `view.tsx`, the sections, their `.stylex.ts` files, `content.ts`. |
 
-### A App feature: `internal/work/features/<name>/`
+### An App feature: `internal/work/features/<name>/`
 
 | File | Role |
 | --- | --- |
@@ -73,7 +73,7 @@ Discovery is mechanical. Each catalog globs the entrypoints. Never register a fe
 | syntax | every ast-grep rule in `sg-rules/` and its tests in `sg-rule-tests/` |
 | styles | ESLint: StyleX values come from tokens |
 | deps | one declared version per dependency (syncpack) |
-| types | `tsc --noEmit` for the site, the work app, the Worker and the scripts |
+| types | `tsc --noEmit` for the site, the App, the Worker and the scripts |
 | format | biome at 0 errors and 0 warnings |
 | cycles | no import cycle in `src`, `internal` or `workers` |
 | clones | jscpd under the limits in `base.rules.yaml` |

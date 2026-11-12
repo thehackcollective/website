@@ -514,7 +514,7 @@ rules:
     bad: ['@media (prefers-color-scheme: dark) {', '[data-theme=''dark''] {', 'color-scheme: dark;', 'colorScheme: ''dark'',']
     good: [<meta name="color-scheme" content="light" />, 'background: var(--thc-color-background-canvas);']
   message: >
-    The work app has one light theme. Do not add dark mode or a theme switch. The neutral tokens are tuned and checked for contrast on light surfaces only. Decision: docs/decisions/2026-11-11-work-neutral-theme.md.
+    The App has one light theme. Do not add dark mode or a theme switch. The neutral tokens are tuned and checked for contrast on light surfaces only. Decision: docs/decisions/2026-11-11-work-neutral-theme.md.
   exempt: ['src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
 - id: web-token-used
   catalog: 62

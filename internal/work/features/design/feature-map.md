@@ -20,8 +20,8 @@ Design is the `/design` catalogue of the shared kit in `src/components/ui`. Ever
 
 ## How to get to it (user POV)
 
-1. Run the work app in dev (`./c up work`). The page does not exist in production.
-2. Sign in to the work app.
+1. Run the App in dev (`./c up work`). The page does not exist in production.
+2. Sign in to the App.
 3. Click "Design" in the sidebar, or the second tab of the phone dock.
 4. Scroll the sections from top to bottom.
 

@@ -28,7 +28,7 @@ Ported from cf0 through elearning. Paths and routes are hack-collective's.
 6. Keep triage in `<run>/audit.json`: `falsePositives: [{id, reason}]` and `intended: [{id, reason}]`. Add measured changes that were not in the first report as `changes: [{category, element, before, after, rounds}]`, with `rounds` as a string such as `round-02 to round-03`.
 7. Stop when real open is zero and the clean capture is correct, after five rounds, or after two rounds that fix nothing. Report each open or intended finding. Do not invent measured values.
 
-Check shared leading edges across all row roles. Measure trailing edges only for trailing items. Keep media and text insets separate. If you change a control on a App rail page, update that feature's `coachmarks.ts` in the same change.
+Check shared leading edges across all row roles. Measure trailing edges only for trailing items. Keep media and text insets separate. If you change a control on an App rail page, update that feature's `coachmarks.ts` in the same change.
 
 ## Optional extras
 

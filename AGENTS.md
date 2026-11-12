@@ -73,8 +73,8 @@ workers/internal/       the App Worker
 
 1. A site feature folder has exactly `entrypoint.ts`, `index.ts`, `feature-map.md` and `workspace/`. `workspace/` is flat.
 2. A site feature map has the sections Sub-features, How to get to it, Gotchas and Verify.
-3. A App feature folder (`internal/work/features/<name>/`) has `entrypoint.ts`, `index.ts` and `feature-map.md`, and flat files.
-4. A App feature map has the sections Sub-features, How to get to it (user POV), Driving it with agent-browser and Gotchas, in this order.
+3. An App feature folder (`internal/work/features/<name>/`) has `entrypoint.ts`, `index.ts` and `feature-map.md`, and flat files.
+4. An App feature map has the sections Sub-features, How to get to it (user POV), Driving it with agent-browser and Gotchas, in this order.
 5. `internal/work/features/` holds only feature folders, `catalog.tsx` and `entrypoint.ts` at its top level.
 6. A site route has a surface. `public` renders under the app root. `app` is reserved for a future app shell (`src/features/entrypoint.ts`).
 7. New product work is a new feature folder. Do not add a branch to an existing feature. The catalog finds the new folder. There is no route list to edit.

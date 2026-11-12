@@ -8,7 +8,7 @@ rule:
     - pattern: import $$$ from "@clerk/clerk-react/legacy"
 message: |
   Do not import from @clerk/react/legacy.
-  the work app uses only Clerk Core 3 (`@clerk/react`). See CLAUDE.md § Clerk Core 3 Auth Implementation Conventions.
+  the App uses only Clerk Core 3 (`@clerk/react`). See CLAUDE.md § Clerk Core 3 Auth Implementation Conventions.
   In the past, the legacy entry point broke org-invitation membership-attach and showed no error (ENG-191, 2026-04-06).
   Use the atomic Core 3 `signUp.create()` pattern in CLAUDE.md.
 severity: error
