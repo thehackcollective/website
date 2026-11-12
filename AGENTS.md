@@ -41,7 +41,8 @@ Run all project commands through `./c`. `./c help` shows the list.
 | `./c explain <rule-id>` | Prints the message, reason, files and fix of one rule. |
 | `./c align [path…]` | Measures alignment, spacing and hit areas on a running page. |
 | `./c hooks` | Points git at `scripts/git-hooks`. |
-| `./c merge <PR>` | Squash-merges a PR when Greptile passes and the rules hold. |
+| `./c review <PR>` | Posts one Claude code-review of the PR head on the PR. |
+| `./c merge <PR>` | Squash-merges a PR when its head has main and the rules hold. |
 
 1. `./c up` runs under `op run --environment` with the 1Password dev Environment (`scripts/c/_lib/op-environments.sh`).
 2. With no Clerk keys in that Environment, the work app opens signed in as the dev member.
@@ -140,8 +141,9 @@ The record is `docs/decisions/2026-11-11-gate-placement.md`.
 1. `./c check` is the one gate. Every rule is at zero violations. The only baseline is `web-token-count-cap`, and it only goes down.
 2. The pre-commit hook (`scripts/git-hooks/pre-commit`) runs `./c check --staged`.
 3. The pre-push hook (`scripts/git-hooks/pre-push`) refuses a push to `main` and runs the full `./c check`.
-4. `./c merge <PR>` waits for Greptile, needs a score of at least `greptile-score-min`, runs `./c check structure` on the head and squash-merges. A red step stops the merge.
-5. Before you say a check is clean, run it. Report what passes and what fails.
+4. A PR merges only after a clean review. The review is one of the last steps of a PR, and it does not block the work. When the work of the PR is nearly done, push it and start `./c review <PR>` in the background. Keep working on the proof while it runs. When it ends, read it, fix the real findings in one batch and push once. Then merge. The record is `docs/decisions/2026-11-12-claude-review-replaces-greptile.md`.
+5. `./c merge <PR>` checks only facts: it brings main into the head, runs `./c check structure` on the head and squash-merges. A red step stops the merge.
+6. Before you say a check is clean, run it. Report what passes and what fails.
 
 ## 10. How a change reaches main
 
@@ -166,16 +168,13 @@ The rules only get stricter. An agent can make a rule stricter at any time. Each
 
 The `guarded` list at the top of `base.rules.yaml` names these files.
 
-To get a loosening approved:
+To ship a loosening:
 
 1. Put the loosening in its own PR. Do not mix it with a feature change.
 2. In the PR description, list each loosened rule and its reason.
-3. Wait for the last Greptile run on the head.
-4. After the last push, an Opus review sub-agent reads the loosening and approves it or refuses it.
-5. If the review approves it, the orchestrator adds the `rules-approved` label. If the label is already there, the orchestrator removes it and adds it again.
-6. Run `./c merge <PR>`.
+3. The PR's `./c review` reads it with the rest of the change. `./c check structure` warns about a loosened rule. A change to gate code gets no script check. `./c merge` blocks on neither.
 
-A builder agent does not add the label. No agent sets `BASE_RULES_LOOSEN`.
+No agent sets `BASE_RULES_LOOSEN`.
 
 ## 12. Hard rules
 

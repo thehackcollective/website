@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+#USAGE: review — post one Claude code-review of a PR head on the PR: ./c review <PR>
+
+set -euo pipefail
+
+cd "$THC_ROOT"
+
+fail() { printf '✗ %s\n' "$1" >&2; exit 1; }
+
+case "${1:-}" in
+  ""|-h|--help)
+    echo "Usage: ./c review <PR>"
+    echo "  It runs one claude -p session with the built-in code-review skill on the PR head and posts the review on the PR."
+    echo "  Start it in the background when the work of the PR is nearly done. Read it when it ends, fix the real findings once, then merge."
+    [[ -n "${1:-}" ]] && exit 0
+    exit 2
+    ;;
+esac
+
+PR="$1"
+command -v claude >/dev/null || fail "No claude CLI here. Install Claude Code, then run ./c review $PR again."
+PR_FIELDS="$(gh pr view "$PR" --json headRefOid,baseRefName -q '"\(.headRefOid) \(.baseRefName)"')" \
+  || fail "gh could not read PR #$PR. Check the PR number and gh auth status."
+read -r HEAD_SHA BASE <<<"$PR_FIELDS"
+git fetch -q origin "$BASE" || fail "git could not fetch $BASE. Check the network, then run ./c review $PR again."
+git fetch -q origin "$HEAD_SHA" 2>/dev/null || git fetch -q origin "refs/pull/$PR/head" 2>/dev/null || true
+git cat-file -e "$HEAD_SHA^{commit}" 2>/dev/null || fail "git could not fetch the head ${HEAD_SHA:0:9} of PR #$PR. Run ./c review $PR again."
+MERGE_BASE="$(git merge-base "origin/$BASE" "$HEAD_SHA")"
+
+WORK="$(mktemp -d)"
+trap 'rm -rf "$WORK"' EXIT
+mkdir "$WORK/head"
+git archive --worktree-attributes "$HEAD_SHA" | tar -x -C "$WORK/head"
+find "$WORK/head" -type l -delete
+git diff "$MERGE_BASE" "$HEAD_SHA" >"$WORK/head/PR.diff"
+
+printf '→ One code-review session of PR #%s at %s.\n' "$PR" "${HEAD_SHA:0:9}"
+(cd "$WORK/head" && claude -p "/code-review PR.diff" --model opus --no-session-persistence \
+  --setting-sources "" --strict-mcp-config --permission-mode default \
+  --allowedTools "Read(./**)" "Grep(./**)" "Glob(./**)" "Skill") >"$WORK/review.md" \
+  || fail "The review session did not finish. Run ./c review $PR again."
+[[ -s "$WORK/review.md" ]] || fail "The review session printed nothing. Run ./c review $PR again."
+
+{ printf '## ./c review of %s\n\n' "${HEAD_SHA:0:9}"; cat "$WORK/review.md"; } >"$WORK/comment.md"
+gh pr comment "$PR" --body-file "$WORK/comment.md" >/dev/null \
+  || { cat "$WORK/comment.md"; fail "gh could not post the review above on PR #$PR. Post it by hand."; }
+printf '✓ The review of %s is on PR #%s.\n' "${HEAD_SHA:0:9}" "$PR"
