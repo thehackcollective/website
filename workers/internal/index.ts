@@ -22,8 +22,18 @@ async function handleApi(request: Request, env: Env, pathname: string): Promise<
   if (pathname === '/api/people') return json(await listPeople(env))
   const personId = pathname.match(/^\/api\/people\/([^/]+)$/)?.[1]
   if (personId === undefined) return json({ error: 'not_found' }, 404)
-  const person = await personById(env, decodeURIComponent(personId))
+  const id = decodedPathPart(personId)
+  if (id === null) return json({ error: 'not_found' }, 404)
+  const person = await personById(env, id)
   return person === null ? json({ error: 'not_found' }, 404) : json(person)
+}
+
+function decodedPathPart(part: string): string | null {
+  try {
+    return decodeURIComponent(part)
+  } catch {
+    return null
+  }
 }
 
 function route(request: Request, env: Env): Promise<Response> {
