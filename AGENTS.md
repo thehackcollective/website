@@ -41,7 +41,8 @@ Run all project commands through `./c`. `./c help` shows the list.
 | `./c explain <rule-id>` | Prints the message, reason, files and fix of one rule. |
 | `./c align [path…]` | Measures alignment, spacing and hit areas on a running page. |
 | `./c hooks` | Points git at `scripts/git-hooks`. |
-| `./c merge <PR>` | Squash-merges a PR when Greptile passes and the rules hold. |
+| `./c review <PR>` | Runs an adversarial Opus review of the PR head and posts its P1 count. |
+| `./c merge <PR>` | Squash-merges a PR when `./c review` found no P1 and the rules hold. |
 
 1. `./c up` runs under `op run --environment` with the 1Password dev Environment (`scripts/c/_lib/op-environments.sh`).
 2. With no Clerk keys in that Environment, the work app opens signed in as the dev member.
@@ -140,8 +141,9 @@ The record is `docs/decisions/2026-11-11-gate-placement.md`.
 1. `./c check` is the one gate. Every rule is at zero violations. The only baseline is `web-token-count-cap`, and it only goes down.
 2. The pre-commit hook (`scripts/git-hooks/pre-commit`) runs `./c check --staged`.
 3. The pre-push hook (`scripts/git-hooks/pre-push`) refuses a push to `main` and runs the full `./c check`.
-4. `./c merge <PR>` waits for Greptile, needs a score of at least `greptile-score-min`, runs `./c check structure` on the head and squash-merges. A red step stops the merge.
-5. Before you say a check is clean, run it. Report what passes and what fails.
+4. `./c review <PR>` reviews the final head once and posts a comment with its P1 count. Fix every real P1 in one batch, push once and review again. The record is `docs/decisions/2026-11-12-claude-review-replaces-greptile.md`.
+5. `./c merge <PR>` needs a `./c review` of the head with no P1, runs `./c check structure` on the head and squash-merges. A red step stops the merge.
+6. Before you say a check is clean, run it. Report what passes and what fails.
 
 ## 10. How a change reaches main
 
@@ -170,7 +172,7 @@ To get a loosening approved:
 
 1. Put the loosening in its own PR. Do not mix it with a feature change.
 2. In the PR description, list each loosened rule and its reason.
-3. Wait for the last Greptile run on the head.
+3. Run `./c review <PR>` on the last head.
 4. After the last push, an Opus review sub-agent reads the loosening and approves it or refuses it.
 5. If the review approves it, the orchestrator adds the `rules-approved` label. If the label is already there, the orchestrator removes it and adds it again.
 6. Run `./c merge <PR>`.

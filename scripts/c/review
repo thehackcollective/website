@@ -1,0 +1,144 @@
+#!/usr/bin/env bash
+#USAGE: review — adversarial Claude review of a PR head, posted with the P1 count that ./c merge reads: ./c review <PR> [--sessions 1|2|3] [--record <file>]
+
+set -euo pipefail
+
+CALLER_DIR="$PWD"
+cd "$THC_ROOT"
+
+MODEL=opus
+MAX_REVIEWS=3
+MARKER='<!-- thc-review '
+
+fail() { printf '✗ %s\n' "$1" >&2; exit 1; }
+say() { printf '→ %s\n' "$1"; }
+
+usage() {
+  echo "Usage: ./c review <PR> [--sessions 1|2|3] [--record <file>]"
+  echo "  Local: it runs claude -p reviews of the PR head in parallel. The default is 1 session."
+  echo "    1 session reads all lenses: correctness, the repo rules and design, security and the user result."
+  echo "    2 sessions: correctness, then rules with security. 3 sessions: one lens each."
+  echo "  No claude CLI (a cloud VM): spawn one adversarial review agent (up to three) yourself."
+  echo "    Write their findings to a file, one per line: '- P1 path:line — problem' or '- P2 ...'."
+  echo "    Then run ./c review <PR> --record <file>."
+  echo "  It posts one PR comment with the P1 count for that head. ./c merge needs P1 = 0."
+  echo "  Each finding labelled P1 counts. To drop a false P1, write the checked findings to a file,"
+  echo "    and write each dropped finding as '- Dropped: path:line — reason', without the P1 label."
+  echo "    Then run ./c review <PR> --record <file> on the same head."
+  echo "  A PR gets at most $MAX_REVIEWS reviews. After that, cut the feature or split the PR."
+}
+
+case "${1:-}" in
+  ""|-h|--help) usage; [[ -n "${1:-}" ]] && exit 0; exit 2 ;;
+esac
+
+PR="$1"
+RECORD=""
+SESSIONS=1
+shift
+while (( $# > 0 )); do
+  case "$1" in
+    --record)
+      RECORD="${2:-}"
+      [[ -z "$RECORD" || "$RECORD" == /* ]] || RECORD="$CALLER_DIR/$RECORD"
+      [[ -s "$RECORD" ]] || fail "--record needs a file with the findings of your review agents."
+      shift 2 ;;
+    --sessions)
+      SESSIONS="${2:-}"
+      [[ "$SESSIONS" =~ ^[123]$ ]] || fail "--sessions takes 1, 2 or 3."
+      shift 2 ;;
+    *) usage; exit 2 ;;
+  esac
+done
+
+[[ "$(gh pr view "$PR" --json state -q .state)" == "OPEN" ]] || fail "PR #$PR is not open."
+BASE="$(gh pr view "$PR" --json baseRefName -q .baseRefName)"
+HEAD_SHA="$(gh pr view "$PR" --json headRefOid -q .headRefOid)"
+git fetch -q origin "$BASE"
+git fetch -q origin "refs/pull/$PR/head" 2>/dev/null || true
+git cat-file -e "$HEAD_SHA^{commit}" 2>/dev/null || fail "git could not fetch the head ${HEAD_SHA:0:9} of PR #$PR."
+
+REVIEWS="$(gh api "repos/{owner}/{repo}/issues/$PR/comments" --paginate -q '.[] | select(.author_association == "OWNER" or .author_association == "MEMBER" or .author_association == "COLLABORATOR" or .user.type == "Bot") | (if (.body | contains("(recorded)")) then "record" else "run" end) as $kind | ([.body | capture("<!-- thc-review sha=(?<sha>[0-9a-f]+) p1=(?<p1>[0-9]+) -->"; "g")] | last) | select(. != null) | "\(.sha) \($kind) \(.p1)"')" || fail "gh could not read the comments of PR #$PR. Check the network, then run ./c review $PR again."
+LAST_HEAD="$(grep "^$HEAD_SHA " <<<"$REVIEWS" | tail -1 || true)"
+if [[ -n "$LAST_HEAD" && -z "$RECORD" ]]; then
+  HEAD_P1="${LAST_HEAD##* }"
+  (( HEAD_P1 == 0 )) && { say "PR #$PR already has a review of ${HEAD_SHA:0:9} with no P1. Run ./c merge $PR."; exit 0; }
+  fail "PR #$PR already has a review of ${HEAD_SHA:0:9} with $HEAD_P1 P1. Fix every real P1 and push. To drop a false P1, run ./c review $PR --record <file> with the checked findings."
+fi
+DONE="$(grep -c " run " <<<"$REVIEWS" || true)"
+[[ -n "$RECORD" ]] || (( DONE < MAX_REVIEWS )) || fail "PR #$PR had $DONE reviews. Do not review it again. Cut the feature that keeps getting findings, or split the PR."
+
+WORK="$(mktemp -d)"
+trap 'rm -rf "$WORK"' EXIT
+
+if [[ -n "$RECORD" ]]; then
+  cp "$RECORD" "$WORK/findings.md"
+else
+  command -v claude >/dev/null || fail "No claude CLI here. Spawn one adversarial review agent (up to three), write their findings to a file, then run ./c review $PR --record <file>."
+  mkdir "$WORK/head"
+  git archive "$HEAD_SHA" | tar -x -C "$WORK/head"
+  git diff "origin/$BASE...$HEAD_SHA" >"$WORK/diff.patch"
+  [[ -s "$WORK/diff.patch" ]] || fail "PR #$PR has no diff against $BASE."
+
+  CORRECTNESS="Correctness and failure paths. Find logic errors, broken edge cases, missing error handling, races, wrong data shapes between the Worker API and the app, and code that the diff breaks elsewhere."
+  RULES="The repo rules and the design rules. Read AGENTS.md, .agents/skills/base-framework/SKILL.md, DESIGN.md for the public site and docs/decisions/2026-11-11-work-design-foundations.md for Work. Find code that breaks a rule that the checks cannot see: a second writer for a value, a shared root edited for a feature, a design rule broken in the UI, copy that breaks the copy rules or invents a fact."
+  SAFETY="Security, data and the user result. Find leaked secrets or personal data, auth checks that are missing, unsafe SQL, data loss, messages sent wrongly, and a user-visible result that does not match what the PR says it does."
+  case "$SESSIONS" in
+    1) LENSES=("review|Use all three lenses. 1. $CORRECTNESS 2. $RULES 3. $SAFETY") ;;
+    2) LENSES=("correctness|$CORRECTNESS" "rules-and-safety|Use two lenses. 1. $RULES 2. $SAFETY") ;;
+    3) LENSES=("correctness|$CORRECTNESS" "rules|$RULES" "safety|$SAFETY") ;;
+  esac
+  say "$SESSIONS $MODEL review session(s) of ${HEAD_SHA:0:9} against $BASE run in parallel."
+  for entry in "${LENSES[@]}"; do
+    name="${entry%%|*}"
+    lens="${entry#*|}"
+    (
+      cd "$WORK/head"
+      claude -p "You are an adversarial code reviewer for PR #$PR of the hack-collective repo. The working directory is the PR head. Standard input is the diff against $BASE.
+Your lens: $lens
+Try to break the change. Read the files you need. Report only real defects that this diff adds or exposes. Do not report style, naming or a missing test. Do not praise.
+Output format, nothing else:
+- P1 path:line — the defect — a concrete input or state that makes it fail
+- P2 path:line — the defect — why it matters
+P1 means the change is wrong, unsafe or breaks something for a user. P2 means it works but should be better.
+If you find nothing, write 'No findings.'
+End with one line: END" \
+        --model "$MODEL" --no-session-persistence \
+        --allowedTools "Read,Grep,Glob" \
+        <"$WORK/diff.patch" >"$WORK/$name.md" 2>"$WORK/$name.err" || echo "exit $?" >"$WORK/$name.failed"
+    ) &
+  done
+  wait
+  for entry in "${LENSES[@]}"; do
+    name="${entry%%|*}"
+    if [[ -e "$WORK/$name.failed" || "$(grep -v '^[[:space:]]*$' "$WORK/$name.md" | tail -1)" != "END" ]]; then
+      tail -20 "$WORK/$name.err" >&2 || true
+      fail "The $name review did not finish. Its last error lines are above. Run ./c review $PR again."
+    fi
+    { printf '### %s\n\n' "$name"; grep -v '^END' "$WORK/$name.md"; printf '\n'; } >>"$WORK/findings.md"
+  done
+fi
+
+sed -i.bak '/thc-review/d' "$WORK/findings.md"
+LABEL='^[[:space:]>]*([-*+]|[0-9]+[.)])?[[:space:]]*[*_`[]*'
+P1="$(grep -cE "${LABEL}P1([^0-9]|$)" "$WORK/findings.md" || true)"
+P2="$(grep -cE "${LABEL}P2([^0-9]|$)" "$WORK/findings.md" || true)"
+SOURCE="$([[ -n "$RECORD" ]] && echo "review agents (recorded)" || echo "./c review, $SESSIONS $MODEL session(s)")"
+{
+  printf '## Review of %s: %s P1, %s P2\n\n' "${HEAD_SHA:0:9}" "$P1" "$P2"
+  if [[ -n "$RECORD" ]]; then
+    printf 'Source: %s.\n\n' "$SOURCE"
+  else
+    printf 'Source: %s. Review %s of %s.\n\n' "$SOURCE" "$((DONE + 1))" "$MAX_REVIEWS"
+  fi
+  cat "$WORK/findings.md"
+  printf '\n%ssha=%s p1=%s -->\n' "$MARKER" "$HEAD_SHA" "$P1"
+} >"$WORK/comment.md"
+gh pr comment "$PR" --body-file "$WORK/comment.md" >/dev/null || fail "gh could not post the review on PR #$PR."
+
+if (( P1 == 0 )); then
+  printf '✓ PR #%s: no P1 on %s (%s P2). Answer each P2 that you do not fix in the PR. Then run ./c merge %s.\n' "$PR" "${HEAD_SHA:0:9}" "$P2" "$PR"
+else
+  printf '✗ PR #%s: %s P1 on %s. Fix every real P1 in one batch, push once, then run ./c review %s again.\n' "$PR" "$P1" "${HEAD_SHA:0:9}" "$PR"
+  exit 1
+fi

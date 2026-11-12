@@ -15,7 +15,6 @@ limits:
   jscpd-dup-lines-max: 0
   jscpd-dup-tokens-max: 0
   health-score-min: 90
-  greptile-score-min: 5
 aliases:
   src:
     "@/ui/": src/components/ui/
