@@ -49,7 +49,12 @@ Run all project commands through `./c`. `./c help` shows the list.
 3. The dev pair is set, so `./c up work` signs in through the Clerk dev instance, which is invite-only. `./c up work dev-member` skips the keys and opens signed in as the dev member.
 4. Logs and pids go to `.c-runtime/`. Copy a log before you read it, because the next run writes over it.
 5. `bun run build` builds the site. `cd internal && bunx vite build` builds App. Neither runs the check.
-6. Production ships through Workers Builds on a merge to main, with `cf deploy --prebuilt --mode production`. Do not deploy by hand.
+6. Production ships through Workers Builds on a merge to main. Do not deploy by hand. Each Worker has one trigger on `main`:
+   - The site builds with `bun install && bun run build`. It deploys with `bunx cf deploy --prebuilt --mode production`.
+   - The App trigger is "App production". It builds with `bun install && cd internal && bunx vite build`.
+   - The App deploy command first applies the D1 migrations: `cd internal && bunx cf d1 migrations apply a6feccfd-24d4-4b6e-8109-62848796ff76 --dir ../workers/internal/migrations`. Then it runs `bunx cf deploy --prebuilt --mode production`.
+   - The App build variable `CLERK_PUBLISHABLE_KEY` holds `CLERK_PROD_PUBLISHABLE_KEY`. The Worker secret `CLERK_SECRET_KEY` holds `CLERK_PROD_SECRET_KEY`.
+   - The record is `docs/decisions/2026-11-12-app-deploy-applies-migrations.md`.
 7. Use the `cf` CLI (`node_modules/.bin/cf`), never Wrangler. The record is `docs/decisions/2026-11-12-cf-cli.md`.
 8. App's D1 migrations live in `workers/internal/migrations`. Apply them from `internal/` with `cf d1 migrations apply <id> --dir ../workers/internal/migrations`. Add `--local --persist-to <dir>` for local data. `cf` defaults to the remote database.
 
