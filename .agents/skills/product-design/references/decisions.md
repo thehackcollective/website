@@ -2,7 +2,7 @@
 
 Accepted design decisions, newest first. Add one when Louis accepts a change that future work must not reopen.
 
-These are public-site decisions. Work decisions live in `docs/decisions/`.
+These are public-site decisions. App decisions live in `docs/decisions/`.
 
 ## 2026-11-11 - The event section lists every hackathon THC is part of
 
@@ -12,7 +12,7 @@ These are public-site decisions. Work decisions live in `docs/decisions/`.
 
 ## 2026-11-11 - The landing tokens move to `--thc-website-*`
 
-- The cf0 port gives Work the `--thc-*` namespace. The landing values moved unchanged to `src/tokens/website-tokens.css` (`--thc-website-*`) and `src/tokens/website-token-consts.stylex.ts`. The entries below that name `--thc-*` or `design-tokens.css` predate the move.
+- The cf0 port gives App the `--thc-*` namespace. The landing values moved unchanged to `src/tokens/website-tokens.css` (`--thc-website-*`) and `src/tokens/website-token-consts.stylex.ts`. The entries below that name `--thc-*` or `design-tokens.css` predate the move.
 - Source: `docs/decisions/2026-11-11-two-token-tiers.md`.
 
 ## 2026-10-08 — Grok Bot section is back as the first section after the hero, now that the event is announced (luma.com/eveur09a). Facts in content.ts `HACK`; THC is a community partner with a track.

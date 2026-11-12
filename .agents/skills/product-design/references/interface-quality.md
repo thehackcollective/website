@@ -1,6 +1,6 @@
 # Interface quality
 
-Values are not repeated here. Read `DESIGN.md` for the roles and `src/tokens/website-tokens.css` for the numbers. This file covers the public site. Work follows `docs/decisions/2026-11-11-work-design-foundations.md`.
+Values are not repeated here. Read `DESIGN.md` for the roles and `src/tokens/website-tokens.css` for the numbers. This file covers the public site. App follows `docs/decisions/2026-11-11-work-design-foundations.md`.
 
 ## Layout
 

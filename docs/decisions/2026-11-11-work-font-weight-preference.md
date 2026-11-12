@@ -1,10 +1,10 @@
-# Work: each member chooses the one text weight
+# App: each member chooses the one text weight
 
 Status: accepted
 Date: 2026-11-11
-Scope: Work only: every element that reads `text.weightRegular` or its aliases. The public site ignores the choice. Amends rule 3 of `docs/decisions/2026-11-11-work-design-foundations.md` and the typeface clause of `docs/decisions/2026-11-11-work-type-ladder.md`.
+Scope: App only: every element that reads `text.weightRegular` or its aliases. The public site ignores the choice. Amends rule 3 of `docs/decisions/2026-11-11-work-design-foundations.md` and the typeface clause of `docs/decisions/2026-11-11-work-type-ladder.md`.
 Decision:
-- One weight. Work text, labels, buttons and headings use one weight, `text.weightRegular`. `text.weightMedium` and `text.weightSemibold` are aliases of it. Hierarchy comes from the size ladder, never from a second weight.
+- One weight. App text, labels, buttons and headings use one weight, `text.weightRegular`. `text.weightMedium` and `text.weightSemibold` are aliases of it. Hierarchy comes from the size ladder, never from a second weight.
 - Default 400. `--thc-weight-regular` is 400 in `src/tokens/design-tokens.css`.
 - Member choice. The setting has three options, Regular (400), Medium (500) and Semibold (600), from `FONT_WEIGHTS` in `src/lib/font-weight.ts`. It shows them as three "B" tiles. Each tile draws its "B" inside a wrapper with `data-thc-weight` set to that option, so each tile shows its own weight and does not change with the member's choice.
 - Applying it. `src/lib/font-weight.ts` sets `data-thc-weight="500"` or `"600"` on `<html>`, and no attribute for 400. `design-tokens.css` maps `[data-thc-weight="…"]` to a new `--thc-weight-regular`, so the whole page, portals included, moves together. `applyFontWeight()` runs at boot in `internal/main.tsx` from the device copy, so the first paint already has the weight.
@@ -15,4 +15,4 @@ Evidence: `docs/plans/2026-11-11-cf0-port.md` (Brand: "one weight 400, plus a pe
 Exceptions: the public site.
 Bad example: `fontWeight: 600` on a heading; `data-thc-weight` in a feature; a second "bold" token for card titles.
 Good example: `fontWeight: text.weightRegular` everywhere; the member picks Semibold and every label, title and button on the page moves to 600.
-Open decisions: where the server saves the choice per member (the save callback that `setFontWeight` takes) is open until the Work member store exists.
+Open decisions: where the server saves the choice per member (the save callback that `setFontWeight` takes) is open until the App member store exists.

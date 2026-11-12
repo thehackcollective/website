@@ -1,16 +1,17 @@
-# Work runs on app.hackcollective.uk
+# App (formerly Work) runs on app.hackcollective.uk
 
 Date: 2026-11-12. Decided by Louis.
 
 ## Decision
 
-1. Work, the THC CRM, is served at app.hackcollective.uk, not work.hackcollective.uk.
-2. The product name stays Work. Only the domain changes.
-3. The Clerk production instance is on app.hackcollective.uk. Its DNS records (`clerk.`, `accounts.` and `clkmail.app.hackcollective.uk`) are live.
+1. App, the THC CRM, is served at app.hackcollective.uk, not work.hackcollective.uk.
+2. The product is called App, not Work or The Hack Collective Work. The Worker is `hack-collective-app`. The browser tab reads `App`, or `<page> · App`.
+3. Code paths keep their names: `internal/work/`, `./c up work` and the D1 database `hack-collective-work` (a Cloudflare resource name).
+4. The Clerk production instance is on app.hackcollective.uk. Its DNS records (`clerk.`, `accounts.` and `clkmail.app.hackcollective.uk`) are live.
 
 ## Reason
 
-A Clerk production instance serves one domain. Louis set the instance up on app.hackcollective.uk, so Work moves to that domain.
+A Clerk production instance serves one domain. Louis set the instance up on app.hackcollective.uk, so App moves to that domain.
 
 ## Keys
 

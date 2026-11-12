@@ -787,7 +787,7 @@ rules:
     bad: ['fontFamily: ''Geist''']
     good: ['fontFamily: text.fontSans']
   message: >
-    Do not write a font name. The font comes only from the text.fontSans token (src/tokens/). All Work pages use Geist (docs/decisions/2026-11-11-work-type-ladder.md).
+    Do not write a font name. The font comes only from the text.fontSans token (src/tokens/). All App pages use Geist (docs/decisions/2026-11-11-work-type-ladder.md).
 - id: web-no-shadcn-theme-vars
   catalog: 62
   check: regex
@@ -813,7 +813,7 @@ rules:
     bad: ['fontWeight: 600', fontWeight="700", 'font-weight: 700;']
     good: ['fontWeight: text.weightRegular', 'fontWeight={text.weightRegular}', 'font-weight: var(--thc-weight-regular);']
   message: >
-    Use the weight token: text.weightRegular in StyleX and var(--thc-weight-regular) in CSS. Work text has one weight, which each member picks. Hierarchy comes from size. See docs/decisions/2026-11-11-work-font-weight-preference.md.
+    Use the weight token: text.weightRegular in StyleX and var(--thc-weight-regular) in CSS. App text has one weight, which each member picks. Hierarchy comes from size. See docs/decisions/2026-11-11-work-font-weight-preference.md.
 - id: migration-numbers
   catalog: 63
   check: migration-numbers

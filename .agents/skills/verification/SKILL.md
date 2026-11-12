@@ -49,7 +49,7 @@ There are two contracts, one for each surface. `./c check structure` enforces bo
 
 A site feature map (`src/features/<name>/feature-map.md`) has these H2 sections: Sub-features, How to get to it, Gotchas and Verify.
 
-A Work feature map (`internal/work/features/<name>/feature-map.md`) has these four H2 sections, in this order (`web-feature-map-sections`):
+A App feature map (`internal/work/features/<name>/feature-map.md`) has these four H2 sections, in this order (`web-feature-map-sections`):
 
 1. `## Sub-features`: one bullet per behaviour, as `name: what a user does and sees`.
 2. `## How to get to it (user POV)`: the route, the nav item or the row that opens it, then the numbered user path.
@@ -61,7 +61,7 @@ Keep entries at the level of behaviour. Do not list files: the feature folder sh
 ## Feature map index
 
 - website (`src/features/website/feature-map.md`): the public landing page at `/`.
-- Work features: one map per folder in `internal/work/features/<name>/feature-map.md`. The CRM modules are not built yet (`docs/work-platform/map.md`).
+- App features: one map per folder in `internal/work/features/<name>/feature-map.md`. The CRM modules are not built yet (`docs/work-platform/map.md`).
 
 ## Hard rules
 

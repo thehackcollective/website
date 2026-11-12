@@ -1,6 +1,6 @@
 # Rules
 
-Stable-ID index for the public site. `lint` means `./c check` catches it mechanically (`sg-rules/`, `base.rules.yaml`, ESLint, tsc); `prose` means an agent must check it. Work rules are in `docs/decisions/2026-11-11-work-design-foundations.md`.
+Stable-ID index for the public site. `lint` means `./c check` catches it mechanically (`sg-rules/`, `base.rules.yaml`, ESLint, tsc); `prose` means an agent must check it. App rules are in `docs/decisions/2026-11-11-work-design-foundations.md`.
 
 | ID | Rule | Enforced by | Source |
 |---|---|---|---|

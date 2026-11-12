@@ -15,7 +15,7 @@ import { PageHeader } from '@/ui/page-header'
 import { PageTabsProvider } from '@/ui/page-tabs'
 
 const shellTabs = {
-  label: 'Work pages',
+  label: 'App pages',
   current: 'design',
   tabs: [
     { id: 'home', label: 'Home', to: '/' },
