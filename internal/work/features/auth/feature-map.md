@@ -17,7 +17,7 @@ Auth signs a member in to the work app. It is invite-only: Clerk holds the membe
 
 ## Driving it with agent-browser
 
-1. Run `./c up work` with no Clerk keys. Open `http://localhost:5281/login`. Expect a redirect to `/` and "Dev member" in the sidebar footer.
+1. Run `./c up work dev-member`. Open `http://localhost:5281/login`. Expect a redirect to `/` and "Dev member" in the sidebar footer.
 2. With Clerk keys in the Environment, open `http://localhost:5281/settings` signed out. Expect `/login?redirect_url=%2Fsettings` with the mark, the h1 and the Clerk card.
 3. Sign in. Expect `/settings`.
 4. Call `fetch('/api/me').then(r => r.json())` in the page. Expect the member with the same id.

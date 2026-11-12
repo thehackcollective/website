@@ -46,7 +46,7 @@ Run all project commands through `./c`. `./c help` shows the list.
 
 1. `./c up` runs under `op run --environment` with the 1Password dev Environment (`scripts/c/_lib/op-environments.sh`).
 2. The 1Password Environment `hackcollective` (`escb5g6qj6obx3ozvjtixcczkq`) holds `CLERK_DEV_SECRET_KEY`, `CLERK_DEV_PUBLISHABLE_KEY`, `CLERK_PROD_SECRET_KEY` and `CLERK_PROD_PUBLISHABLE_KEY`. Under `./c up`, `scripts/c/_lib/with-dev-clerk-keys.sh` passes the dev pair on as `CLERK_SECRET_KEY` and `CLERK_PUBLISHABLE_KEY` and drops the prod pair.
-3. The dev pair is set, so `./c up work` signs in through the Clerk dev instance, which is invite-only. Only a dev run with no Clerk keys opens signed in as the dev member.
+3. The dev pair is set, so `./c up work` signs in through the Clerk dev instance, which is invite-only. `./c up work dev-member` skips the keys and opens signed in as the dev member.
 4. Logs and pids go to `.c-runtime/`. Copy a log before you read it, because the next run writes over it.
 5. `bun run build` builds the site. `cd internal && bunx vite build` builds Work. Neither runs the check.
 6. Production ships through Workers Builds on a merge to main, with `cf deploy --prebuilt --mode production`. Do not deploy by hand.

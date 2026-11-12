@@ -20,7 +20,7 @@ A change is not done until it ran on the product at the layer the user touches. 
 ## Preconditions
 
 - `./c up site` serves hackcollective.uk on :5173. `./c up work` serves app.hackcollective.uk (client and Worker) on :5281. `./c status` shows them. `./c quit` stops them.
-- `./c up` runs under `op run --environment`. The Environment holds the Clerk dev keys, so the work app asks for a Clerk sign-in to the invite-only dev instance. With no Clerk keys, it opens signed in as the dev member.
+- `./c up` runs under `op run --environment`. The Environment holds the Clerk dev keys, so the work app asks for a Clerk sign-in to the invite-only dev instance. `./c up work dev-member` skips the keys and opens signed in as the dev member, which is the way to drive the app without an invited account.
 - `./c up work mock-data:empty` or `./c up work mock-data:full` resets the local work data first.
 - Locate an element by its role and its label (`getByRole`, `getByLabel`). StyleX class names are hashes that change on each build, so never select by a class.
 - Run scripts from the scratchpad, not from the repo.

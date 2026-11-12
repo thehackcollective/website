@@ -27,7 +27,7 @@ Design is the `/design` catalogue of the shared kit in `src/components/ui`. Ever
 
 ## Driving it with agent-browser
 
-1. Run `./c up work`. With no Clerk keys the app opens signed in as the dev member.
+1. Run `./c up work dev-member`. The app opens signed in as the dev member.
 2. Open `http://localhost:5281/design`. Expect the heading "Design" and the "Buttons" section first.
 3. Hold "Hold to delete" until it completes and expect the caption "Hold confirmed".
 4. Click "Archive with undo", then "Undo" in the pill, and expect "Archive undone".
