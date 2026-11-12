@@ -1,0 +1,98 @@
+id: no-hard-width-cap
+language: Tsx
+severity: error
+message: |
+  A fixed width cap stops an app surface from filling its column. See DESIGN.md, Page kinds.
+
+    maxWidth: layout.pageFrame -> remove it for a data surface
+    maxWidth: '640px' -> use '65ch' for text or a named layout token for an overlay
+
+  Keep text at 65 characters per line or less. Use a named layout token for an overlay.
+rule:
+  any:
+    - kind: pair
+      all:
+        - has:
+            field: key
+            regex: '^(maxWidth|maxInlineSize)$'
+        - has:
+            field: value
+            any:
+              - kind: string
+                regex: '.*[0-9]+(px|rem|em|vw).*'
+              - kind: template_string
+                regex: '.*[0-9]+(px|rem|em|vw).*'
+              - kind: number
+                regex: '^[1-9][0-9]*(\.[0-9]+)?$'
+        - not:
+            has:
+              field: value
+              regex: '.*(ch|%).*'
+        - inside:
+            stopBy: end
+            pattern: stylex.create($$$)
+    - kind: pair
+      all:
+        - has:
+            field: key
+            regex: '^(maxWidth|maxInlineSize|width)$'
+        - has:
+            field: value
+            kind: member_expression
+            regex: '^layout\.(pageFrame|containerWide|containerMax)$'
+        - inside:
+            stopBy: end
+            pattern: stylex.create($$$)
+    - kind: pair
+      all:
+        - has:
+            field: value
+            any:
+              - kind: string
+                regex: '.*[0-9]+(px|rem|em|vw).*'
+              - kind: template_string
+                regex: '.*[0-9]+(px|rem|em|vw).*'
+              - kind: number
+                regex: '^[1-9][0-9]*(\.[0-9]+)?$'
+        - not:
+            has:
+              field: value
+              regex: '.*(ch|%).*'
+        - inside:
+            stopBy: end
+            kind: pair
+            has:
+              field: key
+              regex: '^(maxWidth|maxInlineSize)$'
+        - inside:
+            stopBy: end
+            pattern: stylex.create($$$)
+    - kind: pair
+      all:
+        - has:
+            field: value
+            kind: member_expression
+            regex: '^layout\.(pageFrame|containerWide|containerMax)$'
+        - inside:
+            stopBy: end
+            kind: pair
+            has:
+              field: key
+              regex: '^(maxWidth|maxInlineSize|width)$'
+        - inside:
+            stopBy: end
+            pattern: stylex.create($$$)
+files:
+  - "internal/**/*.ts"
+  - "workers/internal/**/*.ts"
+  - "src/components/ui/**/*.ts"
+  - "src/lib/**/*.ts"
+  - "internal/**/*.tsx"
+  - "workers/internal/**/*.tsx"
+  - "src/components/ui/**/*.tsx"
+  - "src/lib/**/*.tsx"
+ignores:
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts"
+  - "src/lib/hairline-*"

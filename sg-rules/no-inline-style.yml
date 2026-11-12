@@ -1,9 +1,17 @@
 id: no-inline-style
-message: Do not use inline style props. Use StyleX.
-severity: error
 language: Tsx
 rule:
-  kind: jsx_attribute
-  regex: '^style=\{\{'
+  any:
+    - all:
+        - kind: jsx_attribute
+        - regex: '^style=\{\{'
+    - pattern: "<$EL style={{$$$}} $$$2/>"
+    - pattern: "<$EL style={{$$$}} $$$2>$$$3</$EL>"
+message: "Do not use inline style={{ }}. Use StyleX tokens. Inline styles go around the design system, and themes cannot override them."
+severity: error
+note: "Exception: dynamic values that StyleX tokens cannot express are acceptable (for example calculated pixel dimensions, canvas measurements, or font weight and size from props). PageHeader is the only exempt primitive."
 files:
   - "src/components/**/*.tsx"
+  - "internal/**/*.tsx"
+ignores:
+  - "src/components/ui/page-header.tsx"

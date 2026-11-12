@@ -1,0 +1,32 @@
+id: no-raw-var-strings-in-design-system
+language: Tsx
+severity: error
+message: |
+  Design-system source has a raw `var(--…)` string.
+  A variable reference in a string is the failure that the token layer removes.
+  `var(--thc-brnad-700)` compiles and ships, but it resolves to nothing and shows no error.
+
+  Import the typed constant instead:
+
+    import { color, space } from '@/tokens/token-consts.stylex.ts'
+    const styles = stylex.create({ card: { color: color.textDefault, padding: space.md } })
+
+  `defineConsts` puts the same `var(--thc-color-text-default)` inline at build time.
+  You keep the CSS variable, and you get a name that the compiler checks.
+rule:
+  kind: string_fragment
+  regex: 'var\(\s*--'
+note: |
+  `files` includes the StyleX style modules (`*.stylex.ts`) in `components/ui/`.
+  Their token values come from `token-consts.stylex.ts`.
+files:
+  - "src/tokens/token-consts.stylex.ts"
+  - "src/components/ui/**/*.stylex.ts"
+ignores:
+  - "src/tokens/**/*.stylex.ts"
+  - "src/components/ui/page-header.stylex.ts"
+  - "**/node_modules/**"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts"
+  - "src/lib/hairline-*"

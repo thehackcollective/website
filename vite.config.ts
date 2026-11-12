@@ -1,3 +1,4 @@
+import { cloudflare } from "@cloudflare/vite-plugin";
 import stylex from "@stylexjs/unplugin";
 import react from "@vitejs/plugin-react";
 import path from "path";
@@ -8,6 +9,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig(({ mode }) => ({
   plugins: [
+    cloudflare({ inspectorPort: false }),
     react(),
     stylex.vite({
       dev: mode === "development",
@@ -17,6 +19,7 @@ export default defineConfig(({ mode }) => ({
         rootDir: path.resolve(__dirname),
       },
       aliases: {
+        "@/ui/*": path.resolve(__dirname, "src/components/ui/*"),
         "@/*": path.resolve(__dirname, "src/*"),
       },
       cssInjectionTarget: (fileName: string) =>
@@ -25,7 +28,10 @@ export default defineConfig(({ mode }) => ({
   ],
   clearScreen: false,
   resolve: {
-    alias: [{ find: "@", replacement: path.resolve(__dirname, "./src") }],
+    alias: [
+      { find: "@/ui", replacement: path.resolve(__dirname, "./src/components/ui") },
+      { find: "@", replacement: path.resolve(__dirname, "./src") },
+    ],
   },
   build: {
     target: "es2022",

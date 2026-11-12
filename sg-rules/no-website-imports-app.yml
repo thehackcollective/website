@@ -1,0 +1,21 @@
+id: no-website-imports-app
+language: Tsx
+severity: error
+message: |
+  A file in `website/` imports an `app/` module or the work app (`@internal/`).
+
+  The public website and the authenticated app are different surfaces with different owners.
+  The website must not depend on app-domain code.
+
+  If both surfaces need the same function, move it into `components/ui/` (visual) or `lib/` (non-UI infrastructure).
+rule:
+  all:
+    - kind: string_fragment
+    - regex: '^@/app/|^@internal/'
+    - inside:
+        stopBy: end
+        kind: import_statement
+files:
+  - "src/features/website/**"
+ignores:
+  - "**/node_modules/**"

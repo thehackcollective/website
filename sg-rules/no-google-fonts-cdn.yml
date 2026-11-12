@@ -1,0 +1,34 @@
+id: no-google-fonts-cdn
+language: Tsx
+rule:
+  all:
+    - kind: string_fragment
+    - regex: "fonts\\.googleapis\\.com|fonts\\.gstatic\\.com"
+    - inside:
+        stopBy: end
+        any:
+          - kind: import_statement
+          - kind: string
+          - kind: template_string
+          - kind: jsx_attribute
+message: |
+  Do not refer to the Google Fonts CDN.
+  the work app hosts all fonts itself as woff2 in public/fonts/.
+  Register fonts with @font-face in src/tokens/design-tokens.css.
+  The Google Fonts CDN sends user IP addresses to Google and adds an external dependency.
+  See product-design/references/interface-quality.md.
+severity: error
+files:
+  - "internal/**/*.ts"
+  - "workers/internal/**/*.ts"
+  - "src/components/ui/**/*.ts"
+  - "src/lib/**/*.ts"
+  - "internal/**/*.tsx"
+  - "workers/internal/**/*.tsx"
+  - "src/components/ui/**/*.tsx"
+  - "src/lib/**/*.tsx"
+ignores:
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts"
+  - "src/lib/hairline-*"

@@ -1,0 +1,22 @@
+id: prefer-container-query
+snapshots:
+  ? |
+    stylex.create({
+      board: { [breakpoint.desktop]: { gridTemplateColumns: '1fr 1fr' } },
+    })
+  : labels:
+    - source: '[breakpoint.desktop]: { gridTemplateColumns: ''1fr 1fr'' }'
+      style: primary
+      start: 27
+      end: 83
+    - source: '[breakpoint.desktop]'
+      style: secondary
+      start: 27
+      end: 47
+    - source: |-
+        stylex.create({
+          board: { [breakpoint.desktop]: { gridTemplateColumns: '1fr 1fr' } },
+        })
+      style: secondary
+      start: 0
+      end: 89

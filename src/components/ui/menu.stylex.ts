@@ -1,0 +1,158 @@
+import * as stylex from '@stylexjs/stylex'
+import {
+  breakpoint,
+  color,
+  cursor,
+  hostContract,
+  layout,
+  motion,
+  radius,
+  shadow,
+  space,
+  text,
+} from '@/tokens/token-consts.stylex'
+
+export const menuStyles = stylex.create({
+  positioner: {
+    zIndex: 50,
+  },
+  popup: {
+    backgroundColor: color.backgroundSurface,
+    borderRadius: radius.md,
+    boxShadow: shadow['4'],
+    maxHeight: hostContract.availableHeight,
+    minWidth: layout.popupMinWidth,
+    opacity: {
+      default: 1,
+      ':is([data-starting-style])': 0,
+      ':is([data-ending-style])': 0,
+    },
+    overflowY: 'auto',
+    overscrollBehavior: 'contain',
+    padding: space.xxs,
+    position: 'relative',
+    transform: {
+      default: 'none',
+      ':is([data-starting-style])': 'scale(0.96)',
+      ':is([data-ending-style])': 'scale(0.96)',
+      [breakpoint.reducedMotion]: 'none',
+    },
+    transformOrigin: hostContract.transformOrigin,
+    transitionDuration: {
+      default: motion.durationMedium,
+      ':is([data-ending-style])': motion.durationExit,
+    },
+    transitionProperty: 'opacity, transform',
+    transitionTimingFunction: {
+      default: motion.ease,
+      ':is([data-ending-style])': motion.easeExit,
+    },
+  },
+  popupTriggerWidth: {
+    minWidth: hostContract.anchorWidth,
+    width: hostContract.anchorWidth,
+  },
+  itemSelected: {
+    backgroundColor: color.backgroundSunken,
+  },
+  inner: {
+    display: 'flex',
+    flexDirection: 'column',
+    position: 'relative',
+  },
+  label: {
+    color: color.textSubtle,
+    fontFamily: text.fontSans,
+    fontSize: text.sizeCaption,
+    lineHeight: text.leadingCaption,
+    paddingBlock: space.xs,
+    paddingInline: space.sm,
+  },
+  item: {
+    alignItems: 'center',
+    backgroundColor: {
+      default: 'transparent',
+      ':is([data-highlighted])': color.backgroundNeutral,
+    },
+    borderColor: 'transparent',
+    borderRadius: radius.nestMdXxs,
+    borderStyle: 'solid',
+    borderWidth: '1px',
+    boxShadow: { default: null, ':focus-visible': layout.focusRing },
+    color: color.textDefault,
+    cursor: cursor.pointer,
+    display: 'flex',
+    fontFamily: text.fontSans,
+    fontSize: text.sizeStep,
+    fontWeight: text.weightRegular,
+    gap: space.stepGap,
+    lineHeight: text.leadingUi,
+    minHeight: layout.stepHeight,
+    outline: 'none',
+    paddingBlock: space['2xs'],
+    paddingInline: space.stepPadding,
+    position: 'relative',
+    textAlign: 'start',
+    textDecorationLine: 'none',
+    width: '100%',
+  },
+  itemLeading: {
+    paddingInlineStart: space.stepInset,
+  },
+  itemBalanced: {
+    paddingInline: space.stepInset,
+  },
+  itemNegative: {
+    color: color.textDanger,
+  },
+  itemDisabled: {
+    color: color.textSubtlest,
+    cursor: cursor.notAllowed,
+  },
+  itemLabel: {
+    minWidth: 0,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+  itemText: {
+    display: 'flex',
+    flexDirection: 'column',
+    minWidth: 0,
+  },
+  itemCaption: {
+    color: color.textSubtle,
+    fontSize: text.sizeCaption,
+    lineHeight: text.leadingCaption,
+  },
+  itemMeta: {
+    color: color.textSubtle,
+    fontVariantNumeric: 'tabular-nums',
+    marginInlineStart: 'auto',
+  },
+  separator: {
+    backgroundClip: 'content-box',
+    backgroundColor: color.backgroundNeutral,
+    boxSizing: 'content-box',
+    height: '1px',
+    paddingBlock: space.xxs,
+  },
+  radioGroup: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  indicatorSlot: {
+    alignItems: 'center',
+    color: color.textDefault,
+    display: 'inline-flex',
+    flexShrink: 0,
+    height: layout.stepGlyph,
+    justifyContent: 'center',
+    width: layout.stepGlyph,
+  },
+  indicator: {
+    display: 'flex',
+    height: '100%',
+    width: '100%',
+  },
+})

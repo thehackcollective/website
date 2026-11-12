@@ -1,0 +1,14 @@
+id: upper-snake-is-module-constant
+language: Tsx
+severity: error
+message: "UPPER_SNAKE names are module-level constants. A value that a function builds is not a constant. Give it a camelCase name. If the value is truly constant, move it to module scope."
+rule:
+  kind: variable_declarator
+  has: { field: name, kind: identifier, regex: '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)+$|^[A-Z]{2,}[A-Z0-9]*$' }
+  inside:
+    stopBy: end
+    any:
+      - kind: function_declaration
+      - kind: arrow_function
+      - kind: function_expression
+      - kind: method_definition

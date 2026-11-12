@@ -1,0 +1,634 @@
+{
+  "propLimits": {
+    "padding": {
+      "limit": [
+        0,
+        "0",
+        "var(--thc-space-3xs)",
+        "var(--thc-space-2xs)",
+        "var(--thc-space-xxs)",
+        "var(--thc-space-xs)",
+        "var(--thc-space-sm)",
+        "var(--thc-space-md)",
+        "var(--thc-space-lg)",
+        "var(--thc-space-xl)",
+        "var(--thc-space-2xl)",
+        "var(--thc-space-3xl)",
+        "var(--thc-space-4xl)",
+        "var(--thc-space-5xl)",
+        "var(--thc-space-6xl)",
+        "var(--thc-space-section)"
+      ],
+      "reason": "Use a --thc-space token. Off-scale padding is a DESIGN.md violation."
+    },
+    "paddingBlock": {
+      "limit": [
+        0,
+        "0",
+        "var(--thc-space-3xs)",
+        "var(--thc-space-2xs)",
+        "var(--thc-space-xxs)",
+        "var(--thc-space-xs)",
+        "var(--thc-space-sm)",
+        "var(--thc-space-md)",
+        "var(--thc-space-lg)",
+        "var(--thc-space-xl)",
+        "var(--thc-space-2xl)",
+        "var(--thc-space-3xl)",
+        "var(--thc-space-4xl)",
+        "var(--thc-space-5xl)",
+        "var(--thc-space-6xl)",
+        "var(--thc-space-section)"
+      ],
+      "reason": "Use a --thc-space token. Off-scale paddingBlock is a DESIGN.md violation."
+    },
+    "paddingInline": {
+      "limit": [
+        0,
+        "0",
+        "var(--thc-space-3xs)",
+        "var(--thc-space-2xs)",
+        "var(--thc-space-xxs)",
+        "var(--thc-space-xs)",
+        "var(--thc-space-sm)",
+        "var(--thc-space-md)",
+        "var(--thc-space-lg)",
+        "var(--thc-space-xl)",
+        "var(--thc-space-2xl)",
+        "var(--thc-space-3xl)",
+        "var(--thc-space-4xl)",
+        "var(--thc-space-5xl)",
+        "var(--thc-space-6xl)",
+        "var(--thc-space-section)"
+      ],
+      "reason": "Use a --thc-space token. Off-scale paddingInline is a DESIGN.md violation."
+    },
+    "paddingTop": {
+      "limit": [
+        0,
+        "0",
+        "var(--thc-space-3xs)",
+        "var(--thc-space-2xs)",
+        "var(--thc-space-xxs)",
+        "var(--thc-space-xs)",
+        "var(--thc-space-sm)",
+        "var(--thc-space-md)",
+        "var(--thc-space-lg)",
+        "var(--thc-space-xl)",
+        "var(--thc-space-2xl)",
+        "var(--thc-space-3xl)",
+        "var(--thc-space-4xl)",
+        "var(--thc-space-5xl)",
+        "var(--thc-space-6xl)",
+        "var(--thc-space-section)"
+      ],
+      "reason": "Use a --thc-space token. Off-scale paddingTop is a DESIGN.md violation."
+    },
+    "paddingBottom": {
+      "limit": [
+        0,
+        "0",
+        "var(--thc-space-3xs)",
+        "var(--thc-space-2xs)",
+        "var(--thc-space-xxs)",
+        "var(--thc-space-xs)",
+        "var(--thc-space-sm)",
+        "var(--thc-space-md)",
+        "var(--thc-space-lg)",
+        "var(--thc-space-xl)",
+        "var(--thc-space-2xl)",
+        "var(--thc-space-3xl)",
+        "var(--thc-space-4xl)",
+        "var(--thc-space-5xl)",
+        "var(--thc-space-6xl)",
+        "var(--thc-space-section)"
+      ],
+      "reason": "Use a --thc-space token. Off-scale paddingBottom is a DESIGN.md violation."
+    },
+    "paddingLeft": {
+      "limit": [
+        0,
+        "0",
+        "var(--thc-space-3xs)",
+        "var(--thc-space-2xs)",
+        "var(--thc-space-xxs)",
+        "var(--thc-space-xs)",
+        "var(--thc-space-sm)",
+        "var(--thc-space-md)",
+        "var(--thc-space-lg)",
+        "var(--thc-space-xl)",
+        "var(--thc-space-2xl)",
+        "var(--thc-space-3xl)",
+        "var(--thc-space-4xl)",
+        "var(--thc-space-5xl)",
+        "var(--thc-space-6xl)",
+        "var(--thc-space-section)"
+      ],
+      "reason": "Use a --thc-space token. Off-scale paddingLeft is a DESIGN.md violation."
+    },
+    "paddingRight": {
+      "limit": [
+        0,
+        "0",
+        "var(--thc-space-3xs)",
+        "var(--thc-space-2xs)",
+        "var(--thc-space-xxs)",
+        "var(--thc-space-xs)",
+        "var(--thc-space-sm)",
+        "var(--thc-space-md)",
+        "var(--thc-space-lg)",
+        "var(--thc-space-xl)",
+        "var(--thc-space-2xl)",
+        "var(--thc-space-3xl)",
+        "var(--thc-space-4xl)",
+        "var(--thc-space-5xl)",
+        "var(--thc-space-6xl)",
+        "var(--thc-space-section)"
+      ],
+      "reason": "Use a --thc-space token. Off-scale paddingRight is a DESIGN.md violation."
+    },
+    "paddingInlineStart": {
+      "limit": [
+        0,
+        "0",
+        "var(--thc-space-3xs)",
+        "var(--thc-space-2xs)",
+        "var(--thc-space-xxs)",
+        "var(--thc-space-xs)",
+        "var(--thc-space-sm)",
+        "var(--thc-space-md)",
+        "var(--thc-space-lg)",
+        "var(--thc-space-xl)",
+        "var(--thc-space-2xl)",
+        "var(--thc-space-3xl)",
+        "var(--thc-space-4xl)",
+        "var(--thc-space-5xl)",
+        "var(--thc-space-6xl)",
+        "var(--thc-space-section)"
+      ],
+      "reason": "Use a --thc-space token. Off-scale paddingInlineStart is a DESIGN.md violation."
+    },
+    "paddingInlineEnd": {
+      "limit": [
+        0,
+        "0",
+        "var(--thc-space-3xs)",
+        "var(--thc-space-2xs)",
+        "var(--thc-space-xxs)",
+        "var(--thc-space-xs)",
+        "var(--thc-space-sm)",
+        "var(--thc-space-md)",
+        "var(--thc-space-lg)",
+        "var(--thc-space-xl)",
+        "var(--thc-space-2xl)",
+        "var(--thc-space-3xl)",
+        "var(--thc-space-4xl)",
+        "var(--thc-space-5xl)",
+        "var(--thc-space-6xl)",
+        "var(--thc-space-section)"
+      ],
+      "reason": "Use a --thc-space token. Off-scale paddingInlineEnd is a DESIGN.md violation."
+    },
+    "margin": {
+      "limit": [
+        0,
+        "0",
+        "auto",
+        "var(--thc-space-3xs)",
+        "var(--thc-space-2xs)",
+        "var(--thc-space-xxs)",
+        "var(--thc-space-xs)",
+        "var(--thc-space-sm)",
+        "var(--thc-space-md)",
+        "var(--thc-space-lg)",
+        "var(--thc-space-xl)",
+        "var(--thc-space-2xl)",
+        "var(--thc-space-3xl)",
+        "var(--thc-space-4xl)",
+        "var(--thc-space-5xl)",
+        "var(--thc-space-6xl)",
+        "var(--thc-space-section)"
+      ],
+      "reason": "Use a --thc-space token. Off-scale margin is a DESIGN.md violation."
+    },
+    "marginBlock": {
+      "limit": [
+        0,
+        "0",
+        "auto",
+        "var(--thc-space-3xs)",
+        "var(--thc-space-2xs)",
+        "var(--thc-space-xxs)",
+        "var(--thc-space-xs)",
+        "var(--thc-space-sm)",
+        "var(--thc-space-md)",
+        "var(--thc-space-lg)",
+        "var(--thc-space-xl)",
+        "var(--thc-space-2xl)",
+        "var(--thc-space-3xl)",
+        "var(--thc-space-4xl)",
+        "var(--thc-space-5xl)",
+        "var(--thc-space-6xl)",
+        "var(--thc-space-section)"
+      ],
+      "reason": "Use a --thc-space token. Off-scale marginBlock is a DESIGN.md violation."
+    },
+    "marginInline": {
+      "limit": [
+        0,
+        "0",
+        "auto",
+        "var(--thc-space-3xs)",
+        "var(--thc-space-2xs)",
+        "var(--thc-space-xxs)",
+        "var(--thc-space-xs)",
+        "var(--thc-space-sm)",
+        "var(--thc-space-md)",
+        "var(--thc-space-lg)",
+        "var(--thc-space-xl)",
+        "var(--thc-space-2xl)",
+        "var(--thc-space-3xl)",
+        "var(--thc-space-4xl)",
+        "var(--thc-space-5xl)",
+        "var(--thc-space-6xl)",
+        "var(--thc-space-section)"
+      ],
+      "reason": "Use a --thc-space token. Off-scale marginInline is a DESIGN.md violation."
+    },
+    "marginTop": {
+      "limit": [
+        0,
+        "0",
+        "auto",
+        "var(--thc-space-3xs)",
+        "var(--thc-space-2xs)",
+        "var(--thc-space-xxs)",
+        "var(--thc-space-xs)",
+        "var(--thc-space-sm)",
+        "var(--thc-space-md)",
+        "var(--thc-space-lg)",
+        "var(--thc-space-xl)",
+        "var(--thc-space-2xl)",
+        "var(--thc-space-3xl)",
+        "var(--thc-space-4xl)",
+        "var(--thc-space-5xl)",
+        "var(--thc-space-6xl)",
+        "var(--thc-space-section)"
+      ],
+      "reason": "Use a --thc-space token. Off-scale marginTop is a DESIGN.md violation."
+    },
+    "marginBottom": {
+      "limit": [
+        0,
+        "0",
+        "auto",
+        "var(--thc-space-3xs)",
+        "var(--thc-space-2xs)",
+        "var(--thc-space-xxs)",
+        "var(--thc-space-xs)",
+        "var(--thc-space-sm)",
+        "var(--thc-space-md)",
+        "var(--thc-space-lg)",
+        "var(--thc-space-xl)",
+        "var(--thc-space-2xl)",
+        "var(--thc-space-3xl)",
+        "var(--thc-space-4xl)",
+        "var(--thc-space-5xl)",
+        "var(--thc-space-6xl)",
+        "var(--thc-space-section)"
+      ],
+      "reason": "Use a --thc-space token. Off-scale marginBottom is a DESIGN.md violation."
+    },
+    "marginLeft": {
+      "limit": [
+        0,
+        "0",
+        "auto",
+        "var(--thc-space-3xs)",
+        "var(--thc-space-2xs)",
+        "var(--thc-space-xxs)",
+        "var(--thc-space-xs)",
+        "var(--thc-space-sm)",
+        "var(--thc-space-md)",
+        "var(--thc-space-lg)",
+        "var(--thc-space-xl)",
+        "var(--thc-space-2xl)",
+        "var(--thc-space-3xl)",
+        "var(--thc-space-4xl)",
+        "var(--thc-space-5xl)",
+        "var(--thc-space-6xl)",
+        "var(--thc-space-section)"
+      ],
+      "reason": "Use a --thc-space token. Off-scale marginLeft is a DESIGN.md violation."
+    },
+    "marginRight": {
+      "limit": [
+        0,
+        "0",
+        "auto",
+        "var(--thc-space-3xs)",
+        "var(--thc-space-2xs)",
+        "var(--thc-space-xxs)",
+        "var(--thc-space-xs)",
+        "var(--thc-space-sm)",
+        "var(--thc-space-md)",
+        "var(--thc-space-lg)",
+        "var(--thc-space-xl)",
+        "var(--thc-space-2xl)",
+        "var(--thc-space-3xl)",
+        "var(--thc-space-4xl)",
+        "var(--thc-space-5xl)",
+        "var(--thc-space-6xl)",
+        "var(--thc-space-section)"
+      ],
+      "reason": "Use a --thc-space token. Off-scale marginRight is a DESIGN.md violation."
+    },
+    "marginInlineStart": {
+      "limit": [
+        0,
+        "0",
+        "auto",
+        "var(--thc-space-3xs)",
+        "var(--thc-space-2xs)",
+        "var(--thc-space-xxs)",
+        "var(--thc-space-xs)",
+        "var(--thc-space-sm)",
+        "var(--thc-space-md)",
+        "var(--thc-space-lg)",
+        "var(--thc-space-xl)",
+        "var(--thc-space-2xl)",
+        "var(--thc-space-3xl)",
+        "var(--thc-space-4xl)",
+        "var(--thc-space-5xl)",
+        "var(--thc-space-6xl)",
+        "var(--thc-space-section)"
+      ],
+      "reason": "Use a --thc-space token. Off-scale marginInlineStart is a DESIGN.md violation."
+    },
+    "marginInlineEnd": {
+      "limit": [
+        0,
+        "0",
+        "auto",
+        "var(--thc-space-3xs)",
+        "var(--thc-space-2xs)",
+        "var(--thc-space-xxs)",
+        "var(--thc-space-xs)",
+        "var(--thc-space-sm)",
+        "var(--thc-space-md)",
+        "var(--thc-space-lg)",
+        "var(--thc-space-xl)",
+        "var(--thc-space-2xl)",
+        "var(--thc-space-3xl)",
+        "var(--thc-space-4xl)",
+        "var(--thc-space-5xl)",
+        "var(--thc-space-6xl)",
+        "var(--thc-space-section)"
+      ],
+      "reason": "Use a --thc-space token. Off-scale marginInlineEnd is a DESIGN.md violation."
+    },
+    "gap": {
+      "limit": [
+        0,
+        "0",
+        "var(--thc-space-3xs)",
+        "var(--thc-space-2xs)",
+        "var(--thc-space-xxs)",
+        "var(--thc-space-xs)",
+        "var(--thc-space-sm)",
+        "var(--thc-space-md)",
+        "var(--thc-space-lg)",
+        "var(--thc-space-xl)",
+        "var(--thc-space-2xl)",
+        "var(--thc-space-3xl)",
+        "var(--thc-space-4xl)",
+        "var(--thc-space-5xl)",
+        "var(--thc-space-6xl)",
+        "var(--thc-space-section)"
+      ],
+      "reason": "Use a --thc-space token. Off-scale gap is a DESIGN.md violation."
+    },
+    "rowGap": {
+      "limit": [
+        0,
+        "0",
+        "var(--thc-space-3xs)",
+        "var(--thc-space-2xs)",
+        "var(--thc-space-xxs)",
+        "var(--thc-space-xs)",
+        "var(--thc-space-sm)",
+        "var(--thc-space-md)",
+        "var(--thc-space-lg)",
+        "var(--thc-space-xl)",
+        "var(--thc-space-2xl)",
+        "var(--thc-space-3xl)",
+        "var(--thc-space-4xl)",
+        "var(--thc-space-5xl)",
+        "var(--thc-space-6xl)",
+        "var(--thc-space-section)"
+      ],
+      "reason": "Use a --thc-space token. Off-scale rowGap is a DESIGN.md violation."
+    },
+    "columnGap": {
+      "limit": [
+        0,
+        "0",
+        "var(--thc-space-3xs)",
+        "var(--thc-space-2xs)",
+        "var(--thc-space-xxs)",
+        "var(--thc-space-xs)",
+        "var(--thc-space-sm)",
+        "var(--thc-space-md)",
+        "var(--thc-space-lg)",
+        "var(--thc-space-xl)",
+        "var(--thc-space-2xl)",
+        "var(--thc-space-3xl)",
+        "var(--thc-space-4xl)",
+        "var(--thc-space-5xl)",
+        "var(--thc-space-6xl)",
+        "var(--thc-space-section)"
+      ],
+      "reason": "Use a --thc-space token. Off-scale columnGap is a DESIGN.md violation."
+    },
+    "fontSize": {
+      "limit": [
+        "var(--thc-size-display)",
+        "var(--thc-size-title)",
+        "var(--thc-size-heading)",
+        "var(--thc-size-body)",
+        "var(--thc-size-ui)",
+        "var(--thc-size-caption)"
+      ],
+      "reason": "Use a --thc-text token. Off-scale fontSize is a DESIGN.md violation."
+    },
+    "lineHeight": {
+      "limit": [
+        "1",
+        "var(--thc-leading-display)",
+        "var(--thc-leading-title)",
+        "var(--thc-leading-heading)",
+        "var(--thc-leading-body)",
+        "var(--thc-leading-ui)",
+        "var(--thc-leading-caption)"
+      ],
+      "reason": "Use a --thc-text token. Off-scale lineHeight is a DESIGN.md violation."
+    },
+    "letterSpacing": {
+      "limit": [
+        "normal",
+        "var(--thc-tracking-display)",
+        "var(--thc-tracking-title)",
+        "var(--thc-tracking-heading)",
+        "var(--thc-tracking-caption)"
+      ],
+      "reason": "Use a --thc-text token. Off-scale letterSpacing is a DESIGN.md violation."
+    },
+    "fontWeight": {
+      "limit": [
+        "var(--thc-weight-regular)"
+      ],
+      "reason": "Use a --thc-text token. Off-scale fontWeight is a DESIGN.md violation."
+    },
+    "borderRadius": {
+      "limit": [
+        "var(--thc-radius-none)",
+        "var(--thc-radius-xs)",
+        "var(--thc-radius-sm)",
+        "var(--thc-radius-md)",
+        "var(--thc-radius-lg)",
+        "var(--thc-radius-xl)",
+        "var(--thc-radius-pill)",
+        "var(--thc-radius-full)",
+        "var(--thc-card-radius)",
+        "var(--thc-input-radius)"
+      ],
+      "reason": "Use a --thc-radius token. Off-scale borderRadius is a DESIGN.md violation."
+    },
+    "borderTopLeftRadius": {
+      "limit": [
+        "var(--thc-radius-none)",
+        "var(--thc-radius-xs)",
+        "var(--thc-radius-sm)",
+        "var(--thc-radius-md)",
+        "var(--thc-radius-lg)",
+        "var(--thc-radius-xl)",
+        "var(--thc-radius-pill)",
+        "var(--thc-radius-full)",
+        "var(--thc-card-radius)",
+        "var(--thc-input-radius)"
+      ],
+      "reason": "Use a --thc-radius token. Off-scale borderTopLeftRadius is a DESIGN.md violation."
+    },
+    "borderTopRightRadius": {
+      "limit": [
+        "var(--thc-radius-none)",
+        "var(--thc-radius-xs)",
+        "var(--thc-radius-sm)",
+        "var(--thc-radius-md)",
+        "var(--thc-radius-lg)",
+        "var(--thc-radius-xl)",
+        "var(--thc-radius-pill)",
+        "var(--thc-radius-full)",
+        "var(--thc-card-radius)",
+        "var(--thc-input-radius)"
+      ],
+      "reason": "Use a --thc-radius token. Off-scale borderTopRightRadius is a DESIGN.md violation."
+    },
+    "borderBottomLeftRadius": {
+      "limit": [
+        "var(--thc-radius-none)",
+        "var(--thc-radius-xs)",
+        "var(--thc-radius-sm)",
+        "var(--thc-radius-md)",
+        "var(--thc-radius-lg)",
+        "var(--thc-radius-xl)",
+        "var(--thc-radius-pill)",
+        "var(--thc-radius-full)",
+        "var(--thc-card-radius)",
+        "var(--thc-input-radius)"
+      ],
+      "reason": "Use a --thc-radius token. Off-scale borderBottomLeftRadius is a DESIGN.md violation."
+    },
+    "borderBottomRightRadius": {
+      "limit": [
+        "var(--thc-radius-none)",
+        "var(--thc-radius-xs)",
+        "var(--thc-radius-sm)",
+        "var(--thc-radius-md)",
+        "var(--thc-radius-lg)",
+        "var(--thc-radius-xl)",
+        "var(--thc-radius-pill)",
+        "var(--thc-radius-full)",
+        "var(--thc-card-radius)",
+        "var(--thc-input-radius)"
+      ],
+      "reason": "Use a --thc-radius token. Off-scale borderBottomRightRadius is a DESIGN.md violation."
+    },
+    "maxWidth": {
+      "limit": [
+        "100%",
+        "50%",
+        "85%",
+        "92%",
+        "none",
+        "auto",
+        "20ch",
+        "32ch",
+        "34ch",
+        "40ch",
+        "42ch",
+        "44ch",
+        "46ch",
+        "48ch",
+        "50ch",
+        "55ch",
+        "56ch",
+        "65ch",
+        "min(var(--thc-popover-width), 100%)",
+        "var(--thc-confirmation-card-width)",
+        "var(--thc-dialog-compact-width)",
+        "var(--thc-dialog-extra-wide-width)",
+        "var(--thc-dialog-wide-width)",
+        "var(--thc-dialog-width)",
+        "var(--thc-empty-max-width)",
+        "var(--thc-popover-width)",
+        "var(--thc-side-panel-max)",
+        "var(--thc-sign-in-card-width)"
+      ],
+      "reason": "Use a named layout token for an overlay or a ch measure for text. Add new ch values here."
+    },
+    "maxInlineSize": {
+      "limit": [
+        "100%",
+        "50%",
+        "85%",
+        "92%",
+        "none",
+        "auto",
+        "20ch",
+        "32ch",
+        "34ch",
+        "40ch",
+        "42ch",
+        "44ch",
+        "46ch",
+        "48ch",
+        "50ch",
+        "55ch",
+        "56ch",
+        "65ch",
+        "min(var(--thc-popover-width), 100%)",
+        "var(--thc-confirmation-card-width)",
+        "var(--thc-dialog-compact-width)",
+        "var(--thc-dialog-extra-wide-width)",
+        "var(--thc-dialog-wide-width)",
+        "var(--thc-dialog-width)",
+        "var(--thc-empty-max-width)",
+        "var(--thc-popover-width)",
+        "var(--thc-side-panel-max)",
+        "var(--thc-sign-in-card-width)"
+      ],
+      "reason": "Use a named layout token for an overlay or a ch measure for text. Add new ch values here."
+    }
+  }
+}

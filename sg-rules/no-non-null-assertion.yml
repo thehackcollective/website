@@ -1,11 +1,7 @@
 id: no-non-null-assertion
 language: Tsx
 severity: error
-message: |
-  Non-null assertion. Narrow with a guard, or throw a named error when the
-  value must exist.
+message: "`x!` hides a null that the types permit. Handle the null with an early return, a default, or a named error. Or make the type stricter."
 rule:
   kind: non_null_expression
-files:
-  - "src/**/*.ts"
-  - "src/**/*.tsx"
+  regex: "!$"

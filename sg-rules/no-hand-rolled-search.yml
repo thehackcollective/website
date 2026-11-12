@@ -1,0 +1,46 @@
+id: no-hand-rolled-search
+language: Tsx
+severity: error
+message: |
+  This file makes its own search field. Use `SearchField` from '@/ui/search-field'.
+  SearchField has one bordered field, the search icon inside it, the control-height tokens and the focus ring.
+    <input type="search" ... />          ->  <SearchField aria-label="..." ... />
+    <Input type="search" ... />          ->  <SearchField aria-label="..." ... />
+    import { Search01Icon } from ...     ->  <SearchField size="toolbar" ... />
+rule:
+  any:
+    - kind: jsx_attribute
+      all:
+        - has:
+            kind: property_identifier
+            regex: '^type$'
+        - has:
+            kind: string
+            regex: "^[\"']search[\"']$"
+    - kind: jsx_attribute
+      all:
+        - has:
+            kind: property_identifier
+            regex: '^role$'
+        - has:
+            kind: string
+            regex: "^[\"']searchbox[\"']$"
+    - kind: import_specifier
+      has:
+        kind: identifier
+        regex: '^Search[0-9]*Icon$'
+files:
+  - "internal/**/*.ts"
+  - "workers/internal/**/*.ts"
+  - "src/components/ui/**/*.ts"
+  - "src/lib/**/*.ts"
+  - "internal/**/*.tsx"
+  - "workers/internal/**/*.tsx"
+  - "src/components/ui/**/*.tsx"
+  - "src/lib/**/*.tsx"
+ignores:
+  - "src/components/ui/**"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts"
+  - "src/lib/hairline-*"

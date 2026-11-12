@@ -2,6 +2,19 @@
 
 Accepted design decisions, newest first. Add one when Louis accepts a change that future work must not reopen.
 
+These are public-site decisions. Work decisions live in `docs/decisions/`.
+
+## 2026-11-11 - The event section lists every hackathon THC is part of
+
+- The single-event section becomes "Hackathons we are part of": upcoming events first, then past events, each a hairline row with a "See on Luma" text link. The Luma calendar stays the one primary action.
+- Private events never appear. Facts live in `content.ts` `UPCOMING_EVENTS` and `PAST_EVENTS`.
+- Source: Louis, this session.
+
+## 2026-11-11 - The landing tokens move to `--thc-website-*`
+
+- The cf0 port gives Work the `--thc-*` namespace. The landing values moved unchanged to `src/tokens/website-tokens.css` (`--thc-website-*`) and `src/tokens/website-token-consts.stylex.ts`. The entries below that name `--thc-*` or `design-tokens.css` predate the move.
+- Source: `docs/decisions/2026-11-11-two-token-tiers.md`.
+
 ## 2026-10-08 — Grok Bot section is back as the first section after the hero, now that the event is announced (luma.com/eveur09a). Facts in content.ts `HACK`; THC is a community partner with a track.
 
 ## 2026-10-08 — Hero figure: "Assemble", a hairline figure built on the vendored kernel

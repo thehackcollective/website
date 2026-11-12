@@ -1,0 +1,44 @@
+id: icon-text-row-on-ladder
+language: Tsx
+severity: error
+message: |
+  A plain element puts an Icon next to text. Use `IconLabel` from `@/ui/icon-label`, or a control from `@/ui`.
+
+    <dt><Icon icon={X} size="sm" />{label}</dt>  ->  <dt><IconLabel icon={X} size="xs">{label}</IconLabel></dt>
+
+  A hand-made row picks its own gap and icon size, so the icon and the text do not share one inset.
+  `IconLabel` takes the gap and the glyph from one step of the size ladder (DESIGN.md, "Size ladder").
+rule:
+  kind: jsx_element
+  all:
+    - has:
+        field: open_tag
+        has:
+          field: name
+          regex: '^[a-z]'
+    - has:
+        kind: jsx_self_closing_element
+        has:
+          field: name
+          regex: '^Icon$'
+    - has:
+        any:
+          - kind: jsx_text
+            regex: '\S'
+          - kind: jsx_expression
+          - kind: jsx_element
+            has:
+              field: open_tag
+              regex: '^<span>$'
+files:
+  - "internal/**/*.tsx"
+  - "workers/internal/**/*.tsx"
+  - "src/components/ui/**/*.tsx"
+  - "src/lib/**/*.tsx"
+ignores:
+  - "**/node_modules/**"
+  - "src/components/ui/icon-label.tsx"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts"
+  - "src/lib/hairline-*"

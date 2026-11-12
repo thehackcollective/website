@@ -1,0 +1,56 @@
+id: icon-text-row-on-ladder
+snapshots:
+  ? |
+    <dt><Icon icon={Home01Icon} size="sm" />{label}</dt>
+  : labels:
+    - source: <dt><Icon icon={Home01Icon} size="sm" />{label}</dt>
+      style: primary
+      start: 0
+      end: 52
+    - source: dt
+      style: secondary
+      start: 1
+      end: 3
+    - source: dt
+      style: secondary
+      start: 1
+      end: 3
+    - source: Icon
+      style: secondary
+      start: 5
+      end: 9
+    - source: <Icon icon={Home01Icon} size="sm" />
+      style: secondary
+      start: 4
+      end: 40
+    - source: '{label}'
+      style: secondary
+      start: 40
+      end: 47
+  ? |
+    <p><Icon icon={Home01Icon} />Done</p>
+  : labels:
+    - source: <p><Icon icon={Home01Icon} />Done</p>
+      style: primary
+      start: 0
+      end: 37
+    - source: p
+      style: secondary
+      start: 1
+      end: 2
+    - source: p
+      style: secondary
+      start: 1
+      end: 2
+    - source: Icon
+      style: secondary
+      start: 4
+      end: 8
+    - source: <Icon icon={Home01Icon} />
+      style: secondary
+      start: 3
+      end: 29
+    - source: Done
+      style: secondary
+      start: 29
+      end: 33

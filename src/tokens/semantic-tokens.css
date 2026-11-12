@@ -1,0 +1,72 @@
+:root {
+  --thc-color-background-canvas: var(--thc-palette-gray-25);
+  --thc-color-background-surface: var(--thc-palette-gray-0);
+  --thc-color-background-surface-subtle: var(--thc-palette-gray-50);
+  --thc-color-background-surface-hover: var(--thc-palette-gray-100);
+  --thc-color-background-sunken: var(--thc-palette-gray-100);
+  --thc-color-background-neutral: var(--thc-palette-gray-200);
+  --thc-color-background-neutral-bold: var(--thc-palette-gray-300);
+  --thc-color-background-neutral-bolder: var(--thc-palette-gray-400);
+  --thc-color-background-neutral-hover: var(--thc-palette-gray-900-a04);
+  --thc-color-background-inverse: var(--thc-palette-gray-900-a96);
+  --thc-color-background-inverse-hover: var(--thc-palette-gray-800);
+  --thc-color-background-inverse-bold: var(--thc-palette-gray-950);
+  --thc-color-background-inverse-solid: var(--thc-palette-gray-900);
+  --thc-color-background-brand: var(--thc-palette-blue-700);
+  --thc-color-background-brand-hover: var(--thc-palette-blue-800);
+  --thc-color-background-brand-active: var(--thc-palette-blue-900);
+  --thc-color-background-selected: var(--thc-palette-gray-100);
+  --thc-color-background-danger: var(--thc-palette-red-700);
+  --thc-color-background-danger-subtle: var(--thc-palette-red-50);
+  --thc-color-background-danger-tint: var(--thc-palette-red-a10);
+  --thc-color-background-success: var(--thc-palette-green-500);
+  --thc-color-background-success-subtle: var(--thc-palette-green-50);
+  --thc-color-background-warning: var(--thc-palette-amber-500);
+  --thc-color-background-warning-subtle: var(--thc-palette-amber-50);
+  --thc-color-background-overlay: var(--thc-palette-black-a72);
+  --thc-color-background-overlay-subtle: var(--thc-palette-black-a10);
+  --thc-color-background-scrim: var(--thc-palette-black-a40);
+  --thc-color-background-on-overlay: var(--thc-palette-white-a24);
+  --thc-color-background-on-overlay-hover: var(--thc-palette-white-a16);
+  --thc-color-background-on-overlay-subtle: var(--thc-palette-white-a70);
+  --thc-color-text-default: var(--thc-palette-gray-900-a96);
+  --thc-color-text-body: var(--thc-palette-gray-900-a82);
+  --thc-color-text-subtle: var(--thc-palette-gray-900-a68);
+  --thc-color-text-subtlest: var(--thc-palette-gray-900-a62);
+  --thc-color-text-inverse: var(--thc-palette-gray-0);
+  --thc-color-text-on-brand: var(--thc-palette-gray-0);
+  --thc-color-text-on-overlay: var(--thc-palette-gray-0);
+  --thc-color-text-brand: var(--thc-palette-blue-800);
+  --thc-color-text-selected: var(--thc-palette-gray-900);
+  --thc-color-text-danger: var(--thc-palette-red-700);
+  --thc-color-text-success: var(--thc-palette-green-700);
+  --thc-color-text-warning: var(--thc-palette-amber-800);
+  --thc-color-border-default: var(--thc-palette-gray-200);
+  --thc-color-border-bold: var(--thc-palette-gray-300);
+  --thc-color-border-bolder: var(--thc-palette-gray-900-a96);
+  --thc-color-border-input: var(--thc-palette-gray-450);
+  --thc-color-border-brand: var(--thc-palette-blue-700);
+  --thc-color-border-selected: var(--thc-palette-gray-200);
+  --thc-color-border-danger: var(--thc-palette-red-700);
+  --thc-color-icon-default: var(--thc-palette-gray-900-a96);
+  --thc-color-icon-subtle: var(--thc-palette-gray-500);
+  --thc-color-icon-brand: var(--thc-palette-blue-700);
+  --thc-color-icon-track: var(--thc-palette-gray-200);
+  --thc-color-icon-track-bold: var(--thc-palette-gray-300);
+  --thc-color-icon-sunken: var(--thc-palette-gray-100);
+  --thc-color-icon-surface: var(--thc-palette-gray-0);
+  --thc-color-icon-success: var(--thc-palette-green-700);
+  --thc-color-icon-subtlest: var(--thc-palette-gray-450);
+  --thc-color-chart-categorical-1: var(--thc-palette-blue-700);
+  --thc-color-chart-categorical-2: var(--thc-palette-gray-900);
+  --thc-color-chart-categorical-3: var(--thc-palette-blue-600);
+  --thc-color-chart-categorical-4: var(--thc-palette-gray-500);
+  --thc-color-chart-categorical-5: var(--thc-palette-blue-900);
+  --thc-color-chart-categorical-6: var(--thc-palette-gray-300);
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --thc-color-border-default: var(--thc-palette-gray-300);
+  }
+}

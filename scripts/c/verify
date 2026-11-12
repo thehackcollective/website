@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+#USAGE: verify — the edit-loop check of what changed (ast-grep, biome, eslint, tsc): ./c verify [--staged | --diff SHA]
+
+set -euo pipefail
+
+THC_ROOT="${THC_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
+cd "$THC_ROOT"
+
+usage() {
+  cat <<'HELP'
+Usage: ./c verify              every tracked, changed or new file
+       ./c verify --staged     the staged files, without the typecheck
+       ./c verify --diff SHA   the files changed since SHA, with the typecheck
+
+  The commit gate is ./c check (the pre-commit hook). verify is the fast check while you edit.
+HELP
+}
+
+MODE="full"
+REF=""
+while (( $# > 0 )); do
+  case "$1" in
+    --staged) MODE="staged"; shift ;;
+    --diff)
+      (( $# > 1 )) || { echo "✗ --diff needs a SHA. Give a SHA after --diff." >&2; exit 2; }
+      MODE="diff"; REF="$2"; shift 2 ;;
+    -h|--help) usage; exit 0 ;;
+    *) echo "✗ $1 is not a known argument." >&2; usage >&2; exit 2 ;;
+  esac
+done
+
+case "$MODE" in
+  full) CHANGED="$(git ls-files --cached --modified --others --exclude-standard)" ;;
+  staged) CHANGED="$(git diff --cached --name-only --diff-filter=ACMRT)" ;;
+  diff) CHANGED="$(git diff --name-only --diff-filter=ACMRT "$REF"...HEAD)" ;;
+esac
+
+rc=0
+mapfile -t code < <(printf '%s\n' "$CHANGED" | grep -E '^(src|internal|workers|scripts)/.*\.(ts|tsx)$' | while read -r f; do [[ -f "$f" ]] && echo "$f"; done || true)
+if (( ${#code[@]} > 0 )); then
+  echo "→ ast-grep"
+  bunx @ast-grep/cli scan "${code[@]}" || rc=1
+  echo "→ biome"
+  bunx biome check --error-on-warnings --files-ignore-unknown=true --no-errors-on-unmatched "${code[@]}" || rc=1
+  echo "→ eslint"
+  bunx eslint --no-warn-ignored --max-warnings 0 "${code[@]}" || rc=1
+else
+  echo "· No TypeScript file changed."
+fi
+if [[ "$MODE" != "staged" ]] && printf '%s\n' "$CHANGED" | grep -qE '^(src/|internal/|workers/|scripts/|package\.json$|bun\.lock$|tsconfig)'; then
+  echo "→ tsc"
+  bun run typecheck || rc=1
+fi
+exit "$rc"

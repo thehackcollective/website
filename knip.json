@@ -1,0 +1,38 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": [
+    "scripts/align-*.ts",
+    "internal/main.tsx",
+    "workers/internal/index.ts",
+    "cloudflare.config.ts",
+    "internal/cloudflare.config.ts",
+    "internal/vite.config.ts"
+  ],
+  "project": [
+    "src/**/*.{ts,tsx}",
+    "internal/**/*.{ts,tsx}",
+    "workers/**/*.ts",
+    "scripts/**/*.ts"
+  ],
+  "ignoreIssues": {
+    "src/components/ui/**/*.{ts,tsx}": [
+      "types"
+    ],
+    "src/features/*/index.ts": [
+      "files"
+    ],
+    "internal/work/features/*/index.ts": [
+      "files"
+    ]
+  },
+  "ignoreDependencies": [
+    "@ast-grep/cli",
+    "@biomejs/biome",
+    "jscpd",
+    "react-doctor",
+    "syncpack"
+  ],
+  "ignoreBinaries": [
+    "ffmpeg"
+  ]
+}

@@ -1,27 +1,12 @@
-@import "../tokens/design-tokens.css";
+@import "../tokens/website-tokens.css";
+@import "../tokens/fonts.css";
 @import "lenis/dist/lenis.css";
 
-@font-face {
-  font-family: "Geist";
-  src: url("/fonts/geist.woff2") format("woff2");
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Geist Mono";
-  src: url("/fonts/geist-mono.woff2") format("woff2");
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-
 [data-hairline] .alt {
-  --hl-plate: var(--thc-primary);
-  --hl-edge: var(--thc-primary-deep);
-  --hl-mid: var(--thc-primary-deep);
-  --hl-lo: var(--thc-primary-active);
+  --hl-plate: var(--thc-website-primary);
+  --hl-edge: var(--thc-website-primary-deep);
+  --hl-mid: var(--thc-website-primary-deep);
+  --hl-lo: var(--thc-website-primary-active);
 }
 
 @layer base, priority1, priority2, priority3, priority4;
@@ -30,24 +15,34 @@
 
 @layer base {
   html {
-    font-family: var(--thc-font-sans);
+    font-family: var(--thc-website-font-sans);
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
-    background-color: var(--thc-canvas);
-    color: var(--thc-ink);
-    font-family: var(--thc-font-sans);
+    background-color: var(--thc-website-canvas);
+    color: var(--thc-website-ink);
+    font-family: var(--thc-website-font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    font-family: var(--thc-font-display);
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--thc-website-font-display);
   }
 
-  code, pre, kbd, samp {
-    font-family: var(--thc-font-mono);
+  code,
+  pre,
+  kbd,
+  samp {
+    font-family: var(--thc-website-font-mono);
   }
 
   a {
@@ -55,9 +50,14 @@
     text-decoration: none;
   }
 
+  a,
+  button {
+    touch-action: manipulation;
+  }
+
   button {
     appearance: none;
-    backgroundColor: transparent;
+    background-color: transparent;
     border: 0;
     color: inherit;
     font: inherit;

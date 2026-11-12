@@ -1,0 +1,23 @@
+id: no-hollow-type-guard
+language: Tsx
+severity: error
+message: "This guard claims a concrete type, but it only checks that the value is an object. That is a type assertion. Check the fields that the caller reads."
+rule:
+  any:
+    - kind: function_declaration
+    - kind: arrow_function
+  all:
+    - has:
+        field: return_type
+        has:
+          kind: type_predicate
+          not: { has: { field: type, regex: '^Record<' } }
+    - has:
+        field: body
+        any:
+          - pattern: isRecord($V)
+          - kind: statement_block
+            has:
+              kind: return_statement
+              has: { pattern: isRecord($V) }
+            not: { has: { nthChild: 2 } }

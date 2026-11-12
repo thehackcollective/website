@@ -1,0 +1,16 @@
+{
+  "$schema": "https://react.doctor/schema/config.json",
+  "supplyChain": {
+    "severity": "warning"
+  },
+  "ignore": {
+    "files": [
+      ".cloudflare/**",
+      "internal/.cloudflare/**",
+      "scripts/**",
+      "workers/**",
+      "src/components/ui/sankey-chart.tsx",
+      "src/components/ui/sparkline.tsx"
+    ]
+  }
+}

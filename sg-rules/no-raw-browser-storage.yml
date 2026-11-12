@@ -1,0 +1,33 @@
+id: no-raw-browser-storage
+language: Tsx
+severity: error
+message: |
+  Code uses `localStorage`, `sessionStorage` or `document.cookie` directly.
+
+  Every cookie and storage key must be in the cookie registry, and consent must allow its category.
+  Add the key to `STORED_KEYS` in `src/lib/cookie-registry.ts`.
+  Then use `readStored`, `writeStored` and `removeStored` from `src/lib/stored.ts`.
+  Use `cookieValues` from the same file to read a registered cookie.
+rule:
+  any:
+    - kind: identifier
+      regex: '^(localStorage|sessionStorage)$'
+    - kind: property_identifier
+      regex: '^(localStorage|sessionStorage)$'
+    - pattern: document.cookie
+files:
+  - "internal/**/*.ts"
+  - "workers/internal/**/*.ts"
+  - "src/components/ui/**/*.ts"
+  - "src/lib/**/*.ts"
+  - "internal/**/*.tsx"
+  - "workers/internal/**/*.tsx"
+  - "src/components/ui/**/*.tsx"
+  - "src/lib/**/*.tsx"
+ignores:
+  - "src/lib/stored.ts"
+  - "**/node_modules/**"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts"
+  - "src/lib/hairline-*"

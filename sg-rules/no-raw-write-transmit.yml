@@ -1,0 +1,28 @@
+id: no-raw-write-transmit
+language: Tsx
+severity: error
+message: |
+  Code calls transmit() on a write directly.
+  A write goes through the api-base module of its surface, which sets the method and sends it.
+  A reversible single-field write updates at once and rolls back on failure. Every other write waits for the server.
+  See rule 28 of docs/decisions/2026-11-11-work-design-foundations.md.
+rule:
+  pattern: $WRITE.transmit($$$ARGS)
+files:
+  - "internal/**/*.ts"
+  - "workers/internal/**/*.ts"
+  - "src/components/ui/**/*.ts"
+  - "src/lib/**/*.ts"
+  - "internal/**/*.tsx"
+  - "workers/internal/**/*.tsx"
+  - "src/components/ui/**/*.tsx"
+  - "src/lib/**/*.tsx"
+ignores:
+  - "src/lib/api-base.ts"
+  - "internal/work/api-base.ts"
+  - "internal/work/writes.ts"
+  - "**/node_modules/**"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts"
+  - "src/lib/hairline-*"

@@ -1,0 +1,7 @@
+id: no-direct-console-log-tsx
+language: Tsx
+rule:
+  pattern: "console.log($$$)"
+message: "Do not use console.log. Use the project logger (src/lib/logger.ts), or use console.warn/error for output that must stay."
+severity: error
+note: "Use logger.debug(...) in development code. Use console.warn/error for problems that must always show."

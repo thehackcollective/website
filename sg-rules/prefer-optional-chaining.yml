@@ -1,0 +1,7 @@
+id: prefer-optional-chaining
+language: Tsx
+rule:
+  pattern: "$A && $A.$B"
+message: "Use optional chaining: change '$A && $A.$B' to '$A?.$B'"
+severity: error
+note: "Optional chaining (?.) is shorter, causes fewer errors, and shows the intent more clearly."

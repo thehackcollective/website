@@ -1,0 +1,15 @@
+id: nested-radius-from-nest
+valid:
+  - |
+    stylex.create({ list: { borderRadius: radius.lg, padding: space.xs }, row: { borderRadius: radius.nestLgXs } })
+  - |
+    stylex.create({ list: { display: 'flex' }, row: { borderRadius: radius.md, paddingBlock: space.xs } })
+  - |
+    stylex.create({ popup: { borderRadius: radius.md, padding: space.xxs }, item: { borderRadius: radius.full } })
+invalid:
+  - |
+    stylex.create({ list: { borderRadius: radius.lg, padding: space.xs }, row: { borderRadius: radius.md } })
+  - |
+    stylex.create({ track: { borderRadius: radius.step, padding: space['2xs'] }, option: { borderRadius: radius.xs } })
+  - |
+    stylex.create({ popup: { borderRadius: radius.md, padding: space.xxs }, item: { borderRadius: radius.step } })

@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+#USAGE: explain — print the message, reason, files and fix of one rule: ./c explain <rule-id>
+
+set -euo pipefail
+
+THC_ROOT="${THC_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
+
+if [[ $# -ne 1 || "$1" == -* ]]; then
+  echo "Usage: ./c explain <rule-id>"
+  echo "  The rule id is the name in [brackets] in a ./c check failure."
+  echo "  It can be a base.rules.yaml rule or an ast-grep rule in sg-rules/."
+  [[ "${1:-}" == -h || "${1:-}" == --help ]] && exit 0
+  exit 2
+fi
+
+exec python3 "$THC_ROOT/scripts/c/_lib/scanner.py" "$THC_ROOT" --explain "$1"

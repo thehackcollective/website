@@ -1,0 +1,1 @@
+# web-infinite-animation-respects-reduced-motion — shrink-only: entries leave, counts fall, nothing joins or grows.

@@ -1,0 +1,23 @@
+id: table-fill-spans-row
+language: Tsx
+severity: error
+message: |
+  The header bar and row fills must use the same row box. This keeps the edges equal on hover, on selection and in the header.
+
+  Remove `backgroundClip`. Use the grid padding for the inset.
+rule:
+  kind: pair
+  all:
+    - has:
+        field: key
+        regex: '^backgroundClip$'
+    - inside:
+        stopBy: end
+        pattern: stylex.create($$$)
+files:
+  - "src/components/ui/table*.ts"
+ignores:
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts"
+  - "src/lib/hairline-*"

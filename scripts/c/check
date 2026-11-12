@@ -1,0 +1,336 @@
+#!/usr/bin/env bash
+#USAGE: check — every gate, one table: ./c check [--staged|--changed REF|--list|--fix] [step …]
+
+set -euo pipefail
+
+if [[ -z "${THC_ROOT:-}" ]]; then
+  THC_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+fi
+export THC_ROOT
+cd "$THC_ROOT"
+source "$THC_ROOT/scripts/c/_lib/limits.sh"
+source "$THC_ROOT/scripts/c/_lib/runtime.sh"
+
+STEPS=(
+  "runtime-dir;hook;.;.c-runtime holds dev-server logs and pids only"
+  "lockfile;hook;(^|/)(bun\.lock|package\.json|package-lock\.json|yarn\.lock|pnpm-lock\.yaml|bun\.lockb)$;bun.lock is the only lockfile and is what bun install writes"
+  "structure;hook;.;the layout law and every base.rules.yaml rule (scanner)"
+  "syntax;hook;.;every ast-grep rule in sg-rules/ and its tests in sg-rule-tests/"
+  "styles;hook;.;ESLint: StyleX values come from tokens, and the typescript-eslint recommended rules hold"
+  "deps;hook;.;one declared version per dependency (syncpack)"
+  "types;hook;^(src|internal|workers|scripts)/|^tsconfig|^package\.json$|^vite\.config\.ts$;tsc --noEmit for the site, the work app, the Worker and the scripts"
+  "format;hook;^(src|internal|workers|scripts)/|^biome\.json$;biome: 0 errors, 0 warnings (the hook reads only the staged files)"
+  "cycles;hook;^(src|internal|workers)/|^import-cycles\.biome\.json$|^scripts/c/_lib/import;no import cycle in src, internal or workers, type imports included (biome)"
+  "clones;hook;^(src|internal)/|^\.jscpd\.json$;jscpd: clones, lines and tokens under the jscpd limits in base.rules.yaml"
+  "dead-code;hook;^(src|internal|workers|scripts)/|^knip\.json$|^package\.json$;knip: no unused file, export or dependency"
+  "health;hook;^(src|internal)/|^doctor\.config\.json$;react-doctor score at or above health-score-min in base.rules.yaml"
+  "schema;hook;^workers/internal/migrations/|^internal/cloudflare\.config\.ts$;the work migrations apply to a fresh D1, and a second apply has nothing left to apply"
+)
+
+usage() {
+  cat <<EOF
+Usage: ./c check                  every hook step over the whole tree
+       ./c check <step> …         only the named steps
+       ./c check --staged         hook steps whose paths are staged, on a copy of the staged files (the pre-commit hook)
+       ./c check --changed REF    hook steps whose paths changed since REF
+       ./c check --list           the table below
+       ./c check --fix …          format rewrites the files and does not report
+
+  Each step has a path pattern. --staged and --changed run a step only when a path matches it.
+  There is no GitHub CI: the hook is the gate, and Workers Builds builds every merge to main.
+  The pre-commit hook runs ./c check --staged. The pre-push hook runs the full ./c check.
+
+  structure accepts this flag:
+    --init       write a baseline for each shrink-only rule that has no baseline
+  structure and cycles also accept these flags:
+    --tighten    lower each baseline to the current count (it never raises a baseline)
+    --ledger     print the rule id, catalog number, current total and baseline total
+    --rule ID    run only the rule ID
+  The scanner compares base.rules.yaml and the guarded configs with \$BASE_RULES_AGAINST
+  (default HEAD; CI sets origin/main). Rules only get stricter: loosening one needs Louis.
+
+EOF
+  print_table
+}
+
+print_table() {
+  printf '  %-12s %-8s %s\n' STEP WHERE PROVES
+  local row name where when what
+  for row in "${STEPS[@]}"; do
+    IFS=';' read -r name where when what <<<"$row"
+    printf '  %-12s %-8s %s\n' "$name" "$where" "$what"
+  done
+}
+
+MODE="full"
+REF=""
+FIX=0
+SELECTED=()
+SCANNER_ARGS=()
+CHANGED=""
+
+while (( $# > 0 )); do
+  case "$1" in
+    -h|--help) usage; exit 0 ;;
+    --list) print_table; exit 0 ;;
+    --staged) MODE="staged"; shift ;;
+    --changed)
+      (( $# > 1 )) || { echo "✗ --changed needs a ref. Give a ref after --changed." >&2; exit 2; }
+      MODE="changed"; REF="$2"; shift 2 ;;
+    --fix) FIX=1; shift ;;
+    --init|--tighten|--ledger) SCANNER_ARGS+=("$1"); shift ;;
+    --rule)
+      (( $# > 1 )) || { echo "✗ --rule needs a rule id. Give a rule id after --rule." >&2; exit 2; }
+      SCANNER_ARGS+=("$1" "$2"); shift 2 ;;
+    -*) echo "✗ $1 is not a known flag." >&2; usage >&2; exit 2 ;;
+    *) SELECTED+=("$1"); shift ;;
+  esac
+done
+
+row_of() {
+  local row
+  for row in "${STEPS[@]}"; do
+    [[ "${row%%;*}" == "$1" ]] && { echo "$row"; return 0; }
+  done
+  return 1
+}
+
+for name in ${SELECTED[@]+"${SELECTED[@]}"}; do
+  row_of "$name" >/dev/null || { echo "✗ $name is not a known step. Run ./c check --list to see the steps." >&2; exit 2; }
+done
+
+REPO_ROOT="$THC_ROOT"
+export BASE_RULES_LOG="$REPO_ROOT/.c-runtime/logs/structure.log"
+
+check_the_index() {
+  local git_dir index
+  git_dir="$(git rev-parse --absolute-git-dir)"
+  index="${GIT_INDEX_FILE:-$git_dir/index}"
+  INDEX_TREE="$(mktemp -d)"
+  trap 'rm -rf "$INDEX_TREE"' EXIT
+  git checkout-index -a --prefix="$INDEX_TREE/"
+  ln -s "$REPO_ROOT/node_modules" "$INDEX_TREE/node_modules"
+  export GIT_DIR="$git_dir" GIT_WORK_TREE="$INDEX_TREE" GIT_INDEX_FILE="$index"
+  THC_ROOT="$INDEX_TREE"
+  cd "$INDEX_TREE"
+}
+
+if [[ "$MODE" == "staged" && ( $FIX == 1 || " ${SCANNER_ARGS[*]-} " == *" --init "* || " ${SCANNER_ARGS[*]-} " == *" --tighten "* ) ]]; then
+  echo "✗ --staged checks a copy of the staged files, so --fix, --init and --tighten cannot write to the repo. Run them without --staged." >&2
+  exit 2
+fi
+
+case "$MODE" in
+  staged)
+    if [[ -n "${GIT_INDEX_FILE:-}" && "$GIT_INDEX_FILE" != /* ]]; then
+      export GIT_INDEX_FILE="$THC_ROOT/$GIT_INDEX_FILE"
+    fi
+    unset GIT_DIR GIT_WORK_TREE GIT_PREFIX
+    export BASE_RULES_AUTOHEAL=1
+    CHANGED="$(git diff --cached --name-only --diff-filter=ACMRD)"
+    [[ -z "$CHANGED" ]] && exit 0
+    check_the_index
+    ;;
+  changed)
+    git rev-parse --verify "$REF^{commit}" >/dev/null
+    CHANGED="$(git diff --name-only --diff-filter=ACMRD "$REF"...HEAD)"
+    ;;
+esac
+
+touched() {
+  [[ -n "$(grep -E "$1" <<<"$CHANGED" || true)" ]]
+}
+
+ensure_deps() {
+  [[ -x node_modules/.bin/knip && -x node_modules/.bin/biome && -x node_modules/.bin/jscpd ]] && return 0
+  echo "→ Dependencies are missing. bun install runs now."
+  (cd "$REPO_ROOT" && env -u GIT_DIR -u GIT_WORK_TREE -u GIT_INDEX_FILE bun install --frozen-lockfile)
+}
+
+step_runtime_dir() {
+  check_runtime_dir "$THC_ROOT"
+}
+
+step_lockfile() {
+  local foreign
+  foreign="$(git ls-files | grep -E '(^|/)(package-lock\.json|yarn\.lock|pnpm-lock\.yaml|bun\.lockb)$' || true)"
+  if [[ "$MODE" == "staged" ]]; then
+    foreign="$(grep -E '(^|/)(package-lock\.json|yarn\.lock|pnpm-lock\.yaml|bun\.lockb)$' <<<"$CHANGED" || true)"
+  fi
+  if [[ -n "$foreign" ]]; then
+    echo "✗ $foreign: bun.lock is the only lockfile in this repo. Do not add or edit a different lockfile."
+    return 1
+  fi
+  bun install --frozen-lockfile --dry-run >/dev/null 2>&1 || {
+    echo "✗ bun.lock does not match package.json. Run bun install (or bun add / bun remove instead of editing package.json), then stage bun.lock."
+    return 1
+  }
+}
+
+step_structure() {
+  bash scripts/c/_lib/structure.sh ${SCANNER_ARGS[@]+"${SCANNER_ARGS[@]}"}
+}
+
+step_syntax() {
+  bunx @ast-grep/cli scan &&
+    bunx @ast-grep/cli test
+}
+
+step_styles() {
+  local -a roots=()
+  local path
+  for path in src internal workers scripts; do [[ -d "$path" ]] && roots+=("$path"); done
+  bunx eslint --no-warn-ignored --max-warnings 0 "${roots[@]}" eslint.config.mjs
+}
+
+step_deps() {
+  bunx syncpack lint
+}
+
+step_types() {
+  bun run typecheck && bunx tsc --noEmit -p workers/internal/tsconfig.json
+}
+
+format_targets() {
+  local path
+  if [[ "$MODE" != "staged" ]] || touched '^biome\.json$'; then
+    for path in src internal workers scripts; do [[ -e "$path" ]] && printf '%s\n' "$path"; done
+    return
+  fi
+  while IFS= read -r path; do
+    [[ -f "$path" ]] && printf '%s\n' "$path"
+  done < <(grep -E '^(src|internal|workers|scripts)/' <<<"$CHANGED" || true)
+}
+
+step_format() {
+  local write=() rc=0
+  local -a targets
+  (( FIX == 1 )) && write=(--write)
+  mapfile -t targets < <(format_targets)
+  (( ${#targets[@]} == 0 )) && return 0
+  bunx biome check --error-on-warnings --files-ignore-unknown=true --no-errors-on-unmatched ${write[@]+"${write[@]}"} "${targets[@]}" || rc=1
+  (( rc == 0 || FIX == 1 )) || echo "✗ biome found a problem. To fix the format, run ./c check --fix format. Then run git add on the changed files."
+  return $rc
+}
+
+step_cycles() {
+  bash scripts/c/_lib/import-cycles.sh ${SCANNER_ARGS[@]+"${SCANNER_ARGS[@]}"}
+}
+
+step_clones() {
+  local out rc clones lines tokens total clones_max lines_max tokens_max
+  clones_max="$(limit jscpd-clones-max)" && lines_max="$(limit jscpd-dup-lines-max)" && tokens_max="$(limit jscpd-dup-tokens-max)" || return 1
+  local -a roots=()
+  for path in src internal; do [[ -d "$path" ]] && roots+=("$path"); done
+  out="$(bunx jscpd "${roots[@]}" --min-lines 5 2>&1)" && rc=0 || rc=$?
+  echo "$out" | tail -15
+  (( rc == 0 )) || { echo "✗ jscpd stopped with exit code $rc."; return 1; }
+  if grep -q 'Found [0-9]* clones' <<<"$out"; then
+    clones="$(grep -oE 'Found [0-9]+ clones' <<<"$out" | grep -oE '[0-9]+' | head -1)"
+    total="$(grep -E 'Total:' <<<"$out" | head -1 | sed 's/\x1B\[[0-9;]*[a-zA-Z]//g')"
+    lines="$(grep -oE '[0-9]+ \([0-9.]+%\)' <<<"$total" | sed -n 1p | grep -oE '^[0-9]+' || echo 0)"
+    tokens="$(grep -oE '[0-9]+ \([0-9.]+%\)' <<<"$total" | sed -n 2p | grep -oE '^[0-9]+' || echo 0)"
+  elif grep -qiE 'no duplicates|0 clones' <<<"$out"; then
+    clones=0 lines=0 tokens=0
+  else
+    echo "✗ jscpd did not print a clone count."
+    return 1
+  fi
+  echo "  ${clones} clones · ${lines} lines · ${tokens} tokens"
+  (( clones <= clones_max && lines <= lines_max && tokens <= tokens_max ))
+}
+
+step_dead_code() {
+  bunx knip
+}
+
+step_health() {
+  local out rc score score_min
+  score_min="$(limit health-score-min)" || return 1
+  out="$(bunx react-doctor --yes --no-parallel --blocking none 2>&1)" && rc=0 || rc=$?
+  (( rc == 0 )) || { echo "$out" | tail -20; echo "✗ react-doctor stopped with exit code $rc."; return 1; }
+  score="$(sed 's/\x1B\[[0-9;]*[a-zA-Z]//g' <<<"$out" | grep -oE '[0-9]+ / 100' | grep -oE '^[0-9]+' | head -1 || true)"
+  [[ -n "$score" ]] || { echo "$out" | tail -20; echo "✗ react-doctor did not print a score."; return 1; }
+  echo "  score ${score}/100"
+  (( score >= score_min )) || { echo "$out" | tail -30; return 1; }
+}
+
+step_schema() {
+  local d1 rc=0 db
+  if [[ ! -d workers/internal/migrations ]]; then
+    echo "  workers/internal/migrations is not there. The work app has no migrations yet."
+    return 0
+  fi
+  [[ -f internal/cloudflare.config.ts ]] || { echo "✗ workers/internal/migrations is there, but internal/cloudflare.config.ts is not. The migrations need the D1 binding."; return 1; }
+  db="$(sed -nE "s/.*id: '([0-9a-f-]{36})'.*/\1/p" internal/cloudflare.config.ts | head -1)"
+  [[ -n "$db" ]] || { echo "✗ internal/cloudflare.config.ts has no D1 id."; return 1; }
+  d1="$(mktemp -d)"
+  (cd internal && CI=1 ../node_modules/.bin/cf d1 migrations apply "$db" --dir ../workers/internal/migrations --local --persist-to "$d1" >/dev/null \
+    && [[ "$(CI=1 ../node_modules/.bin/cf d1 migrations list "$db" --dir ../workers/internal/migrations --local --persist-to "$d1" | tr -d '[:space:]')" == "[]" ]]) || rc=1
+  rm -rf "$d1"
+  return $rc
+}
+
+wanted() {
+  local name="$1" where="$2" when="$3"
+  if (( ${#SELECTED[@]} > 0 )); then
+    local s
+    for s in "${SELECTED[@]}"; do [[ "$s" == "$name" ]] && return 0; done
+    return 1
+  fi
+  case "$MODE" in
+    full) [[ ",$where," == *",hook,"* ]] ;;
+    staged|changed) [[ ",$where," == *",hook,"* ]] && touched "$when" ;;
+  esac
+}
+
+failed=()
+shrunk=()
+ran=0
+for row in "${STEPS[@]}"; do
+  IFS=';' read -r name where when what <<<"$row"
+  wanted "$name" "$where" "$when" || continue
+  case "$name" in
+    format|cycles|clones|dead-code|health|syntax|styles|deps|types|schema) ensure_deps ;;
+  esac
+  ran=$((ran + 1))
+  printf '→ %s — %s\n' "$name" "$what"
+  start=$SECONDS
+  log="$(mktemp)"
+  if "step_${name//-/_}" >"$log" 2>&1; then
+    printf '✓ %s (%ss)\n' "$name" "$((SECONDS - start))"
+    mapfile -t -O "${#shrunk[@]}" shrunk < <(sed -n 's/^baseline-shrinks: //p' "$log")
+  else
+    if [[ "$name" == structure ]]; then cat "$log"; else tail -60 "$log"; fi
+    printf '✗ %s failed (%ss). To run it again, run ./c check %s\n' "$name" "$((SECONDS - start))" "$name"
+    failed+=("$name")
+  fi
+  rm -f "$log"
+done
+
+stage_shrunk_baselines() {
+  local path real_index=""
+  if [[ "${GIT_INDEX_FILE:-}" == */next-index-*.lock ]]; then
+    real_index="$(dirname "$GIT_INDEX_FILE")/index.lock"
+    [[ -f "$real_index" ]] || real_index=""
+  fi
+  for path in "$@"; do
+    if GIT_WORK_TREE="$REPO_ROOT" git -C "$REPO_ROOT" diff --quiet -- "$path"; then
+      cp "$INDEX_TREE/$path" "$REPO_ROOT/$path"
+    else
+      echo "⚠ $path has changes that are not staged. The commit gets the lower baseline, but the working tree keeps your version."
+    fi
+    git add -- "$path"
+    [[ -n "$real_index" ]] && GIT_INDEX_FILE="$real_index" git add -- "$path"
+    echo "✓ $path went down. The hook staged the lower baseline in this commit."
+  done
+}
+
+if (( ${#failed[@]} > 0 )); then
+  echo "✗ ./c check: these steps failed: ${failed[*]}"
+  echo "  A rule id is the name in [brackets] above. To learn about a rule, run ./c explain <rule-id>."
+  exit 1
+fi
+(( ${#shrunk[@]} > 0 )) && stage_shrunk_baselines "${shrunk[@]}"
+(( ran > 0 )) && echo "✓ ./c check: ${ran} steps passed"
+exit 0

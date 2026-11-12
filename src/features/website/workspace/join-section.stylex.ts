@@ -1,6 +1,14 @@
 import * as stylex from '@stylexjs/stylex'
 
-import { color, layout, motion, radius, space, text } from '@/tokens/token-consts.stylex'
+import {
+  breakpoint,
+  color,
+  layout,
+  motion,
+  radius,
+  space,
+  text,
+} from '@/tokens/website-token-consts.stylex'
 
 export const joinStyles = stylex.create({
   section: {
@@ -122,13 +130,15 @@ export const joinStyles = stylex.create({
   contactLink: {
     color: {
       default: color.ink,
-      ':hover': color.primary,
+      ':hover': { [breakpoint.hover]: color.primary },
+      ':active': color.primary,
     },
     textDecorationLine: 'underline',
     textUnderlineOffset: '3px',
     textDecorationColor: {
       default: color.hairline,
-      ':hover': color.primary,
+      ':hover': { [breakpoint.hover]: color.primary },
+      ':active': color.primary,
     },
   },
   footer: {

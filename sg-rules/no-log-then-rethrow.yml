@@ -1,0 +1,15 @@
+id: no-log-then-rethrow
+language: Tsx
+severity: error
+message: "If you log an error and then throw the same error, you log it two times. Throw a new error with context (new Error(msg, { cause })) or handle the error here."
+rule:
+  kind: catch_clause
+  all:
+    - has: { field: parameter, pattern: $E }
+    - has:
+        field: body
+        all:
+          - has: { pattern: "console.$M($$$A);" }
+          - has:
+              kind: throw_statement
+              has: { kind: identifier, pattern: $E }

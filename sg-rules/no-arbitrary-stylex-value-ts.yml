@@ -1,0 +1,59 @@
+id: no-arbitrary-stylex-value-ts
+language: Tsx
+severity: error
+message: |
+  A scale property inside `stylex.create()` has a literal value. Use a token.
+
+    fontSize: '13px'          ->  fontSize: text.sizeUi
+    padding: 18               ->  padding: space.md
+    borderRadius: '6px'       ->  borderRadius: radius.sm
+    gap: '0.5rem'             ->  gap: space.xs
+
+  Each literal adds a new scale step that has no name and no review.
+  Three of them cause the type scale to drift again. ENG-1248 exists to stop that failure.
+  In that failure, three files used different display sizes: 72px, 44px and 48px.
+
+  If the value does not exist, add it to the token files in `src/tokens/`.
+  Then the new step has a name, a review and one shared source.
+
+  The StyleX ESLint plugin `propLimits` (`eslint.prop-limits.json`) checks the same literals with its allowlist.
+  `./c check` runs both checks (styles, syntax).
+rule:
+  kind: pair
+  all:
+    - has:
+        field: key
+        regex: '^(fontSize|lineHeight|letterSpacing|borderRadius|padding|paddingBlock|paddingInline|paddingTop|paddingBottom|paddingLeft|paddingRight|margin|marginBlock|marginInline|marginTop|marginBottom|marginLeft|marginRight|gap|rowGap|columnGap)$'
+    - has:
+        field: value
+        any:
+          - kind: string
+          - kind: number
+    - not:
+        has:
+          field: value
+          regex: '^[''"]?(0|auto|normal|1)[''"]?$'
+    - inside:
+        stopBy: end
+        pattern: stylex.create($$$)
+note: |
+  The values `0`, `auto`, `normal` and unitless `1` are allowed.
+  Zero has no unit. `auto` is layout (margin centering). `normal` is the CSS default for letter-spacing.
+  Unitless line-height `1` is leading-none.
+  The `propLimits` allowlist in eslint.prop-limits.json is the main gate, and it also allows these values.
+
+  The files in `ignores` style one-off visual compositions: the topology canvas, the liquid nav rail, and the marketing hero with the demo chat overlay.
+  Their values are tuned per element and are older than the token scale.
+  A token for each value adds one scale step per line. That is the drift this rule stops.
+  Do not add files to `ignores`.
+files:
+  - "internal/**/*.ts"
+  - "workers/internal/**/*.ts"
+  - "src/components/ui/**/*.ts"
+  - "src/lib/**/*.ts"
+ignores:
+  - "**/node_modules/**"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts"
+  - "src/lib/hairline-*"

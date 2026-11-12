@@ -1,0 +1,39 @@
+id: no-raw-hugeicons-in-app
+language: Tsx
+severity: error
+message: |
+  `HugeiconsIcon` is imported from `@hugeicons/react` in app code.
+
+  The `Icon` wrapper is the only place that draws a Hugeicons icon in the app.
+  It sets the size from the icon tokens. Each glyph comes from the job map
+  `icons` in `components/ui/icon-jobs.ts`. Use the wrapper with a job:
+
+    import { Icon } from '@/ui/icon'
+    import { icons } from '@/ui/icons'
+    <Icon icon={icons.property} size="sm" />
+
+  The sizes are `sm`, `md` and `lg`: 16, 18 and 20px on the console scale,
+  and 18, 20 and 24px on the public scale. `fill` takes the size of the parent.
+  See DESIGN.md, Icons.
+rule:
+  kind: import_specifier
+  has:
+    field: name
+    regex: '^HugeiconsIcon$'
+  inside:
+    stopBy: end
+    kind: import_statement
+    has:
+      field: source
+      regex: '@hugeicons/react'
+files:
+  - "internal/**"
+  - "internal/work/features/**"
+  - "src/components/ui/**"
+ignores:
+  - "src/components/ui/icon.tsx"
+  - "**/node_modules/**"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts"
+  - "src/lib/hairline-*"

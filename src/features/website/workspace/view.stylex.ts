@@ -1,6 +1,6 @@
 import * as stylex from '@stylexjs/stylex'
 
-import { color, layout } from '@/tokens/token-consts.stylex'
+import { color, layout } from '@/tokens/website-token-consts.stylex'
 
 export const pageStyles = stylex.create({
   page: {

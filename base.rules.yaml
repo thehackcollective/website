@@ -1,0 +1,1245 @@
+roots: [src, internal, workers, scripts]
+extensions: [.ts, .tsx, .mjs, .js]
+baselines: scripts/c/_lib/baselines
+vendored:
+  - ".agents/skills/**"
+  - "src/lib/hairline-*.js"
+guarded:
+  gates: [c, scripts/c/check, scripts/c/merge, scripts/c/_lib/scanner.py, scripts/c/_lib/structure.sh, scripts/c/_lib/import-cycles.sh, scripts/c/_lib/import_edges.py, scripts/git-hooks/pre-commit, scripts/git-hooks/pre-push, sgconfig.yml]
+  tsconfig: [tsconfig.json, scripts/tsconfig.json]
+  biome: [biome.json, import-cycles.biome.json]
+  sg-rules: [sg-rules]
+  skip-lists: [knip.json, .jscpd.json, doctor.config.json, biome.json, import-cycles.biome.json, eslint.config.mjs, tsconfig.json, scripts/tsconfig.json]
+limits:
+  jscpd-clones-max: 0
+  jscpd-dup-lines-max: 0
+  jscpd-dup-tokens-max: 0
+  health-score-min: 90
+  greptile-score-min: 5
+aliases:
+  src:
+    "@/ui/": src/components/ui/
+    "@/": src/
+  internal:
+    "@/ui/": src/components/ui/
+    "@internal/": internal/
+    "@/": src/
+  workers:
+    "@/ui/": src/components/ui/
+    "@internal/": internal/
+    "@/": src/
+
+rules:
+- id: web-coachmark-coverage
+  catalog: 7
+  check: coachmark-coverage
+  scope: [internal/work/features/*/entrypoint.ts, internal/work/features/*/coachmarks.ts]
+  baseline: none
+  message: >
+    A rail page has no coachmark step. Each nav entry with a portals list is a rail page. Add one to three steps for its nav id to COACHMARKS in workspace/coachmarks.ts of the feature that owns the page.
+- id: web-coachmark-anchors
+  catalog: 7
+  check: coachmark-anchors
+  scope: [internal/work/features/*/coachmarks.ts, internal/work/features/*/*.tsx]
+  baseline: none
+  message: >
+    A coachmark step and its anchor do not agree. Each step anchor is a literal '<feature>.<id>'. The same feature workspace must render data-coachmark="<feature>.<id>" as a literal on a real element. Each data-coachmark must have a step. Each COACHMARKS key must be a rail page id of that feature. Add the missing attribute or step, or remove the extra one.
+- id: app-page-frame-reserved
+  catalog: 2
+  check: regex
+  pattern: (--thc-page-frame|layout\.pageFrame)
+  scope: [internal/**, workers/internal/**, src/components/ui/**, src/lib/**, src/tokens/design-tokens.css, src/tokens/semantic-tokens.css, src/tokens/component-tokens.css, src/tokens/webapp-globals.css, src/tokens/token-consts.stylex.ts]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['maxWidth: layout.pageFrame', '--thc-page-frame: 1120px']
+    good: ['maxWidth: ''68ch''', 'maxWidth: layout.siteFrame']
+  message: >
+    The app page frame is retired. Remove it. Let data surfaces fill the main column. Use a character measure for text and a named layout token for an overlay.
+- id: web-no-glass-effects
+  catalog: 2
+  check: regex
+  pattern: (?i)backdrop-?filter|glass|liquid|liquef|fedisplacementmap|feturbulence|blur\(\s*[0-9]
+  scope: [internal/**, workers/internal/**, src/components/ui/**, src/lib/**, src/tokens/design-tokens.css, src/tokens/semantic-tokens.css, src/tokens/component-tokens.css, src/tokens/webapp-globals.css, src/tokens/token-consts.stylex.ts]
+  exempt: [src/components/ui/primitive-styles.stylex.ts, src/tokens/**, src/tokens/webapp-globals.css, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['backdropFilter: ''blur(12px)''', 'backgroundColor: color.backgroundGlass', 'import { LiquidButton } from ''@/ui/liquid-button''', 'filter: ''blur(4px)''']
+    good: ['backgroundColor: color.backgroundSurface', <Button variant="primary">Book a Call</Button>, 'inputRef.current?.blur()']
+  message: >
+    Do not use glass, liquid or blur effects in the web app. Remove backdropFilter, blur filters, glass tokens and Liquefy code. Use an opaque surface (color.backgroundSurface or color.backgroundCanvas) with a color.borderDefault hairline. A primary action is a Button with variant primary. See DESIGN.md, Surfaces and elevation.
+- id: web-app-no-shadows
+  catalog: 2
+  check: regex
+  pattern: (?i)(box|text)-?shadow\s*:(?!\s*(['"]?(none|null)\b|\{|layout\.focusRing\b))|\bshadow\.|\bshadow\[|--thc-shadow-|drop-?shadow
+  scope: [internal/**, workers/internal/**, src/components/ui/**, src/lib/**, src/tokens/design-tokens.css, src/tokens/semantic-tokens.css, src/tokens/component-tokens.css, src/tokens/webapp-globals.css, src/tokens/token-consts.stylex.ts]
+  exempt: [internal/work/shell/**, src/tokens/**, src/components/ui/**, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['boxShadow: shadow.float', 'boxShadow: `0 0 0 1px ${color.borderDefault}`', 'default: shadow[''2''],', 'filter: ''drop-shadow(0 1px 2px #0003)''']
+    good: ['boxShadow: { default: null, '':focus-visible'': layout.focusRing }', 'boxShadow: ''none''', <Card> from @/ui/card]
+  message: >
+    Do not write a shadow in an app feature. Depth comes from the ui/ components (Card, menus, popovers, dialogs), which use the layered shadow tokens. The focus ring (layout.focusRing) is the only box-shadow that a feature can use.
+- id: web-ui-shadow-is-token
+  catalog: 2
+  check: regex
+  pattern: (?is)drop-?shadow|(?:box|text)-?shadow\s*:\s*(?:\{[^{}]*?)?['\"`][^'\"`]*?(?<![\w.%-])(?:-?\d*\.?\d+(?:px|rem|em)|0)\s+(?:-?\d*\.?\d+(?:px|rem|em)|0)(?![\w%(])|(?:box|text)-shadow\s*:\s*[^;'\"`{}]*?(?<![\w.%-])(?:-?\d*\.?\d+(?:px|rem|em)|0)\s+(?:-?\d*\.?\d+(?:px|rem|em)|0)(?![\w%(])|['\"`][^'\"`\n]*?(?<![\w.%-])(?:-?\d*\.?\d+(?:px|rem|em)|0)\s+(?:-?\d*\.?\d+(?:px|rem|em)|0)(?![\w%(])[^'\"`\n]*?(?:#[0-9a-f]{3,8}\b|rgba?\(|hsla?\(|oklch\(|var\(|\$\{color\.|\b(?:black|white|transparent|currentcolor)\b)[^'\"`\n]*['\"`]
+  scope: [src/components/ui/**]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['boxShadow: `0 0 0 1px ${color.borderDefault}`', 'boxShadow: ''0 1px 2px var(--x)''', 'boxShadow: ''0 4px 8px black''', 'boxShadow: ''0 1px 2px #0000001a''', 'filter: ''drop-shadow(0 1px 2px #0003)''']
+    good: ['boxShadow: shadow[''4'']', 'boxShadow: { default: shadow[''2''], '':focus-visible'': layout.focusRing }']
+  message: >
+    A ui/ component takes depth only from a layered shadow token (shadow.* from src/tokens/token-consts.stylex.ts). Do not write a raw shadow value: a string with two or more lengths in a shadow property, or with lengths and a color. See docs/decisions/2026-11-11-work-neutral-theme.md.
+  exempt: ['src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+- id: web-cross-feature-via-index
+  catalog: 2
+  check: import-boundary
+  scope: [internal/**]
+  owner: internal/work/features/([^/]+)/
+  forbid: [internal/work/features/*/**]
+  allow: ['internal/work/features/{self}/**', internal/work/features/*/index.ts]
+  baseline: none
+  message: >
+    An import from a different feature uses the public edge '@/features/<name>' (its index.ts). Export the symbol there. Never import from the workspace/ of a different feature.
+- id: absolute-imports
+  catalog: 4
+  check: regex
+  pattern: (?:from|import)\s*\(?\s*['"]\.\./
+  scope: [src/**, internal/**, workers/**]
+  baseline: none
+  examples:
+    bad: ['import { readJson } from ''../shared/json''']
+    good: ['import { readJson } from ''@/shared/json''']
+  message: >
+    Import by absolute path ('@/features/<name>/routes', '@/shared/env', '@/lib/...'). Never use '../'. You can use a sibling import './x' in the same folder.
+- id: named-exports-only
+  catalog: 5
+  check: regex
+  pattern: ^export\s+default\b
+  scope: [src/**, internal/**, workers/**]
+  exempt: [workers/internal/index.ts, internal/cloudflare.config.ts, internal/vite.config.ts]
+  baseline: none
+  examples:
+    bad: ['export default function View() {}']
+    good: ['export function View() {}']
+  message: >
+    Use a named export (export function X or export const X), so that agents can find it with grep. Reserved feature files export reserved names (reserved-*-export). Worker entry files are exempt, because the runtime requires a default export.
+- id: repo-root-allowlist
+  catalog: 59
+  check: path
+  universe: tracked
+  pattern: ^(?!(?:\.agents|\.claude|docs|internal|public|scripts|sg-rule-tests|sg-rules|src|workers)/|(?:\.gitignore|\.jscpd\.json|\.node-version|cloudflare\.config\.ts|\.syncpackrc\.json|AGENTS\.md|CLAUDE\.md|DESIGN\.md|README\.md|base\.rules\.yaml|biome\.json|bun\.lock|bunfig\.toml|c|doctor\.config\.json|eslint\.config\.mjs|eslint\.prop-limits\.json|import-cycles\.biome\.json|index\.html|knip\.json|package\.json|sgconfig\.yml|skills-lock\.json|tsconfig\.json|vite\.config\.ts)$)
+  baseline: none
+  examples:
+    bad: [.greptile/config.json, notes.md]
+    good: [src/main.tsx, base.rules.yaml]
+  message: >
+    The repo root holds only the entries that this rule lists, dot entries included. Do not add a config file for a tool so that it skips files. vendored in base.rules.yaml is the one list of exceptions. A new root entry changes this rule, so it needs the rules-approved label.
+- id: no-nested-biome-config
+  catalog: 59
+  check: path
+  universe: tracked
+  pattern: (^|/)\.?biome\.jsonc?$
+  scope: [src/**, internal/**, workers/**]
+  baseline: none
+  examples:
+    bad: [src/features/website/biome.json, internal/work/features/tasks/biome.jsonc]
+    good: [biome.json, import-cycles.biome.json]
+  message: >
+    A biome config file under src can turn off a lint rule, for example noImportCycles, for one folder. Each app has its biome config files in the app folder only. Delete the file. Put the change in the biome.json of the app, where the guarded config check reads it.
+- id: kebab-case-filenames
+  catalog: 6
+  check: path
+  pattern: /[^/]*[A-Z][^/]*\.tsx?$
+  scope: [src/features/**, internal/**, workers/**]
+  baseline: none
+  examples:
+    bad: [internal/work/features/tasks/workspace/TaskList.tsx]
+    good: [internal/work/features/tasks/workspace/task-list.tsx]
+  message: >
+    Feature file names are kebab-case (task-drawer.tsx exports TaskDrawer). Rename the file. Then update the files that import it.
+- id: reserved-view-export
+  catalog: 7
+  check: must-match
+  pattern: ^export function View\(
+  scope: [src/features/*/workspace/view*.tsx]
+  baseline: none
+  message: >
+    A view file exports `export function View()`. features/catalog.ts loads that name for each route. Rename the component to View.
+- id: reserved-loading-export
+  catalog: 7
+  check: must-match
+  pattern: ^export function Loading\(
+  scope: [src/features/*/workspace/loading.tsx]
+  baseline: none
+  message: >
+    loading.tsx exports `export function Loading()`. The catalog shows it while the view loads.
+- id: reserved-error-export
+  catalog: 7
+  check: must-match
+  pattern: ^export function ErrorFallback\(
+  scope: [src/features/*/workspace/error.tsx]
+  baseline: none
+  message: >
+    error.tsx exports `export function ErrorFallback()`. The catalog shows it when the view throws an error.
+- id: no-use-effect
+  catalog: 13
+  check: regex
+  pattern: \buse(Layout|Insertion)?Effect\b
+  scope: [src/**, internal/**]
+  exempt: [src/lib/use-mount-effect.ts]
+  baseline: none
+  examples:
+    bad: ['useEffect(() => subscribe(), [])', useLayoutEffect(measure)]
+    good: [useMountEffect(() => subscribe())]
+  message: >
+    Do not use useEffect. Calculate state inline or with useMemo. Handle user actions in event handlers. Reset state with a key. Fetch data through the feature store. For a real external sync at mount time, use useMountEffect from '@/lib/use-mount-effect'.
+- id: no-comments
+  catalog: 23
+  check: comment-ratchet
+  scope: [src/**, internal/**, workers/**, scripts/**]
+  exempt: ['**/*.d.ts']
+  pragmas: (eslint-disable|biome-ignore|react-doctor-disable|@ts-ignore|@ts-expect-error|@ts-nocheck)
+  baseline: none
+  message: >
+    Comments are not permitted. Put the information in a name, a type, or a rule in base.rules.yaml. Then delete the comment.
+- id: no-comments-anywhere
+  catalog: 23
+  check: comment-ratchet
+  universe: tracked
+  scope: ['**']
+  exempt: ['{src,internal,workers,scripts}/**/*.{ts,tsx,js,mjs}', '**/*.d.ts']
+  pragmas: ^#USAGE:|(eslint-disable|biome-ignore|@ts-ignore|@ts-expect-error|@ts-nocheck)
+  baseline: none
+  message: >
+    Comments are not permitted in any file. This includes SQL, shell, Python, YAML, JSONC, CSS and config files. Put the information in a name, a rule in base.rules.yaml, the feature-map.md of the owner, or a decision record. Then delete the comment.
+- id: doc-refs-resolve
+  catalog: 60
+  check: doc-refs
+  universe: tracked
+  scope: ['**/*.md']
+  baseline: none
+  message: >
+    A Markdown file names a repo path or a ./c command in backticks that does not exist. Docs that point at code that moved teach the next agent the wrong place. Write the current path (git ls-files finds it), or delete the sentence if the code is gone.
+- id: web-feature-map-sections
+  catalog: 61
+  check: must-match
+  universe: tracked
+  pattern: (?s)^## Sub-features$.*^## How to get to it \(user POV\)$.*^## Driving it with agent-browser$.*^## Gotchas$
+  scope: [internal/work/features/*/feature-map.md]
+  baseline: none
+  message: >
+    A web feature map has these four H2 headings in this order: Sub-features, How to get to it (user POV), Driving it with agent-browser, Gotchas. The verification skill reads each map in this shape. Add the missing heading or move it into this order.
+- id: no-suppressions
+  catalog: 26
+  check: regex
+  pattern: '@ts-ignore|@ts-expect-error|@ts-nocheck|eslint-disable|biome-ignore|react-doctor-disable'
+  scope: [src/**, internal/**, workers/**, scripts/**]
+  baseline: none
+  examples:
+    bad: [// @ts-ignore, '// biome-ignore lint/style: legacy']
+    good: [const ignored = items.filter(isHidden)]
+  message: >
+    Suppression comments are not permitted. Fix the error at its cause. If it is a real exception, record a decision. Then make the type narrower.
+- id: no-any
+  catalog: 27
+  check: regex
+  pattern: :\s*any\b|\bas\s+any\b|<any\s*[,>]|\bany\[\]
+  scope: [src/**, internal/**, workers/**, scripts/**]
+  baseline: none
+  examples:
+    bad: ['function parse(input: any) {}', const rows = data as any]
+    good: ['function parse(input: unknown) {}']
+  message: >
+    Do not use `any`. Type the boundary. Or use `unknown` and narrow it. Or import the real type from its owner.
+- id: no-non-null-assertion
+  catalog: 28
+  check: regex
+  pattern: '[\w\)\]]!(?=[.\)\],;\[]|\s*[)\],;])(?!=)'
+  scope: [src/**, internal/**, workers/**, scripts/**]
+  baseline: none
+  examples:
+    bad: [const id = user!.id, 'return rows[0]!;']
+    good: ['const id = user?.id', <p>Saved!</p>]
+  message: >
+    `x!` hides a null that the types permit. Handle the null with an early return, a default, or a named error. Or make the type stricter.
+- id: one-record-guard
+  catalog: 31
+  check: regex
+  pattern: (function|const)\s+(isRecord|isPlainRecord|isPlainObject|isObjectRecord)\b
+  scope: [src/**, internal/**, workers/**, scripts/**]
+  exempt: [src/lib/guards.ts]
+  baseline: none
+  examples:
+    bad: ['function isRecord(value: unknown): value is Record<string, unknown> {']
+    good: ['import { isRecord } from ''@/shared/json''']
+  message: >
+    Each app has one record guard. Import isRecord from '@/shared/guards' (api) or '@/lib/guards' (web). Do not write a new one.
+- id: no-generic-type-predicate
+  catalog: 28
+  check: regex
+  pattern: \)\s*:\s*\w+\s+is\s+[A-Z]\b(?![\w<.\[])
+  scope: [src/**, internal/**, workers/**, scripts/**]
+  baseline: none
+  examples:
+    bad: ['function isT(value: unknown): value is T {']
+    good: ['function isTask(value: unknown): value is Task {']
+  message: >
+    A guard that returns `value is T` for a type parameter T cannot check T at runtime. Thus it is a type assertion. Write a guard for the concrete type. Make it check the fields that the caller reads.
+- id: one-schema-library
+  catalog: 31
+  check: regex
+  pattern: (?:from|import)\s*\(?\s*['"](yup|joi|valibot|superstruct|io-ts|arktype|@sinclair/typebox)['"/]
+  baseline: none
+  examples:
+    bad: [import * as yup from 'yup', 'import { object } from ''valibot''']
+    good: ['import { z } from ''zod''']
+  message: >
+    Use one schema library: the library that the codebase uses now. A second schema library needs a decision record first.
+- id: no-eval
+  catalog: 32
+  check: regex
+  pattern: \beval\s*\(|\bnew\s+Function\s*\(
+  baseline: none
+  examples:
+    bad: [eval(code), new Function('return 1')]
+    good: [evaluate(code)]
+  message: >
+    Do not build code from strings at runtime. Use a typed dispatch table.
+- id: no-process-env
+  catalog: 34
+  check: regex
+  scope: [src/**, internal/**, workers/**]
+  pattern: \bprocess\.env\b
+  baseline: none
+  examples:
+    bad: [const key = process.env.API_KEY]
+    good: [const key = env.API_KEY]
+  message: >
+    Workers and the browser have no process.env. Read the binding from Env (shared/env.ts). Or read import.meta.env through config.ts.
+- id: no-mutable-export
+  catalog: 35
+  check: regex
+  pattern: ^\s*export\s+(let|var)\b
+  baseline: none
+  examples:
+    bad: [export let count = 0]
+    good: [export const count = 0]
+  message: >
+    Each durable value has one writer. Export a const, or a store with a named command.
+- id: no-free-form-console
+  catalog: 54
+  check: regex
+  scope: [src/**, internal/**, workers/**]
+  pattern: \bconsole\.(log|debug|info|trace)\s*\(
+  baseline: none
+  examples:
+    bad: ['console.log(''debug'', value)']
+    good: ['console.error(JSON.stringify({ event: ''sync.failed'' }))']
+  message: >
+    Log with console.warn or console.error and a structured object ({ event, ...fields }). Or delete the line.
+- id: no-unit-test-files
+  catalog: 45
+  check: path
+  pattern: (\.(test|spec)\.(ts|tsx|mjs|js)$)|/__tests__/
+  baseline: none
+  examples:
+    bad: [src/lib/date.test.ts, workers/internal/__tests__/mail.ts]
+    good: [src/lib/date.ts]
+  message: >
+    This repo writes no unit tests (AGENTS.md). Delete the test file. Prove the behavior with an E2E run (the verification skill). Attach the proof to the PR.
+- id: no-test-runner-imports
+  catalog: 45
+  check: regex
+  pattern: from\s+['"](bun:test|vitest|node:test|@jest/globals|@testing-library/[^'"]+|@playwright/test)['"]
+  baseline: none
+  examples:
+    bad: ['import { test, expect } from ''bun:test''', 'import { render } from ''@testing-library/react''']
+    good: ['import { z } from ''zod''']
+  message: >
+    This repo has no unit test runner. Delete the import. Prove the behavior with an E2E run (the verification skill).
+- id: web-fetch-behind-api-module
+  catalog: 17
+  check: regex
+  pattern: (?<![\w.])fetch\s*\(
+  scope: [internal/**, workers/internal/**, src/components/ui/**, src/lib/**, src/tokens/design-tokens.css, src/tokens/semantic-tokens.css, src/tokens/component-tokens.css, src/tokens/webapp-globals.css, src/tokens/token-consts.stylex.ts]
+  exempt: ['**/{api,*-api,api-base}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  baseline: none
+  examples:
+    bad: [const res = await fetch('/api/tasks')]
+    good: [const res = await api.get('/tasks')]
+  message: >
+    Put fetch() in an api.ts, *-api.ts or api-base.ts module. This keeps the host contract typed. Add a function there and call it.
+- id: name-by-function
+  catalog: 58
+  check: path
+  pattern: (?:[/._-]|(?<=[a-z0-9])(?=[A-Z]))(?i:zero)s?(?=[/._A-Z-])|^(?!src/components/ui/[^/]+-logo\.tsx$)(?:(?!/(?:providers|adapters)/).)*?(?:[/._-]|(?<=[a-z0-9])(?=[A-Z]))(?i:elevenlabs|deepgram|telnyx|twilio|vapi|agentmail|resend|virustotal|composio|clerk|hostaway|hosthub|guesty|fixflo|calendly|calcom|zoho|meta|gmail|outlook|google|microsoft|ms|jev)s?(?=[/._A-Z-])
+  scope: [src/features/**, internal/work/features/**, workers/internal/**, src/lib/**, src/components/ui/**]
+  baseline: none
+  examples:
+    bad: [workers/internal/features/agent/elevenlabs/elevenlabs.ts, internal/work/features/zero/workspace/view.tsx]
+    good: [workers/internal/features/agent/providers/elevenlabs.ts, internal/work/features/agent/workspace/view.tsx]
+  message: >
+    Name a file by its function. Never use a vendor name or a codename (zero), in kebab case or camel case. Rename the file for what it does (speech, phone, email-sender, use-mailbox, auth-token). On web, workspace/ stays flat, so the rename is the fix. A vendor name is permitted only in the path below a providers/ or adapters/ folder (api features and shared: <feature>/providers/<vendor>.ts). It is never permitted above that folder. A brand logo is components/ui/<brand>-logo.tsx. Channels (whatsapp, email, phone, voice) are functions.
+- id: web-framework-never-imports-features
+  catalog: 2
+  check: import-boundary
+  scope: ['internal/work/features/*.{ts,tsx}', internal/work/api-base.ts]
+  forbid: [internal/work/features/*/**]
+  baseline: none
+  message: >
+    Framework code (internal/work/features/catalog.tsx, internal/work/features/entrypoint.ts and the work api-base module) never imports a feature. Find the feature through import.meta.glob in the catalog. Or move the shared code into lib/.
+- id: web-color-literal-in-token-source
+  catalog: 62
+  check: regex
+  pattern: (?:#|%23)(?![0-9]+\b)[0-9a-fA-F]{3,8}\b|%23[0-9]{3,8}\b|(?:(?<![A-Za-z] )|(?<=px )|(?<=em )|(?<=solid )|(?<=dashed )|(?<=dotted )|(?<=double )|(?<=inset ))#[0-9]{3,8}\b|\b(?:rgba?|hsla?|oklch|oklab)\(|\b(?:fill|stroke|stopColor|floodColor|lightingColor|color)=\{?\s*['\"`](?:lightgoldenrodyellow|mediumspringgreen|mediumaquamarine|mediumslateblue|mediumturquoise|mediumvioletred|blanchedalmond|cornflowerblue|darkolivegreen|lightslategray|lightslategrey|lightsteelblue|mediumseagreen|darkgoldenrod|darkslateblue|darkslategray|darkslategrey|darkturquoise|lavenderblush|lightseagreen|palegoldenrod|paleturquoise|palevioletred|rebeccapurple|antiquewhite|darkseagreen|lemonchiffon|lightskyblue|mediumorchid|mediumpurple|midnightblue|darkmagenta|deepskyblue|floralwhite|forestgreen|greenyellow|lightsalmon|lightyellow|navajowhite|saddlebrown|springgreen|yellowgreen|aquamarine|blueviolet|chartreuse|darkorange|darkorchid|darksalmon|darkviolet|dodgerblue|ghostwhite|lightcoral|lightgreen|mediumblue|papayawhip|powderblue|sandybrown|whitesmoke|aliceblue|burlywood|cadetblue|chocolate|darkgreen|darkkhaki|firebrick|gainsboro|goldenrod|indianred|lawngreen|lightblue|lightcyan|lightgray|lightgrey|lightpink|limegreen|mintcream|mistyrose|olivedrab|orangered|palegreen|peachpuff|rosybrown|royalblue|slateblue|slategray|slategrey|steelblue|turquoise|cornsilk|darkblue|darkcyan|darkgray|darkgrey|deeppink|honeydew|lavender|moccasin|seagreen|seashell|crimson|darkred|dimgray|dimgrey|fuchsia|hotpink|magenta|oldlace|skyblue|thistle|bisque|indigo|maroon|orange|orchid|purple|salmon|sienna|silver|tomato|violet|yellow|azure|beige|black|brown|coral|green|ivory|khaki|linen|olive|wheat|white|aqua|blue|cyan|gold|gray|grey|lime|navy|peru|pink|plum|snow|teal|red|tan)['\"`]
+  scope: ['internal/**/*.{ts,tsx,css}', 'workers/internal/**/*.{ts,tsx,css}', 'src/components/ui/**/*.{ts,tsx,css}', 'src/lib/**/*.{ts,tsx,css}', src/tokens/design-tokens.css, src/tokens/semantic-tokens.css, src/tokens/component-tokens.css, src/tokens/webapp-globals.css, src/tokens/token-consts.stylex.ts]
+  exempt: [src/tokens/design-tokens.css, src/components/ui/*-logo.tsx, src/components/ui/provider-logos.tsx, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['backgroundColor: ''#f5f5f5''', 'color: ''#000''', 'border: ''1px solid #111111''', 'boxShadow: ''0 1px 2px #000''', 'backgroundImage: "url(''data:image/svg+xml,%3Csvg fill=%22%23ff0000%22/%3E'')"', <rect fill="white" />, '<path stroke={''black''} />']
+    good: ['backgroundColor: color.backgroundCanvas', '<p>Unit #101</p>', '''Flat #42, unit #7, block #2001''', <path fill="currentColor" />, '<rect fill={color.iconDefault} />']
+  message: >
+    A web component has a color literal. Add the color to the palette in src/tokens/design-tokens.css. Add a semantic token for it in src/tokens/semantic-tokens.css. Then use its accessor from src/tokens/token-consts.stylex.ts.
+- id: web-outline-keeps-focus-ring
+  catalog: 62
+  check: regex
+  pattern: \{(?!(?:[^{}]|\{[^{}]*\})*(?:\{[^{}]*)?':focus-visible')(?:[^{}]|\{[^{}]*\})*\boutline(?:Style|Width)?\s*:\s*(?:\{[^{}]*?['\"]?(?:none|0)\b[^{}]*\}|['\"]?(?:none|0)\b)(?:[^{}]|\{[^{}]*\})*\}
+  scope: ['internal/**/*.{ts,tsx}', 'workers/internal/**/*.{ts,tsx}', 'src/components/ui/**/*.{ts,tsx}', 'src/lib/**/*.{ts,tsx}', src/tokens/token-consts.stylex.ts]
+  exempt: [src/components/ui/primitive-styles.stylex.ts, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['field: { outline: ''none'', borderColor: color.borderInput, },', 'row: { outline: { default: ''none'', '':focus'': ''none'' }, },', 'input: { outlineWidth: 0 },']
+    good: ['field: { outline: ''none'', boxShadow: { default: null, '':focus-visible'': layout.focusRing }, },', 'row: { outline: ''none'', boxShadow: { '':focus-visible'': layout.focusRingField }, '':focus-visible'': { outline: layout.focusRing }, },', 'link: { outlineOffset: ''2px'' },']
+  message: >
+    A style removes the outline and gives no focus ring in its place. A keyboard user then cannot see where focus is. Keep the outline, or add boxShadow: { default: null, ':focus-visible': layout.focusRing } in the same style. A field uses layout.focusRingField. Or spread primitiveStyles.focusRing. An inner input whose wrapper shows the ring on :focus-within spreads primitiveStyles.innerField. See rule 31 of docs/decisions/2026-11-11-work-design-foundations.md.
+- id: web-pressable-has-active
+  catalog: 62
+  check: regex
+  pattern: \b(?:backgroundColor|borderColor|color)\s*:\s*\{(?!(?:[^{}]|\{[^{}]*\})*(?::active'|focus|\binput\.))(?:[^{}]|\{[^{}]*\})*':hover'(?:[^{}]|\{[^{}]*\})*\}|\b(?:backgroundColor|borderColor|color)\s*:\s*\{(?=(?:[^{}]|\{[^{}]*\})*':hover'\s*:\s*\{[^{}]*breakpoint\.hover)(?=(?:[^{}]|\{[^{}]*\})*:active'\s*:\s*[^{\s])(?:[^{}]|\{[^{}]*\})*\}
+  scope: ['internal/**/*.{ts,tsx}', 'workers/internal/**/*.{ts,tsx}', 'src/components/ui/**/*.{ts,tsx}', 'src/lib/**/*.{ts,tsx}', src/tokens/token-consts.stylex.ts]
+  exempt: [src/tokens/**, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['backgroundColor: {\n      default: ''transparent'',\n      '':hover'': { [breakpoint.hover]: color.backgroundNeutralHover },\n      '':active'': color.backgroundNeutralBold,\n    },', 'backgroundColor: { default: ''transparent'', '':hover'': { [breakpoint.hover]: color.backgroundNeutralHover }, },', 'color: { default: color.textSubtle, '':hover'': color.textDefault },']
+    good: ['borderColor: { default: input.defaultBorder, '':hover'': { [breakpoint.hover]: color.borderBold }, '':focus-within'': input.defaultBorderFocus },', 'backgroundColor: { default: color.backgroundNeutralHover, '':hover'': { [breakpoint.hover]: color.backgroundNeutral }, '':not(:disabled):active'': { default: color.backgroundNeutralBold, [breakpoint.hover]: color.backgroundNeutralBold } },', 'backgroundColor: { default: ''transparent'', '':hover'': { [breakpoint.hover]: color.backgroundNeutralHover }, '':active'': { default: color.backgroundNeutralBold, [breakpoint.hover]: color.backgroundNeutralBold }, },', 'opacity: { default: 0, '':hover'': { [breakpoint.hover]: 0.6 } },']
+  message: >
+    A control changes colour on hover but not on press. Each pressable control shows a darker step on :active, and touch screens show only that step. Add ':active' with the next darker token. Neutral hover goes to neutral bold, and surface hover goes to neutral hover. Inverse hover goes to inverse bold, and border bold goes to border bolder. When the hover sits under breakpoint.hover, put the press step there too. Else the hover wins on a mouse. Write ':active': { default: X, [breakpoint.hover]: X }. See rule 32 of docs/decisions/2026-11-11-work-design-foundations.md.
+- id: web-disabled-not-opacity
+  catalog: 62
+  check: regex
+  pattern: (?:\b\w*(?:[Dd]isabled|[Ss]oon|[Uu]navailable)\w*\s*:\s*\{(?:[^{}]|\{[^{}]*\})*\bopacity\s*:|\bopacity\s*:\s*\{[^{}]*(?:disabled|aria-disabled))
+  scope: ['internal/**/*.{ts,tsx}', 'workers/internal/**/*.{ts,tsx}', 'src/components/ui/**/*.{ts,tsx}', 'src/lib/**/*.{ts,tsx}', src/tokens/token-consts.stylex.ts]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['itemDisabled: { opacity: 0.5 },', 'fileButtonDisabled: { cursor: cursor.notAllowed, opacity: 0.5, },', 'opacity: { default: 1, '':disabled'': 0.4 },']
+    good: ['itemDisabled: { color: color.textSubtlest, backgroundColor: color.backgroundSunken },', 'fadeIn: { opacity: 0 },']
+  message: >
+    A disabled or not-ready control is dimmed with opacity. Opacity gives a different contrast on each surface. Use the muted tokens: color.textSubtlest for text and icons, color.backgroundSunken or none for the fill. A not-ready feature also shows a short Soon caption. See rule 33 of docs/decisions/2026-11-11-work-design-foundations.md.
+  exempt: ['src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+- id: web-cursor-is-const
+  catalog: 62
+  check: regex
+  pattern: \bcursor\s*:\s*(?:\{[^{}]*?)?['\"`][a-z-]+['\"`]
+  scope: ['internal/**/*.{ts,tsx}', 'workers/internal/**/*.{ts,tsx}', 'src/components/ui/**/*.{ts,tsx}', 'src/lib/**/*.{ts,tsx}', src/tokens/token-consts.stylex.ts]
+  exempt: [src/tokens/**, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['cursor: ''pointer'',', 'cursor: { default: ''default'', '':is([data-disabled])'': ''not-allowed'' },', 'cursor: ''col-resize'',']
+    good: ['cursor: cursor.pointer,', 'cursor: { default: cursor.default, '':is([data-disabled])'': cursor.notAllowed },']
+  message: >
+    A cursor is a raw string. Use the cursor consts from tokens/token-consts.stylex.ts. pointer means clickable, default means static and text means selectable. notAllowed means disabled. colResize means a resize handle that also moves with the arrow keys. See rule 34 of docs/decisions/2026-11-11-work-design-foundations.md.
+- id: web-css-var-in-token-source
+  catalog: 62
+  check: regex
+  pattern: var\(--
+  scope: ['internal/**/*.{ts,tsx}', 'workers/internal/**/*.{ts,tsx}', 'src/components/ui/**/*.{ts,tsx}', 'src/lib/**/*.{ts,tsx}', src/tokens/token-consts.stylex.ts]
+  exempt: [src/tokens/**, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['color: ''var(--thc-ink)''', 'color: ''var(--thc-color-text-default)''']
+    good: ['color: color.textDefault']
+  message: >
+    A web component has a CSS variable string. Add the token to its tier file in src/tokens/. Then use its accessor from src/tokens/token-consts.stylex.ts.
+- id: web-token-var-defined
+  catalog: 62
+  check: css-var-refs
+  pattern: var\(\s*(--thc-[\w-]+)
+  definitions: [src/tokens/design-tokens.css, src/tokens/semantic-tokens.css, src/tokens/component-tokens.css, src/tokens/webapp-globals.css]
+  scope: ['internal/**/*.{ts,tsx,css}', 'workers/internal/**/*.{ts,tsx,css}', 'src/components/ui/**/*.{ts,tsx,css}', 'src/lib/**/*.{ts,tsx,css}', src/tokens/design-tokens.css, src/tokens/semantic-tokens.css, src/tokens/component-tokens.css, src/tokens/webapp-globals.css, src/tokens/token-consts.stylex.ts]
+  universe: tracked
+  baseline: none
+  message: >
+    A var(--thc-*) reference names a token that has no definition. The browser then uses no value, and no other check finds the error. Define the token in its tier file in src/tokens/, or correct the name.
+  exempt: ['src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+- id: web-token-contrast
+  catalog: 62
+  check: contrast
+  palette: src/tokens/design-tokens.css
+  scope: [src/tokens/semantic-tokens.css]
+  universe: tracked
+  baseline: none
+  pairs:
+  - min: 4.5
+    surfaces: [background-canvas, background-surface, background-surface-subtle, background-surface-hover, background-sunken, background-selected]
+    tokens: [text-default, text-body, text-subtle, text-subtlest, text-brand, text-selected, text-danger, text-success, text-warning]
+  - min: 4.5
+    surfaces: [background-inverse, background-inverse-bold, background-inverse-solid]
+    tokens: [text-inverse]
+  - min: 4.5
+    surfaces: [background-brand, background-brand-hover, background-brand-active]
+    tokens: [text-on-brand]
+  - min: 3
+    surfaces: [background-canvas, background-surface, background-surface-subtle, background-surface-hover, background-sunken, background-selected]
+    tokens: [icon-default, icon-subtle, icon-subtlest, icon-brand, icon-success, border-input, border-brand, border-danger]
+  message: >
+    A text token is under 4.5:1, or an icon or control border is under 3:1, on a surface it is used on (WCAG 2.2, 1.4.3 and 1.4.11). Point the semantic token at a darker palette step. A new text, icon or input border token goes into the pairs list here.
+- id: web-light-theme-only
+  catalog: 62
+  check: regex
+  pattern: prefers-color-scheme|data-theme|color-scheme\s*:\s*dark|colorScheme
+  scope: ['internal/**/*.{ts,tsx,css}', 'workers/internal/**/*.{ts,tsx,css}', 'src/components/ui/**/*.{ts,tsx,css}', 'src/lib/**/*.{ts,tsx,css}', src/tokens/design-tokens.css, src/tokens/semantic-tokens.css, src/tokens/component-tokens.css, src/tokens/webapp-globals.css, src/tokens/token-consts.stylex.ts, internal/index.html]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['@media (prefers-color-scheme: dark) {', '[data-theme=''dark''] {', 'color-scheme: dark;', 'colorScheme: ''dark'',']
+    good: [<meta name="color-scheme" content="light" />, 'background: var(--thc-color-background-canvas);']
+  message: >
+    The work app has one light theme. Do not add dark mode or a theme switch. The neutral tokens are tuned and checked for contrast on light surfaces only. Decision: docs/decisions/2026-11-11-work-neutral-theme.md.
+  exempt: ['src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+- id: web-token-used
+  catalog: 62
+  check: token-used
+  consts: src/tokens/token-consts.stylex.ts
+  definitions: [src/tokens/design-tokens.css, src/tokens/semantic-tokens.css, src/tokens/component-tokens.css, src/tokens/webapp-globals.css]
+  readers: ['internal/**/*.{ts,tsx,css}', 'workers/internal/**/*.{ts,tsx,css}', 'src/components/ui/**/*.{ts,tsx,css}', 'src/lib/**/*.{ts,tsx,css}', src/tokens/design-tokens.css, src/tokens/semantic-tokens.css, src/tokens/component-tokens.css, src/tokens/webapp-globals.css, src/tokens/token-consts.stylex.ts, internal/index.html]
+  scope: [src/tokens/design-tokens.css, src/tokens/semantic-tokens.css, src/tokens/component-tokens.css, src/tokens/webapp-globals.css, src/tokens/token-consts.stylex.ts]
+  universe: tracked
+  baseline: none
+  message: >
+    A token that no file reads is dead. Delete it from token-consts and from its tier file in src/tokens/, and from eslint.prop-limits.json. Add a token only in the change that first reads it.
+- id: web-token-palette-is-literal
+  catalog: 62
+  check: regex
+  pattern: --thc-palette-[a-z0-9-]+\s*:[^;]*var\(
+  scope: [src/tokens/design-tokens.css]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['--thc-palette-blue-700: var(--thc-palette-blue-600);', '--thc-palette-blue-700: color-mix(in srgb, var(--thc-palette-blue-600) 50%, white);']
+    good: ['--thc-palette-blue-700: #006bff;']
+  message: >
+    A palette token points at a variable. Give each --thc-palette-* token a literal color value in src/tokens/design-tokens.css.
+- id: web-token-color-names-a-role
+  catalog: 62
+  check: regex
+  pattern: '--thc-color-[a-z-]*(?:accent|blue|gray|grey|red|green|amber|slate|white|black)-\d+\s*:'
+  scope: [src/tokens/semantic-tokens.css]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['--thc-color-accent-blue-700: var(--thc-palette-blue-700);', '--thc-color-gray-950: var(--thc-palette-gray-950);']
+    good: ['--thc-color-background-brand: var(--thc-palette-blue-700);', '--thc-color-chart-categorical-1: var(--thc-palette-blue-700);']
+  message: >
+    A semantic color token has a hue and step in its name. Only a --thc-palette-* token names a hue and step. Name a --thc-color-* token for its role: --thc-color-{property}-{role}[-{emphasis}][-{state}], for example --thc-color-background-brand-subtle.
+- id: web-color-mix-in-tokens
+  catalog: 62
+  check: regex
+  pattern: color-mix\(
+  scope: ['internal/**/*.{ts,tsx,css}', 'workers/internal/**/*.{ts,tsx,css}', 'src/components/ui/**/*.{ts,tsx,css}', 'src/lib/**/*.{ts,tsx,css}', src/tokens/design-tokens.css, src/tokens/semantic-tokens.css, src/tokens/component-tokens.css, src/tokens/webapp-globals.css, src/tokens/token-consts.stylex.ts, internal/index.html]
+  exempt: [src/tokens/**, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['backgroundColor: `color-mix(in srgb, ${color.backgroundInverseSolid} 56%, transparent)`,']
+    good: ['backgroundColor: color.backgroundOverlay,']
+  message: >
+    A color-mix() is outside src/tokens/. Each color is declared one time, in the token files. Add a palette step and a role token for the color, then use its accessor from token-consts.stylex.ts.
+- id: web-color-var-in-tokens
+  catalog: 62
+  check: regex
+  pattern: (?:['\"]--[\w-]+['\"]|(?<![\w-])--[\w-]+)\s*:\s*(?:(?:color|gradient)\.|(?:button|input|card)\.(?!radius\b)|`[^`]*?(?:\$\{\s*(?:(?:color|gradient)\.|(?:button|input|card)\.(?!radius\b))|#[0-9a-fA-F]{3,8}\b|color-mix\(|(?:rgba?|hsla?|hwb|oklch|oklab)\(|var\(--thc-(?:color|palette|gradient)-)|['\"]?(?:#[0-9a-fA-F]{3,8}\b|var\(--thc-(?:color|palette|gradient)-|var\(--thc-(?:button|input|card)-(?!radius\b)|color-mix\(|(?:rgba?|hsla?|hwb|oklch|oklab)\(|(?:lightgoldenrodyellow|mediumspringgreen|mediumaquamarine|mediumslateblue|mediumturquoise|mediumvioletred|blanchedalmond|cornflowerblue|darkolivegreen|lightslategray|lightslategrey|lightsteelblue|mediumseagreen|darkgoldenrod|darkslateblue|darkslategray|darkslategrey|darkturquoise|lavenderblush|lightseagreen|palegoldenrod|paleturquoise|palevioletred|rebeccapurple|antiquewhite|darkseagreen|lemonchiffon|lightskyblue|mediumorchid|mediumpurple|midnightblue|darkmagenta|deepskyblue|floralwhite|forestgreen|greenyellow|lightsalmon|lightyellow|navajowhite|saddlebrown|springgreen|yellowgreen|aquamarine|blueviolet|chartreuse|darkorange|darkorchid|darksalmon|darkviolet|dodgerblue|ghostwhite|lightcoral|lightgreen|mediumblue|papayawhip|powderblue|sandybrown|whitesmoke|aliceblue|burlywood|cadetblue|chocolate|darkgreen|darkkhaki|firebrick|gainsboro|goldenrod|indianred|lawngreen|lightblue|lightcyan|lightgray|lightgrey|lightpink|limegreen|mintcream|mistyrose|olivedrab|orangered|palegreen|peachpuff|rosybrown|royalblue|slateblue|slategray|slategrey|steelblue|turquoise|cornsilk|darkblue|darkcyan|darkgray|darkgrey|deeppink|honeydew|lavender|moccasin|seagreen|seashell|crimson|darkred|dimgray|dimgrey|fuchsia|hotpink|magenta|oldlace|skyblue|thistle|bisque|indigo|maroon|orange|orchid|purple|salmon|sienna|silver|tomato|violet|yellow|azure|beige|black|brown|coral|green|ivory|khaki|linen|olive|wheat|white|aqua|blue|cyan|gold|gray|grey|lime|navy|peru|pink|plum|snow|teal|red|tan)(?![-\w])))
+  scope: ['internal/**/*.{ts,tsx,css}', 'workers/internal/**/*.{ts,tsx,css}', 'src/components/ui/**/*.{ts,tsx,css}', 'src/lib/**/*.{ts,tsx,css}', src/tokens/design-tokens.css, src/tokens/semantic-tokens.css, src/tokens/component-tokens.css, src/tokens/webapp-globals.css, src/tokens/token-consts.stylex.ts]
+  exempt: [src/tokens/**, src/components/ui/sonner.stylex.ts, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['''--lq-accent'': color.backgroundBrand,', '  --grid-line: #dc26261a;', '''--ring'': ''white'',', '  --ring: white;', '''--fill'': `${color.backgroundBrand}`,', '''--edge'': `color-mix(in srgb, ${color.borderDefault} 50%, transparent)`,', '''--edge'': ''#e4e4e7'',', '''--edge'': button.secondaryBorder,']
+    good: ['  --grid-bl: 8px;', 'backgroundColor: color.backgroundDangerTint,', '''--edge-radius'': card.radius,', '  --edge-radius: var(--thc-card-radius);', '''--offset'': `${space.md}`,', '''--count'': ''none'',']
+  message: >
+    A CSS custom property with a color value is outside src/tokens/. A component does not add a local color layer. Declare the color as a token in its tier file, then use its accessor. Only sonner.stylex.ts maps the Sonner --normal-* variables to tokens.
+- id: web-css-only-in-tokens
+  catalog: 62
+  check: path
+  universe: tracked
+  pattern: \.css$
+  scope: [internal/**, workers/internal/**, src/components/ui/**, src/lib/**, src/tokens/design-tokens.css, src/tokens/semantic-tokens.css, src/tokens/component-tokens.css, src/tokens/webapp-globals.css, src/tokens/token-consts.stylex.ts]
+  exempt: [src/tokens/**, src/tokens/webapp-globals.css, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  baseline: none
+  examples:
+    bad: [internal/work/features/website/workspace/landing.css, src/components/ui/card.css]
+    good: [src/tokens/semantic-tokens.css, src/tokens/webapp-globals.css]
+  message: >
+    A .css file is outside src/tokens/ and index.css. A plain .css file can declare its own colors, out of reach of the token rules. Put the styles of a component in its .stylex.ts file and use the accessors from token-consts.stylex.ts.
+- id: web-token-color-format
+  catalog: 62
+  check: regex
+  pattern: --thc-palette-[a-z0-9-]+\s*:\s*+(?!#[0-9a-f]{6}(?:[0-9a-f]{2})?;)|\b(?:rgba?|hsla?|hwb|oklch|oklab|lab|lch)\(|:[^;{}]*?(?<![-\w#.])(?:lightgoldenrodyellow|mediumspringgreen|mediumaquamarine|mediumslateblue|mediumturquoise|mediumvioletred|blanchedalmond|cornflowerblue|darkolivegreen|lightslategray|lightslategrey|lightsteelblue|mediumseagreen|darkgoldenrod|darkslateblue|darkslategray|darkslategrey|darkturquoise|lavenderblush|lightseagreen|palegoldenrod|paleturquoise|palevioletred|rebeccapurple|antiquewhite|darkseagreen|lemonchiffon|lightskyblue|mediumorchid|mediumpurple|midnightblue|darkmagenta|deepskyblue|floralwhite|forestgreen|greenyellow|lightsalmon|lightyellow|navajowhite|saddlebrown|springgreen|yellowgreen|aquamarine|blueviolet|chartreuse|darkorange|darkorchid|darksalmon|darkviolet|dodgerblue|ghostwhite|lightcoral|lightgreen|mediumblue|papayawhip|powderblue|sandybrown|whitesmoke|aliceblue|burlywood|cadetblue|chocolate|darkgreen|darkkhaki|firebrick|gainsboro|goldenrod|indianred|lawngreen|lightblue|lightcyan|lightgray|lightgrey|lightpink|limegreen|mintcream|mistyrose|olivedrab|orangered|palegreen|peachpuff|rosybrown|royalblue|slateblue|slategray|slategrey|steelblue|turquoise|cornsilk|darkblue|darkcyan|darkgray|darkgrey|deeppink|honeydew|lavender|moccasin|seagreen|seashell|crimson|darkred|dimgray|dimgrey|fuchsia|hotpink|magenta|oldlace|skyblue|thistle|bisque|indigo|maroon|orange|orchid|purple|salmon|sienna|silver|tomato|violet|yellow|azure|beige|black|brown|coral|green|ivory|khaki|linen|olive|wheat|white|aqua|blue|cyan|gold|gray|grey|lime|navy|peru|pink|plum|snow|teal|red|tan)(?![-\w])
+  scope: [src/tokens/design-tokens.css, src/tokens/semantic-tokens.css, src/tokens/component-tokens.css]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['--thc-palette-white-a92: rgba(255, 255, 255, 0.92);', '--thc-palette-blue-700: #006BFF;', '--thc-palette-blue-700: #06f;', '--thc-shadow-float: 0 1px 2px rgba(0, 0, 0, 0.1);', 'box-shadow: 0 1px 2px red;']
+    good: ['--thc-palette-blue-700: #006bff;', '--thc-palette-white-a92: #ffffffeb;', '--thc-shadow-float: 0 1px 2px #0000001a;']
+  message: >
+    Write each color literal as lowercase hex. Use #rrggbb for an opaque color and #rrggbbaa for a color with alpha. Do not use rgb, rgba, hsl, oklch or a named color in the token files.
+- id: web-token-count-cap
+  catalog: 62
+  check: regex
+  pattern: '^\s*--thc-(?:palette|color|button|input|card)-[a-z0-9-]+\s*:'
+  scope: [src/tokens/design-tokens.css, src/tokens/semantic-tokens.css, src/tokens/component-tokens.css]
+  universe: tracked
+  baseline: shrink-only
+  examples:
+    bad: ['  --thc-palette-blue-50: #eff6ff;', '  --thc-color-text-default: var(--thc-palette-gray-900-a96);', '  --thc-button-primary-text: var(--thc-color-text-on-brand);']
+    good: ['  --thc-space-xs: 8px;', '  --thc-radius-md: 8px;']
+  message: >
+    Each palette, semantic and component color token counts against a cap. The cap is the count in the baseline file, and it does not go up. A token exists only while code uses it. Before you add a token, delete a token that has no user, or use a token that exists.
+- id: web-token-semantic-points-at-palette
+  catalog: 62
+  check: regex
+  pattern: --[a-z0-9-]+\s*:\s*+(?!var\(--thc-palette-[a-z0-9-]+\)\s*;)
+  scope: [src/tokens/semantic-tokens.css]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['--thc-color-text-default: #18181b;', '--thc-color-text-body: var(--thc-color-text-default);']
+    good: ['--thc-color-text-default: var(--thc-palette-gray-900-a96);']
+  message: >
+    A semantic color token must have exactly one var(--thc-palette-*) value. Do not use a literal or a different token. Add the literal to the palette in src/tokens/design-tokens.css first.
+- id: web-token-semantic-name
+  catalog: 62
+  check: regex
+  pattern: '(?m)^\s*--(?!thc-color-(?:background|text|border|icon|chart|accent)-[a-z0-9-]+\s*:)[a-z0-9-]+\s*:|--thc-color-[a-z0-9-]*-(?:hover|active|focus|disabled|invalid|selected)-[a-z0-9-]*\s*:'
+  scope: [src/tokens/semantic-tokens.css]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['  --thc-ink: var(--thc-palette-gray-900-a96);', '  --thc-color-background-hover-brand: var(--thc-palette-blue-800);']
+    good: ['  --thc-color-background-brand-hover: var(--thc-palette-blue-800);']
+  message: >
+    A semantic token name must be --thc-color-{property}-{role}. The property is background, text, border, icon, chart or accent. Put a state word (hover, active, focus, disabled, invalid, selected) last.
+- id: web-token-component-points-at-semantic
+  catalog: 62
+  check: regex
+  pattern: var\(--thc-palette-
+  scope: [src/tokens/component-tokens.css]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['--thc-button-primary-background: var(--thc-palette-blue-700);']
+    good: ['--thc-button-primary-background: var(--thc-color-background-brand);']
+  message: >
+    A component token points at a palette token. Use a semantic --thc-color-* token from src/tokens/semantic-tokens.css.
+- id: web-token-component-value
+  catalog: 62
+  check: regex
+  pattern: --[a-z0-9-]+\s*:\s*+(?!var\(--thc-(?:color|radius|space)-[a-z0-9-]+\)\s*;)
+  scope: [src/tokens/component-tokens.css]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['--thc-button-primary-background: white;', '--thc-button-ghost-text: var(--thc-button-secondary-text);']
+    good: ['--thc-button-primary-background: var(--thc-color-background-brand);', '--thc-card-radius: var(--thc-radius-md);']
+  message: >
+    A component token must have exactly one var(--thc-color-*), var(--thc-radius-*) or var(--thc-space-*) value. Do not use a literal or a different component token. Add a semantic token to src/tokens/semantic-tokens.css first.
+- id: web-token-component-name
+  catalog: 62
+  check: regex
+  pattern: '(?m)^\s*--(?!thc-(?:button|input|card)-)[a-z0-9-]+\s*:|--thc-[a-z0-9-]*-(?:hover|active|focus|disabled|invalid|selected)-[a-z0-9-]*\s*:'
+  scope: [src/tokens/component-tokens.css]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['  --thc-button-primary-hover-background: var(--thc-color-background-brand-hover);', '  --thc-panel-background: var(--thc-color-background-surface);']
+    good: ['  --thc-button-primary-background-hover: var(--thc-color-background-brand-hover);']
+  message: >
+    A component token name must be --thc-{element}-{variant}-{property}-{state}. The element is button, input or card. Put the state word last.
+- id: web-token-palette-private
+  catalog: 62
+  check: regex
+  pattern: --thc-palette-
+  scope: [internal/**, workers/internal/**, src/components/ui/**, src/lib/**, src/tokens/design-tokens.css, src/tokens/semantic-tokens.css, src/tokens/component-tokens.css, src/tokens/webapp-globals.css, src/tokens/token-consts.stylex.ts]
+  exempt: [src/tokens/design-tokens.css, src/tokens/semantic-tokens.css, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['color: var(--thc-palette-gray-500);']
+    good: ['color: var(--thc-color-text-subtle);']
+  message: >
+    Only src/tokens/semantic-tokens.css reads the palette. Use a semantic --thc-color-* token, or its color accessor from src/tokens/token-consts.stylex.ts.
+- id: web-button-element-in-design-system
+  catalog: 62
+  check: regex
+  pattern: <button\b
+  scope: [internal/**/*.tsx, workers/internal/**/*.tsx, src/components/ui/**/*.tsx, src/lib/**/*.tsx]
+  exempt: [src/components/ui/**, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  baseline: none
+  examples:
+    bad: [<button type="button">Save</button>]
+    good: [<Button>Save</Button>]
+  message: >
+    Use Button for a labeled action. Use Pressable for a clickable row or tile. Both components live in src/components/ui/.
+- id: web-form-control-element-in-design-system
+  catalog: 62
+  check: regex
+  pattern: <(?:input|select|textarea)\b
+  scope: [internal/**/*.tsx, workers/internal/**/*.tsx, src/components/ui/**/*.tsx, src/lib/**/*.tsx]
+  exempt: [src/components/ui/**, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  baseline: none
+  examples:
+    bad: [<input type="text" />, '<select value={kind}>', '<textarea rows={4} />']
+    good: ['<Input value={name} />', '<Select value={kind}>', '<Textarea rows={4} />']
+  message: >
+    Use Input, Select or Textarea from src/components/ui/. Put a label and an error on a control with Field. Do not write a raw input, select or textarea in a feature. If ui/ has no control for the job, port it from senvielab into ui/.
+- id: web-feature-no-hand-made-toggle
+  catalog: 62
+  check: regex
+  pattern: \s(?:role="(?:switch|radio|progressbar)"|aria-pressed[=\s>])
+  scope: [internal/**/*.tsx, workers/internal/**/*.tsx, src/components/ui/**/*.tsx, src/lib/**/*.tsx]
+  exempt: [src/components/ui/**, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  baseline: shrink-only
+  examples:
+    bad: ['<div role="switch" aria-checked={on}>', <span role="progressbar" />, '<Button aria-pressed={on}>']
+    good: ['<Switch checked={on} />', '<Progress value={step} />', '<ToggleGroup value={view}>']
+  message: >
+    A switch, radio, toggle or progress bar has one component in src/components/ui/. Use Switch, RadioGroup, ToggleGroup, Button with pressed, or Progress. Do not set the role or aria-pressed by hand in a feature.
+- id: web-app-no-brand-tint-fill
+  catalog: 62
+  check: regex
+  pattern: \bcolor\.\w*Brand\w*?(?:Subtle|Subtler|Subtlest|Tint|Light)\b|--thc-color-(?![a-z0-9-]*(?:subtle|tint))[a-z0-9-]+\s*:\s*var\(--thc-palette-blue-(?:50|[1-5]\d\d)\)
+  scope: [internal/work/**, internal/work/features/**, src/components/ui/**, src/tokens/semantic-tokens.css]
+  exempt: ['src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['backgroundColor: color.backgroundBrandSubtle', 'borderColor: color.borderBrandSubtlest', 'fill={color.iconBrandSubtle}', 'backgroundColor: color.backgroundBrandTint', '  --thc-color-background-brand-soft: var(--thc-palette-blue-100);', '  --thc-color-icon-brand-quiet: var(--thc-palette-blue-300);']
+    good: ['backgroundColor: color.backgroundSunken', 'borderColor: color.borderDefault', 'color: color.iconBrand', 'fill={color.iconBrandAlt}', '  --thc-color-icon-brand-subtle: var(--thc-palette-blue-300);', '  --thc-color-background-brand: var(--thc-palette-blue-700);']
+  message: >
+    The app uses neutral fills and one blue accent. Do not use a light blue step (blue-50 to blue-500) in any role: background, border, icon, fill or text. For a selected or hover state, use color.backgroundSunken or color.backgroundNeutralHover with color.textDefault. Use blue only for the primary action, the focus ring, links and a small selected indicator. A semantic token that points at a light blue step has subtle or tint in its name, so that this rule finds each use of it.
+- id: web-no-eyebrow
+  catalog: 62
+  check: regex
+  pattern: (?i)\beyebrow|textTransform:\s*['"]uppercase|text-transform:\s*uppercase|trackingAllcaps
+  scope: [internal/**, workers/internal/**, src/components/ui/**, src/lib/**, src/tokens/design-tokens.css, src/tokens/semantic-tokens.css, src/tokens/component-tokens.css, src/tokens/webapp-globals.css, src/tokens/token-consts.stylex.ts]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['eyebrow: ''NOW AVAILABLE''', 'textTransform: ''uppercase''']
+    good: [<p>Meta caption</p>, 'fontSize: text.sizeCaption']
+  message: >
+    An eyebrow is a badge, pill or kicker label above a headline. Remove it. Keep hairline dividers. Show unique meta text with text.sizeCaption and color.textSubtle. Use sentence case.
+  exempt: ['src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+- id: web-action-radius-is-step
+  catalog: 62
+  check: regex
+  pattern: (?is)\b(?:base|root|track|pill|tab|submit|button)\s*:\s*\{(?:[^{}]|\{[^{}]*\})*?borderRadius\s*:\s*(?!\s*radius\.step\b)[^,}\n]+|\boption\s*:\s*\{(?:[^{}]|\{[^{}]*\})*?borderRadius\s*:\s*(?!\s*radius\.(?:step|nestStep2xs)\b)[^,}\n]+
+  scope: [src/components/ui/button.tsx, src/components/ui/icon-button.tsx, src/components/ui/hold-button.tsx, src/components/ui/segmented.stylex.ts]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['button: { borderRadius: radius.pill }', 'base: { borderRadius: radius.xs }']
+    good: ['base: { borderRadius: radius.step }', 'option: { borderRadius: radius.nestStep2xs }']
+  message: >
+    In the app, an action control takes the radius of its control size: radius.step. An item inside a segmented track uses radius.nestStep2xs. See docs/decisions/2026-11-11-work-control-ladder.md.
+  exempt: ['src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+- id: web-no-oversized-radius-literal
+  catalog: 62
+  check: regex
+  pattern: \b(?:9999|999)px\b
+  scope: ['internal/**/*.{ts,tsx,css}', 'workers/internal/**/*.{ts,tsx,css}', 'src/components/ui/**/*.{ts,tsx,css}', 'src/lib/**/*.{ts,tsx,css}', src/tokens/design-tokens.css, src/tokens/semantic-tokens.css, src/tokens/component-tokens.css, src/tokens/webapp-globals.css, src/tokens/token-consts.stylex.ts]
+  exempt: [src/tokens/**, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['borderRadius: ''9999px''']
+    good: ['borderRadius: radius.full']
+  message: >
+    Use a radius token. Do not use a 999px or 9999px radius literal.
+- id: web-no-geist-sans
+  catalog: 62
+  check: regex
+  pattern: \bGeist\b(?! Mono)
+  scope: [internal/**, workers/internal/**, src/components/ui/**, src/lib/**, src/tokens/design-tokens.css, src/tokens/semantic-tokens.css, src/tokens/component-tokens.css, src/tokens/webapp-globals.css, src/tokens/token-consts.stylex.ts, internal/index.html]
+  exempt: [src/tokens/**, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['fontFamily: ''Geist''']
+    good: ['fontFamily: text.fontSans']
+  message: >
+    Do not write a font name. The font comes only from the text.fontSans token (src/tokens/). All Work pages use Geist (docs/decisions/2026-11-11-work-type-ladder.md).
+- id: web-no-shadcn-theme-vars
+  catalog: 62
+  check: regex
+  pattern: --(?:background|foreground|muted(?:-foreground)?|border|input|chart-\d|radius|popover|card|accent|secondary|destructive|ring)\b(?![\w-])
+  scope: ['internal/**/*.{ts,tsx,css}', 'workers/internal/**/*.{ts,tsx,css}', 'src/components/ui/**/*.{ts,tsx,css}', 'src/lib/**/*.{ts,tsx,css}', src/tokens/design-tokens.css, src/tokens/semantic-tokens.css, src/tokens/component-tokens.css, src/tokens/webapp-globals.css, src/tokens/token-consts.stylex.ts]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['backgroundColor: ''var(--background)''']
+    good: ['backgroundColor: color.backgroundCanvas']
+  message: >
+    Replace the legacy theme variable with a --thc- token. Use the matching color, radius or text accessor from src/tokens/token-consts.stylex.ts.
+  exempt: ['src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+- id: web-font-weight-token
+  catalog: 62
+  check: regex
+  pattern: (?:fontWeight\s*:\s*(?!\s*text\.(?:weightLight|weightRegular|weightMedium|weightSemibold|weightBlack)\b)[^,}\n]+|fontWeight\s*=\s*(?!\s*\{text\.(?:weightLight|weightRegular|weightMedium|weightSemibold|weightBlack)\})[^>\n]+|font-weight\s*:\s*(?!\s*var\(--thc-weight-(?:light|regular|medium|semibold|black)\))[^;}\n]+)
+  scope: [internal/**/*.tsx, workers/internal/**/*.tsx, src/components/ui/**/*.tsx, src/lib/**/*.tsx, internal/**/*.stylex.ts, workers/internal/**/*.stylex.ts, src/components/ui/**/*.stylex.ts, src/lib/**/*.stylex.ts, src/tokens/token-consts.stylex.ts, internal/**/*.stylex.tsx, workers/internal/**/*.stylex.tsx, src/components/ui/**/*.stylex.tsx, src/lib/**/*.stylex.tsx, internal/**/*.css, workers/internal/**/*.css, src/components/ui/**/*.css, src/lib/**/*.css, src/tokens/design-tokens.css, src/tokens/semantic-tokens.css, src/tokens/component-tokens.css, src/tokens/webapp-globals.css]
+  exempt: [src/tokens/design-tokens.css, src/tokens/token-consts.stylex.ts, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['fontWeight: 600', fontWeight="700", 'font-weight: 700;']
+    good: ['fontWeight: text.weightRegular', 'fontWeight={text.weightRegular}', 'font-weight: var(--thc-weight-regular);']
+  message: >
+    Use the weight token: text.weightRegular in StyleX and var(--thc-weight-regular) in CSS. Work text has one weight, which each member picks. Hierarchy comes from size. See docs/decisions/2026-11-11-work-font-weight-preference.md.
+- id: migration-numbers
+  catalog: 63
+  check: migration-numbers
+  universe: tracked
+  pattern: (?:^|/)migrations/(\d{4})_[a-z0-9_]+\.sql$
+  scope: [workers/internal/migrations/**]
+  duplicates: []
+  baseline: none
+  examples:
+    bad: [0001_a.sql -> 0001_a.sql 0001_b.sql, 0001_a.sql 0002_b.sql -> 0002_b.sql 0001_baseline.sql, 0001_a.sql 0002_b.sql -> 0001_baseline.sql 0001_c.sql, 0001_a.sql 0003_c.sql -> 0001_a.sql 0002_b.sql 0003_c.sql, 0001_a.sql -> 0001_a.sql b.sql, 0078_listings.sql 0078_listings_markets.sql -> 0078_listings.sql 0078_listings_markets.sql 0078_extra.sql]
+    good: [0001_a.sql -> 0001_a.sql 0002_b.sql, 0001_a.sql 0002_main.sql -> 0001_a.sql 0002_main.sql 0003_branch.sql, -> 0001_a.sql, 0001_a.sql 0002_b.sql -> 0001_baseline.sql]
+  message: >
+    The name of a D1 migration file is NNNN_<what_it_does>.sql. NNNN is four digits. No two files have the same number. A new file gets a number that is higher than every number at HEAD. The one exception is a reset: a change that deletes every file at HEAD in the folder and adds a new baseline. Then the numbers start again from 0001. Rename the new file to the next free number. If you rebased onto main and main took your number, rename your file before you push. Do not rename a migration that is at HEAD, because D1 records the name of each applied file in d1_migrations. The deploy applies the new files with cf d1 migrations apply.
+- id: web-size-literal-is-token
+  catalog: 62
+  check: regex
+  pattern: \b(?:width|height|minWidth|minHeight|maxHeight|inlineSize|blockSize|minInlineSize|minBlockSize)\s*:\s*['"](?:(?:1[2-9]|[23]\d|4[0-8])px|(?:0\.75|0\.875|1|1\.125|1\.25|1\.5|1\.75|2|2\.25|2\.5|2\.75|3)rem)['"]
+  scope: ['internal/**/*.{ts,tsx}', 'workers/internal/**/*.{ts,tsx}', 'src/components/ui/**/*.{ts,tsx}', 'src/lib/**/*.{ts,tsx}', src/tokens/token-consts.stylex.ts]
+  exempt: [src/tokens/**, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  universe: tracked
+  baseline: shrink-only
+  examples:
+    bad: ['height: ''1rem'',', 'width: ''32px'',', 'minHeight: ''44px'',']
+    good: ['height: layout.iconSize,', 'width: layout.controlHeightTouch,', 'height: ''1px'',', 'width: ''100%'',']
+  message: >
+    An icon or a control takes its size from a token. Use layout.iconSizeSm, layout.iconSize or layout.iconSizeLg for a glyph. Use layout.controlHeight* or layout.stepHeight for a control. Do not write a width or height from 12px to 48px (0.75rem to 3rem) as a literal. If no token fits, add one in src/tokens/.
+- id: web-icon-prop-size-is-token
+  catalog: 62
+  check: regex
+  pattern: <(?:HugeiconsIcon|Icon)\b[^>]*\bsize\s*=\s*\{(?:1[2-9]|[23]\d|4[0-8])\}
+  scope: ['internal/**/*.{ts,tsx}', 'workers/internal/**/*.{ts,tsx}', 'src/components/ui/**/*.{ts,tsx}', 'src/lib/**/*.{ts,tsx}', src/tokens/token-consts.stylex.ts]
+  exempt: [src/tokens/**, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  universe: tracked
+  baseline: zero
+  examples:
+    bad: ['<Icon icon={icons.search} size={18} />']
+    good: ['<Icon icon={icons.search} size={layout.iconSize} />']
+  message: >
+    Use a named icon token for an icon size. Use layout.iconSizeSm, layout.iconSize, layout.iconSizeLg or layout.iconSizeDisplay. Do not use a numeric size prop.
+- id: web-svg-size-is-token
+  catalog: 62
+  check: regex
+  pattern: <svg\b[^>]*\b(?:width|height)\s*=\s*(?:\{(?:1[2-9]|[23]\d|4[0-8])\}|['\"](?:1[2-9]|[23]\d|4[0-8])(?:px)?['\"])
+  scope: ['internal/**/*.{ts,tsx}', 'workers/internal/**/*.{ts,tsx}', 'src/components/ui/**/*.{ts,tsx}', 'src/lib/**/*.{ts,tsx}', src/tokens/token-consts.stylex.ts]
+  exempt: [src/tokens/**, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  universe: tracked
+  baseline: zero
+  examples:
+    bad: ['<svg width={16} height={16}>']
+    good: ['<svg width={layout.iconSizeSm} height={layout.iconSizeSm}>']
+  message: >
+    Use an icon token for a small SVG. Use layout.iconSizeSm, layout.iconSize, layout.iconSizeLg or layout.inlineIconSize.
+- id: web-sibling-space-is-gap
+  catalog: 62
+  check: regex
+  pattern: \bmargin(?:Top|Bottom|Left|Right|Block|BlockStart|BlockEnd|Inline|InlineStart|InlineEnd)?\s*:\s*(?:\{[^}`$]*?)?(?:space|layout)[.[]
+  scope: ['internal/**/*.{ts,tsx}', 'workers/internal/**/*.{ts,tsx}', 'src/components/ui/**/*.{ts,tsx}', 'src/lib/**/*.{ts,tsx}', src/tokens/token-consts.stylex.ts]
+  exempt: [src/tokens/**, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['marginTop: space.md,', 'marginBlockEnd: space.lg,', 'marginBottom: { default: space.sm,', 'marginBlock: space[''2xl''],']
+    good: ['gap: space.md,', 'marginInline: ''auto'',', 'margin: 0,', 'marginInline: { default: `calc(-1 * ${space.gutter})`, [breakpoint.tablet]: 0 },', 'marginInline: { default: `calc(-1 * ${space.md})` },']
+  message: >
+    Space between siblings comes from gap on the parent. A margin on a child also adds space after the last item. Use gap, rowGap or columnGap on a flex or grid parent. Wrap a sub-group in an element with its own gap when siblings need different spaces. Keep margin only for auto alignment, a negative calc offset and flowing prose.
+- id: web-safe-area-is-token
+  catalog: 62
+  check: regex
+  pattern: env\(safe-area-inset-
+  scope: ['internal/**/*.{ts,tsx,css}', 'workers/internal/**/*.{ts,tsx,css}', 'src/components/ui/**/*.{ts,tsx,css}', 'src/lib/**/*.{ts,tsx,css}', src/tokens/design-tokens.css, src/tokens/semantic-tokens.css, src/tokens/component-tokens.css, src/tokens/webapp-globals.css, src/tokens/token-consts.stylex.ts]
+  exempt: [src/tokens/**, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['bottom: `calc(env(safe-area-inset-bottom, 0px) + ${space.md})`,', 'paddingBottom: ''env(safe-area-inset-bottom, 0px)'',', 'top: `max(${space.md}, env(safe-area-inset-top))`,']
+    good: ['bottom: `calc(${space.safeBottom} + ${space.md})`,', 'paddingBottom: space.safeBottom,', 'top: `calc(${space.safeTop} + ${space.sm})`,']
+  message: >
+    A safe-area inset comes from a space token. Use space.safeTop, space.safeBottom, space.safeLeft or space.safeRight, in the same calc. Do not write env(safe-area-inset-*) outside src/tokens/.
+- id: web-clipboard-through-use-copied
+  catalog: 62
+  check: regex
+  pattern: navigator\.clipboard
+  scope: ['internal/**/*.{ts,tsx}', 'workers/internal/**/*.{ts,tsx}', 'src/components/ui/**/*.{ts,tsx}', 'src/lib/**/*.{ts,tsx}', src/tokens/token-consts.stylex.ts]
+  exempt: [src/lib/hooks/use-copied.ts, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: [await navigator.clipboard.writeText(url), 'void navigator.clipboard?.writeText(json)', "navigator.clipboard\n  .writeText(command)"]
+    good: ['const { copied, copy, announcement } = useCopied()', void copy(invite.url), void copyText(window.location.href)]
+  message: >
+    Copy goes through useCopied in src/lib/hooks/use-copied.ts. The hook shows the confirmation for 2 seconds and gives the text for an aria-live region. Call copy(value), show icons.done while copied is true, and render announcement in an aria-live region. A download or an export calls confirm() from the same hook.
+- id: web-sound-one-owner
+  catalog: 62
+  check: regex
+  pattern: new Audio\(|AudioContext
+  scope: ['internal/**/*.{ts,tsx}', 'workers/internal/**/*.{ts,tsx}', 'src/components/ui/**/*.{ts,tsx}', 'src/lib/**/*.{ts,tsx}', src/tokens/token-consts.stylex.ts]
+  exempt: [src/lib/interaction-sounds.ts, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['context ??= new AudioContext()', 'let context: AudioContext | null = null', const ding = new Audio('/ding.mp3')]
+    good: [playSound('click'), setSoundOn(!sound), const sound = useSoundOn()]
+  message: >
+    Sound has one owner: src/lib/interaction-sounds.ts. Add a preset there and call playSound(name). The owner keeps the one mute state. Read it with useSoundOn and change it with setSoundOn.
+- id: web-transition-named-properties
+  catalog: 62
+  check: regex
+  pattern: transitionProperty\s*:\s*(?:\{[^}]*?)?['"`][^'"`]*(?<![\w-])(?:all|width|height|top|left|right|bottom|inset|max-height|margin[\w-]*|padding[\w-]*|grid-template[\w-]*)(?![\w-])|(?<![\w-])transition(?:-property)?\s*:[^;{}\n]*(?<![\w-])all(?![\w-])
+  scope: ['internal/**/*.{ts,tsx,css}', 'workers/internal/**/*.{ts,tsx,css}', 'src/components/ui/**/*.{ts,tsx,css}', 'src/lib/**/*.{ts,tsx,css}', src/tokens/design-tokens.css, src/tokens/semantic-tokens.css, src/tokens/component-tokens.css, src/tokens/webapp-globals.css, src/tokens/token-consts.stylex.ts]
+  exempt: [src/lib/size-transition.stylex.ts, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['transitionProperty: ''width'',', 'transitionProperty: ''grid-template-rows'',', 'transitionProperty: ''opacity, height'',', 'transitionProperty: { default: ''margin-top'' },', 'transitionProperty: ''all'',', '  transition: all 200ms ease;', '  transition-property: all;']
+    good: ['transitionProperty: ''opacity, transform'',', 'transitionProperty: ''background-color, border-color, box-shadow'',', 'transitionProperty: ''stroke-dashoffset'',', 'transitionProperty: ''clip-path'',', '  transition: background-color 9999s ease-out;', '{...stylex.props(styles.panel, sizeTransition.rows)}']
+  message: >
+    Animate opacity and transform only. A transition on all or on a layout property makes the browser lay out the page again on each frame. When a size must change, use sizeTransition from src/lib/size-transition.stylex.ts.
+- id: web-motion-is-token
+  catalog: 62
+  check: regex
+  pattern: (?:transition|animation)Duration\s*:\s*(?:\{[^}]*?:\s*)?['"`][^'"`]*?(?<![\w.$-])(?!0m?s\b)\d*\.?\d+m?s\b|(?:transition|animation)-duration\s*:[^;{}]*?(?<![\w.$-])(?!0m?s\b)\d*\.?\d+m?s\b|cubic-bezier\(
+  scope: ['internal/**/*.{ts,tsx,css}', 'workers/internal/**/*.{ts,tsx,css}', 'src/components/ui/**/*.{ts,tsx,css}', 'src/lib/**/*.{ts,tsx,css}', src/tokens/design-tokens.css, src/tokens/semantic-tokens.css, src/tokens/component-tokens.css, src/tokens/webapp-globals.css, src/tokens/token-consts.stylex.ts]
+  exempt: [src/tokens/**, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['animationDuration: ''2s'',', 'transitionDuration: ''180ms'',', 'animationDuration: ''0.9s'',', 'transitionDuration: { default: ''200ms'', [breakpoint.reducedMotion]: ''0s'' },', "transitionDuration: {\n  ':is([data-instant])': '0ms',\n  default: '150ms',\n},", 'transitionTimingFunction: ''cubic-bezier(0.25, 0.1, 0.25, 1)'',', '  animation-duration: 300ms;']
+    good: ['animationDuration: motion.durationLoop,', 'transitionDuration: { default: motion.durationFast, [breakpoint.reducedMotion]: ''0s'' },', "transitionDuration: {\n  default: motion.durationFast,\n  ':is([data-instant])': '0ms',\n},", 'animationDuration: `calc(${motion.durationLoop} * 2)`,', 'animationTimingFunction: motion.easeExit,', 'transitionDuration: { default: tableVars.follow, [breakpoint.reducedMotion]: ''0ms'' },']
+  message: >
+    A duration and an easing come from the motion tokens. Use motion.durationFast, durationMedium, durationSlow, durationEnter, durationReveal or durationLoop, and motion.ease, easeSmooth, easeInOut, easeDrawer or easePop. An exit or a close uses motion.durationExit and motion.easeExit. Thus an exit is shorter than its entrance and eases in. A value of 0s or 0ms is permitted. Do not write cubic-bezier outside src/tokens/.
+- id: web-fixed-bottom-clears-safe-area
+  catalog: 62
+  check: regex
+  pattern: (?:^(?P<i>[ ]*)[\w'\"\[\].]+\s*:\s*\{[ ]*\n(?=(?s:(?:(?!^(?P=i)\}).)*?)\bposition\s*:\s*(?:'fixed'|\{[^}]*'fixed'))(?=(?s:(?:(?!^(?P=i)\}).)*?)\b(?:bottom|insetBlockEnd)\s*:)(?!(?s:(?:(?!^(?P=i)\}).)*?)safeBottom)(?!(?s:(?:(?!^(?P=i)\}).)*?)\b(?:top|insetBlockStart)\s*:\s*0\b)|^[ ]*[\w'\"\[\].]+\s*:\s*\{(?=[^\n]*\})(?=[^\n]*\bposition\s*:\s*(?:'fixed'|\{[^}]*'fixed'))(?=[^\n]*\b(?:bottom|insetBlockEnd)\s*:)(?![^\n]*safeBottom)(?![^\n]*\b(?:top|insetBlockStart)\s*:\s*0\b))
+  scope: ['internal/**/*.{ts,tsx}', 'workers/internal/**/*.{ts,tsx}', 'src/components/ui/**/*.{ts,tsx}', 'src/lib/**/*.{ts,tsx}', src/tokens/token-consts.stylex.ts]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ["  pill: {\n    bottom: space.xl,\n    position: 'fixed',\n  },", "  toggle: {\n    insetBlockEnd: space.md,\n    position: 'fixed',\n    right: space.md,\n  },", "  sheet: {\n    bottom: 0,\n    paddingBlockEnd: space.md,\n    position: 'fixed',\n  },", '  restart: { position: ''fixed'', bottom: space.lg, right: space.lg },', "  bar: {\n    bottom: { default: 'auto', [breakpoint.mobile]: 0 },\n    position: { default: 'static', [breakpoint.mobile]: 'fixed' },\n  },"]
+    good: ["  pill: {\n    bottom: `calc(${space.safeBottom} + ${space.xl})`,\n    position: 'fixed',\n  },", "  sheet: {\n    bottom: 0,\n    paddingBlockEnd: `calc(${space.safeBottom} + ${space.md})`,\n    position: 'fixed',\n  },", "  overlay: {\n    bottom: 0,\n    position: 'fixed',\n    top: 0,\n  },", "  pill: {\n    bottom: space.xl,\n    position: 'absolute',\n  },", '  restart: { position: ''fixed'', bottom: `calc(${space.safeBottom} + ${space.lg})`, right: space.lg },']
+  message: >
+    A fixed element pinned to the bottom edge must clear the phone safe area. Put space.safeBottom in the bottom or insetBlockEnd calc, or pad the element with space.safeBottom. A full-screen overlay that also sets top: 0 is edge to edge and passes.
+  exempt: ['src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+- id: web-line-height-is-token
+  catalog: 62
+  check: regex
+  pattern: \blineHeight\s*:\s*(?:['"`]|\d)
+  scope: ['internal/**/*.{ts,tsx}', 'workers/internal/**/*.{ts,tsx}', 'src/components/ui/**/*.{ts,tsx}', 'src/lib/**/*.{ts,tsx}', src/tokens/token-consts.stylex.ts]
+  exempt: [src/tokens/**, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['lineHeight: ''1'',', 'lineHeight: 1.5,', 'lineHeight: ''24px'',']
+    good: ['lineHeight: text.leadingBody,', 'lineHeight: { default: text.leadingTitle,', 'lineHeight: text.leadingNone,']
+  message: >
+    Leading comes from a token. Each role leading is the role size times 1.5 for text (body, ui, caption) or 1.2 for headings (heading, title, display). Use text.leadingBody, text.leadingHeading or the token of the same role as the font size. Use text.leadingNone for a glyph in a fixed box. Decision: docs/decisions/2026-11-11-work-type-ladder.md.
+- id: web-ellipsis-is-one-character
+  catalog: 62
+  check: regex
+  pattern: \w\.\.\.(?:['"`<]|\s*$)
+  scope: ['internal/**/*.{ts,tsx}', 'workers/internal/**/*.{ts,tsx}', 'src/components/ui/**/*.{ts,tsx}', 'src/lib/**/*.{ts,tsx}', src/tokens/token-consts.stylex.ts]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['''Saving...''', <span>Loading...</span>, '`${count} more...`']
+    good: ['''Saving…''', '{...props}', '[...items, next]']
+  message: >
+    Use the ellipsis character … (U+2026), not three periods. Three periods can break across two lines and look wider than the one character.
+  exempt: ['src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+- id: web-prose-measure-is-token
+  catalog: 62
+  check: regex
+  pattern: \bmax(?:Width|InlineSize)\s*:\s*['"](?:5[5-9]|6[0-46-9]|[7-9]\d)ch['"]
+  scope: ['internal/**/*.{ts,tsx}', 'workers/internal/**/*.{ts,tsx}', 'src/components/ui/**/*.{ts,tsx}', 'src/lib/**/*.{ts,tsx}', src/tokens/token-consts.stylex.ts]
+  exempt: [src/tokens/**, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['maxWidth: ''75ch'',', 'maxWidth: ''60ch'',', 'maxInlineSize: ''68ch'',']
+    good: ['maxWidth: ''65ch'',', 'maxWidth: ''40ch'',', 'maxWidth: ''100%'',']
+  message: >
+    A column of running text is 65 characters wide. Write maxWidth: '65ch'. A narrow width under 55ch for a label or a card can stay as it is. Decision: docs/decisions/2026-11-11-work-type-ladder.md.
+- id: web-font-size-is-ladder-token
+  catalog: 62
+  check: regex
+  pattern: \bfontSize\s*:\s*(?!\{|text\.size[A-Za-z]+\b|`max\(\$\{text\.sizeField\},\s*\$\{text\.size[A-Za-z]+\}\)`)[^\s,}]|\bfontSize\s*:\s*\{[^{}]*?(?:default|\]|['"])\s*:\s*(?!text\.size[A-Za-z]+\b|\{)[^\s,}]|\bfontSize\s*=\s*\{?\s*['"\d]|font-size\s*:\s*(?!var\(--thc-|inherit\b|1em\b|0\.75em\b)[^;\s]
+  scope: ['internal/**/*.{ts,tsx,css}', 'workers/internal/**/*.{ts,tsx,css}', 'src/components/ui/**/*.{ts,tsx,css}', 'src/lib/**/*.{ts,tsx,css}', src/tokens/design-tokens.css, src/tokens/semantic-tokens.css, src/tokens/component-tokens.css, src/tokens/webapp-globals.css, src/tokens/token-consts.stylex.ts]
+  exempt: [src/tokens/**, src/components/ui/provider-logos.tsx, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['fontSize: ''18px'',', 'fontSize: 14,', 'fontSize: { default: `calc(${text.sizeDisplay} * 1.2)`, }', 'font-size: 14px;']
+    good: ['fontSize: text.sizeUi,', 'fontSize: { default: text.sizeTitle, ''@media (min-width: 960px)'': text.sizeDisplay },', 'fontSize: `max(${text.sizeField}, ${text.sizeUi})`,', 'font-size: var(--thc-size-body);']
+  message: >
+    A font size comes from one text.size token. The tokens hold the 1.25 ladder: 13, 16, 20, 25, 31, 39, 49 and 61. Do not write a literal size. If no step fits, use the next step of the ladder. Decision: docs/decisions/2026-11-11-work-type-ladder.md.
+- id: web-type-token-not-scaled
+  catalog: 62
+  check: regex
+  pattern: calc\([^)]*\$\{text\.size[A-Za-z]+\}|\$\{text\.(?:size|leading)[A-Za-z]+\}\s*[*/]
+  scope: ['internal/**/*.{ts,tsx}', 'workers/internal/**/*.{ts,tsx}', 'src/components/ui/**/*.{ts,tsx}', 'src/lib/**/*.{ts,tsx}', src/tokens/token-consts.stylex.ts]
+  exempt: [src/tokens/**, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['`calc(${text.sizeDisplay} * 1.2)`', '`calc(${text.leadingDisplay} * 1.6)`']
+    good: ['fontSize: text.sizeHero,', '`max(${text.sizeField}, ${text.sizeUi})`', 'height: text.leadingUi,']
+  message: >
+    Do not scale a size or leading token. A scaled token is a size off the 1.25 ladder. Use the token of the step you need, for example text.sizeHero and text.leadingHero. Decision: docs/decisions/2026-11-11-work-type-ladder.md.
+- id: web-size-token-on-ladder
+  catalog: 62
+  check: regex
+  pattern: --thc-size-(?!wordmark\b|welcome\b)[a-z-]+\s*:(?!\s*(?:0|13|16|20|25|31|39|49|61)px\s*;|\s*var\()\s*[^;]+;
+  scope: [src/tokens/design-tokens.css, src/tokens/semantic-tokens.css, src/tokens/component-tokens.css, src/tokens/webapp-globals.css]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['--thc-size-hero: 48px;', '--thc-size-caption: 14px;']
+    good: ['--thc-size-hero: 49px;', '--thc-size-field: 0px;', '--thc-size-ui: var(--thc-size-body);']
+  message: >
+    A --thc-size token holds one step of the 1.25 ladder: 13, 16, 20, 25, 31, 39, 49 or 61px, or a var() of another size token. Only the wordmark and the welcome heading use clamp(). Decision: docs/decisions/2026-11-11-work-type-ladder.md.
+- id: web-page-top-is-shell
+  catalog: 62
+  check: regex
+  pattern: \bspace\.pageTop\b
+  scope: ['internal/**/*.{ts,tsx}', 'workers/internal/**/*.{ts,tsx}', 'src/components/ui/**/*.{ts,tsx}', 'src/lib/**/*.{ts,tsx}', src/tokens/token-consts.stylex.ts]
+  exempt: [src/tokens/**, src/components/ui/page-header.stylex.ts, internal/work/shell/layout.stylex.ts, internal/work/shell/nav.stylex.ts, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['page: { display: ''flex'', paddingBlockStart: space.pageTop }']
+    good: ['frame: { display: ''flex'', paddingBlockStart: space.lg }']
+  message: >
+    The shell frame gives every app page its top offset. A page sets no top offset. Only the shell, the sidebar top row and the page header read space.pageTop.
+- id: web-page-root-no-top
+  catalog: 62
+  check: regex
+  pattern: '(?<![\w.])(?:page|pageFrame)\s*:\s*\{(?:[^{}]|\{[^{}]*\})*?\b(?:paddingTop|paddingBlockStart|paddingBlock|padding|marginTop|marginBlockStart|marginBlock|margin)\s*:'
+  scope: ['internal/work/features/**/*.{ts,tsx}', src/components/ui/page*.stylex.ts]
+  exempt: ['src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['page: { display: ''flex'', paddingBlockStart: space.md }', 'pageFrame: { padding: space.lg }']
+    good: ['page: { display: ''flex'', paddingBlockEnd: space.md }', 'page: { paddingInline: space.gutter }']
+  message: >
+    The root style of an app page is named page or pageFrame. It sets no top padding or top margin. The shell frame gives the top offset. Set the bottom with paddingBlockEnd. A surface outside the app sidebar goes in the exempt list of this rule.
+- id: web-header-band-is-token
+  catalog: 62
+  check: regex
+  pattern: (?<![\w.])(?:brandRow|titleRow|content)\s*:\s*\{(?:(?!layout\.pageHeaderHeight\b)(?:[^{}]|\{[^{}]*\}))*\}
+  scope: [internal/work/shell/nav.stylex.ts, src/components/ui/page-header.stylex.ts]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['titleRow: { alignItems: ''center'', minHeight: layout.controlHeightXl }']
+    good: ['titleRow: { alignItems: ''center'', minHeight: layout.pageHeaderHeight }']
+  message: >
+    The sidebar top row (brandRow) and the page header rows (content and titleRow) have the height layout.pageHeaderHeight. Both bands start at space.pageTop, so their contents share one center line.
+  exempt: ['src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+- id: web-size-constant-is-token
+  catalog: 62
+  check: regex
+  pattern: ^\s*(?:export\s+)?const\s+[A-Za-z_][A-Za-z0-9_]*\s*(?::\s*[A-Za-z_][A-Za-z0-9_.<>|' ]*)?=\s*['"`]-?\d+(?:\.\d+)?(?:px|rem|em)['"`]
+  scope: ['internal/**/*.{ts,tsx}', 'workers/internal/**/*.{ts,tsx}', 'src/components/ui/**/*.{ts,tsx}', 'src/lib/**/*.{ts,tsx}', src/tokens/token-consts.stylex.ts]
+  exempt: [src/tokens/**, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  universe: tracked
+  baseline: shrink-only
+  examples:
+    bad: [const ITEM_HEIGHT = '2.25rem', 'const RAIL_WIDTH: string = ''15rem''', export const GAP = '12px']
+    good: ['height: layout.controlHeightLg,', 'width: layout.railWidth,', const SECONDS = 30]
+  message: >
+    A size in a module constant hides a literal from the token rules. Do not put a px, rem or em value in a const outside src/tokens/. Use a token from token-consts.stylex.ts. If no token fits, add one in src/tokens/, so that each size has one writer.
+- id: web-icon-by-job
+  catalog: 62
+  check: regex
+  pattern: \bfrom\s+['"]@hugeicons/core-free-icons['"]
+  scope: ['internal/**/*.{ts,tsx}', 'workers/internal/**/*.{ts,tsx}', 'src/components/ui/**/*.{ts,tsx}', 'src/lib/**/*.{ts,tsx}', src/tokens/token-consts.stylex.ts]
+  exempt: [src/components/ui/icon-jobs.ts, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['import { ArrowUp02Icon } from ''@hugeicons/core-free-icons''', 'import { Home01Icon, Key01Icon } from "@hugeicons/core-free-icons"']
+    good: ['import { icons } from ''@/ui/icons''', 'import { HugeiconsIcon, type IconSvgElement } from ''@hugeicons/react''']
+  message: >
+    An app file imports a glyph from @hugeicons/core-free-icons. Each icon does one job, and src/components/ui/icon-jobs.ts is the one map from a job to its glyph. Import icons from @/ui/icons and use the job, for example icons.send. If no job fits, add a job to icon-jobs.ts with a glyph that no other job uses.
+- id: web-icon-one-glyph-per-job
+  catalog: 62
+  check: icon-glyph-unique
+  scope: [src/components/ui/icon-jobs.ts]
+  baseline: none
+  examples:
+    bad: ["  send: ArrowUp02Icon,\n  submit: ArrowUp02Icon,", 'close: Cancel01Icon,
+
+        collapse: Cancel01Icon', "export {\n  ArrowUp02Icon as send,\n}\nexport { ArrowUp02Icon as submit, Cancel01Icon as dismiss }", "export {\n  ArrowUp02Icon as send,\n}\nexport { ArrowUp02Icon as submit } from '@hugeicons/core-free-icons'", "export {\n  ArrowUp02Icon as send,\n}\nexport const submit = ArrowUp02Icon", 'export { Cancel01Icon as close } from ''@hugeicons/core-free-icons''', "import { ArrowUp02Icon as SendGlyph } from '@hugeicons/core-free-icons'\nexport {\n  SendGlyph as send,\n  SendGlyph as submit,\n}", "const Up = ArrowUp02Icon\nexport {\n  Up as submit,\n}", "export {\n  ArrowUp02Icon as 'submit',\n}", "export {\n  ArrowUp02Icon /* x */ as submit,\n}"]
+    good: ["  send: ArrowUp02Icon,\n  close: Cancel01Icon,", 'add: PlusSignIcon,
+
+        zoomIn: ZoomInAreaIcon,', "export {\n  ArrowUp02Icon as send,\n  Cancel01Icon as close,\n}", 'export { ArrowUp02Icon as send, Cancel01Icon as close }']
+  message: >
+    icon-jobs.ts has a job on a glyph that another job uses, or a job that the check cannot read. Then a person cannot tell two jobs apart. Write each job as one 'Glyph as job' entry in the one export block, with a glyph that no other job uses. Do not use export const, export from, import renames, top-level const, quoted names or comments in this file. If two jobs are one job, keep one name and change the other call sites to it.
+  exempt: ['src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+- id: web-new-tab-link-is-external-link
+  catalog: 62
+  check: regex
+  pattern: '[''"`]_blank[''"`]'
+  scope: ['internal/**/*.{ts,tsx}', 'workers/internal/**/*.{ts,tsx}', 'src/components/ui/**/*.{ts,tsx}', 'src/lib/**/*.{ts,tsx}', src/tokens/token-consts.stylex.ts]
+  exempt: [src/components/ui/external-link.tsx, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['window.open(file, ''_blank'', ''noopener'')', '<a href={url} target="_blank" rel="noreferrer">', '<ButtonLink href={url} target=''_blank''>', '<a href={url} target={''_blank''}>', '<a target={"_blank"} href={url}>']
+    good: ['<ExternalLink href={url}>Open invoice</ExternalLink>', '<ExternalLink media href={src}>', openExternal(file), 'window.open(url, ''thc-connect'', ''popup'')']
+  message: >
+    A link opens a new tab without ExternalLink. A person must see that a link leaves the page. Use ExternalLink from @/ui/external-link. In an event handler, use openExternal from the same file. It sets target and rel, adds the open-external arrow after a text label and tells a screen reader that the link opens a new tab. Use the media prop for an image that opens full size (rule 25 of docs/decisions/2026-11-11-work-design-foundations.md).
+- id: web-text-link-is-underlined
+  catalog: 62
+  check: regex
+  pattern: textDecorationLine:\s*\{\s*default:\s*'none',\s*':hover'|textDecorationLine:\s*\{\s*':hover':\s*\{[^}]*'underline'\s*\},\s*default:\s*'none'
+  scope: ['internal/**/*.{ts,tsx}', 'workers/internal/**/*.{ts,tsx}', 'src/components/ui/**/*.{ts,tsx}', 'src/lib/**/*.{ts,tsx}', src/tokens/token-consts.stylex.ts]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['textDecorationLine: { default: ''none'', '':hover'': { [breakpoint.hover]: ''underline'' } },', "textDecorationLine: {\n      default: 'none',\n      ':hover': { [breakpoint.hover]: 'underline' },\n    },", 'textDecorationLine: { '':hover'': { [breakpoint.hover]: ''underline'' }, default: ''none'' },']
+    good: ['textDecorationLine: ''underline'',', 'textDecorationLine: ''none'',', 'textDecorationLine: ''line-through'',']
+  message: >
+    A text link shows its underline only on hover. A touch screen has no hover, so the person cannot see that the text is a link. Underline a text link at rest. Use Button or ButtonLink with variant="link", or ExternalLink. A whole-row or card link is not a text link. Give it a hover background, not a hover underline (rule 25 of docs/decisions/2026-11-11-work-design-foundations.md).
+  exempt: ['src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+- id: web-size-number-is-token
+  catalog: 62
+  check: regex
+  pattern: \b(?:width|height|minWidth|minHeight|maxHeight|inlineSize|blockSize|minInlineSize|minBlockSize)\s*:\s*(?:1[2-9]|[23]\d|4[0-8])\s*[,}]
+  scope: [internal/**/*.stylex.ts, workers/internal/**/*.stylex.ts, src/components/ui/**/*.stylex.ts, src/lib/**/*.stylex.ts, src/tokens/token-consts.stylex.ts]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['width: 24,', 'height: 40 }']
+    good: ['width: layout.iconSizeLg,', 'height: layout.controlHeightMd,', 'width: 1,']
+  message: >
+    StyleX reads a number as pixels, so width: 24 is a size literal that web-size-literal-is-token does not see. Use a layout token for an icon or a control. If no token fits, add one in src/tokens/.
+  exempt: ['src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+- id: web-ui-one-component-per-role
+  catalog: 62
+  check: path
+  universe: tracked
+  pattern: /(?:(?:[a-z0-9]+-)*(?:drawer|sheet)|side-panel|modal|tabs|confirm-dialog|section-card|native-select|thc-skeleton|beautiful-loading-state)(?:[.-][a-z.-]*)?\.(?:tsx?|css)$
+  scope: [src/components/ui/**]
+  baseline: none
+  examples:
+    bad: [src/components/ui/drawer.tsx, src/components/ui/tabs.stylex.ts, src/components/ui/native-select.tsx, src/components/ui/confirm-dialog.tsx, src/components/ui/side-drawer.tsx, src/components/ui/filter-drawer.stylex.ts, src/components/ui/action-sheet.tsx, src/components/ui/bottom-sheet.tsx, src/components/ui/side-sheet.tsx]
+    good: [src/components/ui/stylesheet.ts, src/components/ui/dialog.tsx, src/components/ui/segmented.tsx, src/components/ui/select.tsx, src/components/ui/alert-dialog.tsx]
+  message: >
+    The ui kit has one component for each role. A side or bottom panel is Dialog with a size. Tabs are Segmented. A select is Select. A confirm step is AlertDialog. A section is Card. A loading state is Skeleton. Add a size or a variant to that component. Do not add a second component for the same role (docs/decisions/2026-11-11-work-control-ladder.md).
+  exempt: ['src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+- id: web-app-no-pill-shape
+  catalog: 62
+  check: regex
+  pattern: \bshape=["'{]+pill|\bshape=\{[^}]*['"`]pill['"`]|\bshape\s*:\s*[^,}\n]*['"`]pill['"`]|\b(?:const|let)\s+\w+(?:\s*:[^=\n]*)?\s*=\s*[^;\n]*['"`]pill['"`]
+  scope: ['internal/**/*.{ts,tsx}', 'workers/internal/**/*.{ts,tsx}', 'src/components/ui/**/*.{ts,tsx}', 'src/lib/**/*.{ts,tsx}', src/tokens/token-consts.stylex.ts]
+  exempt: [src/components/ui/**, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: [<Button shape="pill" variant="primary">Save</Button>, '<Segmented shape={''pill''} />', '<Button shape={compact ? ''pill'' : ''step''}>Save</Button>', const SHAPE = 'pill' as const, 'const shape: ButtonShape = round ? ''pill'' : ''step''', '{ shape: ''pill'', variant: ''primary'' }']
+    good: [<Button variant="primary">Save</Button>, '<Segmented value={view} items={VIEWS} />', '<Button shape={shape}>Save</Button>', const label = 'Pill tray']
+  message: >
+    In the app, a control takes the step radius of its size. Only the public pages (website, site-chrome, homes, owner-listing, viewing-call and consent) pass shape="pill". Remove the shape prop.
+- id: web-press-scale-respects-reduced-motion
+  catalog: 62
+  check: regex
+  pattern: transform\s*:\s*\{(?![^{}]*reducedMotion)[^{}]*(?<![\w-])active[']?\s*:\s*['"`][^'"`\n]*(?:scale|translate)|(?<![\w-])active[']?\s*:\s*\{(?![^{}]*reducedMotion)[^{}]*(?:scale|translate)
+  scope: ['internal/**/*.{ts,tsx}', 'workers/internal/**/*.{ts,tsx}', 'src/components/ui/**/*.{ts,tsx}', 'src/lib/**/*.{ts,tsx}', src/tokens/token-consts.stylex.ts]
+  universe: tracked
+  baseline: none
+  examples:
+    bad: ['transform: { default: null, '':active'': ''scale(0.97)'' },', ''':active'': { default: ''scale(0.97)'', [breakpoint.hover]: ''scale(0.97)'' },']
+    good: [''':active'': { default: ''scale(0.97)'', [breakpoint.reducedMotion]: ''none'' },', 'transform: { default: null, '':active'': ''translateY(1px)'', [breakpoint.reducedMotion]: ''none'' },', 'backgroundColor: { default: null, '':active'': color.backgroundPressed },', 'inactive: { transform: ''scale(0.96)'' },', 'transform: { default: ''none'', inactive: ''translateY(4px)'' },']
+  message: >
+    A press transform moves the control. Under reduced motion the control must stay still. Write the :active value as an object: { default: 'scale(0.97)', [breakpoint.reducedMotion]: 'none' }. The global reduced-motion CSS sets the transition to 0.01ms, but the scale still applies.
+  exempt: ['src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+- id: web-hover-only-on-hover-devices
+  catalog: 62
+  check: regex
+  pattern: '[''"]:hover[''"]\s*:(?!\s*\{\s*\[breakpoint\.hover\]\s*:[^{},]*,?\s*\})'
+  scope: ['internal/**/*.{ts,tsx}', 'workers/internal/**/*.{ts,tsx}', 'src/components/ui/**/*.{ts,tsx}', 'src/lib/**/*.{ts,tsx}', src/tokens/token-consts.stylex.ts]
+  universe: tracked
+  baseline: shrink-only
+  examples:
+    bad: ['backgroundColor: { default: ''transparent'', '':hover'': color.backgroundSurfaceHover },', 'textDecorationLine: { default: ''none'', '':hover'': { default: ''none'', [breakpoint.hover]: ''underline'' } },']
+    good: ['backgroundColor: { default: ''transparent'', '':hover'': { [breakpoint.hover]: color.backgroundSurfaceHover } },', 'color: { default: color.textBody, '':hover'': { [breakpoint.hover]: color.textDefault } },']
+  message: >
+    A hover style shows only on a device that can hover. On a touch screen a bare :hover sticks after a tap. Write the :hover value as an object with one key: { [breakpoint.hover]: value }. Do not add a default key inside it.
+  exempt: ['src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+- id: web-infinite-animation-respects-reduced-motion
+  catalog: 62
+  check: regex
+  pattern: (?s)['"]?[\w:-]+['"]?\s*:\s*\{(?!(?:[^{}]|\{[^{}]*\})*?(?:\{[^{}]*?)?(?:reducedMotion|prefers-reduced-motion))(?:[^{}]|\{[^{}]*\})*?animationIterationCount\s*:\s*['"]infinite['"]
+  scope: ['internal/**/*.{ts,tsx}', 'workers/internal/**/*.{ts,tsx}', 'src/components/ui/**/*.{ts,tsx}', 'src/lib/**/*.{ts,tsx}', src/tokens/token-consts.stylex.ts]
+  universe: tracked
+  baseline: shrink-only
+  examples:
+    bad: ["pendingDot: {\n    animationName: pendingPulse,\n    animationIterationCount: 'infinite',\n  },", "'::after': {\n    animationIterationCount: 'infinite',\n    animationName: { default: sweep },\n  },"]
+    good: ["pendingDot: {\n    animationName: { default: pendingPulse, [breakpoint.reducedMotion]: 'none' },\n    animationIterationCount: 'infinite',\n  },", "haloOn: {\n    animationIterationCount: { default: 'infinite', [breakpoint.reducedMotion]: 0 },\n  },", "pulse: {\n    animationIterationCount: 'infinite',\n    display: { default: 'block', [breakpoint.reducedMotion]: 'none' },\n  },"]
+  message: >
+    A style loops an animation with animationIterationCount 'infinite', but the same style object has no reduced-motion key. Under reduced motion the loop must stop. Write the animationName as an object: { default: pulse, [breakpoint.reducedMotion]: 'none' }.
+  exempt: ['src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+- id: web-write-through-helpers
+  catalog: 57
+  check: regex
+  pattern: \bmethod\s*:\s*['"`](?:POST|PUT|PATCH|DELETE)\b|\{\s*method\s*[,}]
+  scope: ['internal/**/*.{ts,tsx}', 'workers/internal/**/*.{ts,tsx}', 'src/components/ui/**/*.{ts,tsx}', 'src/lib/**/*.{ts,tsx}', src/tokens/token-consts.stylex.ts]
+  exempt: [src/lib/api-base.ts, internal/work/api-base.ts, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  baseline: none
+  examples:
+    bad: ['fetchJson(url, isTask, { method: ''POST'', body })', 'fetch(url, { method: ''DELETE'', headers })', 'const init = { method, headers }']
+    good: ['writeJson(url, isTask, ''POST'', { body })', 'writeRequest(url, ''DELETE'')', 'fetchJson(url, isTask, { signal })']
+  message: >
+    A web write sets its HTTP method only in the api-base module of its surface, the one file this rule exempts. Do not write a method in a feature, a kit file or a hook. Add a typed write function to the api-base module and call it. Each write declares whether it is optimistic or waits for the server (rule 28 of docs/decisions/2026-11-11-work-design-foundations.md).
+- id: web-debounce-one-delay
+  catalog: 57
+  check: regex
+  pattern: (?i)\b\w*(?:debounce|query_?wait|search_?delay|typing_?delay)\w*\s*[:=]\s*\d
+  scope: ['internal/**/*.{ts,tsx}', 'workers/internal/**/*.{ts,tsx}', 'src/components/ui/**/*.{ts,tsx}', 'src/lib/**/*.{ts,tsx}', src/tokens/token-consts.stylex.ts]
+  exempt: [src/lib/hooks/use-debounced-request.ts, 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts', 'src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts', src/lib/hairline-*]
+  baseline: none
+  examples:
+    bad: [const QUERY_WAIT_MS = 200, const SEARCH_DELAY_MS = 300, const debounceMs = 250]
+    good: [const DOUBLE_TAP_MS = 300, '<ParentSize debounceTime={10}>', search.later(text)]
+  message: >
+    A search or filter that asks the server waits 300 ms after the last key. Use useDebouncedRequest from src/lib/hooks/use-debounced-request.ts, which owns the one delay. Do not set a second debounce delay. Decision: rule 29 of docs/decisions/2026-11-11-work-design-foundations.md.

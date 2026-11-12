@@ -1,0 +1,119 @@
+id: nested-radius-from-nest
+snapshots:
+  ? |
+    stylex.create({ list: { borderRadius: radius.lg, padding: space.xs }, row: { borderRadius: radius.md } })
+  : labels:
+    - source: 'borderRadius: radius.md'
+      style: primary
+      start: 77
+      end: 100
+    - source: list
+      style: secondary
+      start: 16
+      end: 20
+    - source: 'borderRadius: radius.lg'
+      style: secondary
+      start: 24
+      end: 47
+    - source: 'padding: space.xs'
+      style: secondary
+      start: 49
+      end: 66
+    - source: '{ borderRadius: radius.lg, padding: space.xs }'
+      style: secondary
+      start: 22
+      end: 68
+    - source: 'list: { borderRadius: radius.lg, padding: space.xs }'
+      style: secondary
+      start: 16
+      end: 68
+    - source: '{ list: { borderRadius: radius.lg, padding: space.xs }, row: { borderRadius: radius.md } }'
+      style: secondary
+      start: 14
+      end: 104
+    - source: row
+      style: secondary
+      start: 70
+      end: 73
+    - source: 'row: { borderRadius: radius.md }'
+      style: secondary
+      start: 70
+      end: 102
+  ? |
+    stylex.create({ popup: { borderRadius: radius.md, padding: space.xxs }, item: { borderRadius: radius.step } })
+  : labels:
+    - source: 'borderRadius: radius.step'
+      style: primary
+      start: 80
+      end: 105
+    - source: popup
+      style: secondary
+      start: 16
+      end: 21
+    - source: 'borderRadius: radius.md'
+      style: secondary
+      start: 25
+      end: 48
+    - source: 'padding: space.xxs'
+      style: secondary
+      start: 50
+      end: 68
+    - source: '{ borderRadius: radius.md, padding: space.xxs }'
+      style: secondary
+      start: 23
+      end: 70
+    - source: 'popup: { borderRadius: radius.md, padding: space.xxs }'
+      style: secondary
+      start: 16
+      end: 70
+    - source: '{ popup: { borderRadius: radius.md, padding: space.xxs }, item: { borderRadius: radius.step } }'
+      style: secondary
+      start: 14
+      end: 109
+    - source: item
+      style: secondary
+      start: 72
+      end: 76
+    - source: 'item: { borderRadius: radius.step }'
+      style: secondary
+      start: 72
+      end: 107
+  ? |
+    stylex.create({ track: { borderRadius: radius.step, padding: space['2xs'] }, option: { borderRadius: radius.xs } })
+  : labels:
+    - source: 'borderRadius: radius.xs'
+      style: primary
+      start: 87
+      end: 110
+    - source: track
+      style: secondary
+      start: 16
+      end: 21
+    - source: 'borderRadius: radius.step'
+      style: secondary
+      start: 25
+      end: 50
+    - source: 'padding: space[''2xs'']'
+      style: secondary
+      start: 52
+      end: 73
+    - source: '{ borderRadius: radius.step, padding: space[''2xs''] }'
+      style: secondary
+      start: 23
+      end: 75
+    - source: 'track: { borderRadius: radius.step, padding: space[''2xs''] }'
+      style: secondary
+      start: 16
+      end: 75
+    - source: '{ track: { borderRadius: radius.step, padding: space[''2xs''] }, option: { borderRadius: radius.xs } }'
+      style: secondary
+      start: 14
+      end: 114
+    - source: option
+      style: secondary
+      start: 77
+      end: 83
+    - source: 'option: { borderRadius: radius.xs }'
+      style: secondary
+      start: 77
+      end: 112

@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+#USAGE: help — list the ./c commands
+
+set -euo pipefail
+
+cat <<'USAGE'
+./c — The Hack Collective commands (hackcollective.uk and work.hackcollective.uk)
+
+  ./c up [site|work] [mock-data:empty|mock-data:full]
+                         start the dev servers in the background: site on :5173, work on :5281.
+                         Runs under op run --environment (the 1Password dev Environment id is in
+                         scripts/c/_lib/op-environments.sh). No .env or .dev.vars file.
+                         With no Clerk keys, the work app opens signed in.
+  ./c status             which dev servers run, where, and for how long
+  ./c quit [site|work]   stop the dev servers that ./c up started
+  ./c doctor             is this checkout set up the way the repo says?
+
+  ./c check [step …]     the one gate: lockfile, structure, syntax, styles, deps, types, format,
+                         cycles, clones, dead-code, health, schema. ./c check --list shows each step.
+  ./c pre-commit         the commit gate (scripts/git-hooks/pre-commit runs it): ./c check --staged
+  ./c verify [--staged|--diff SHA]
+                         the fast check of what changed while you edit
+  ./c explain <rule-id>  the message, reason, files and fix of one rule
+  ./c align [path…]      measure alignment, spacing and hit areas of a running page
+  ./c hooks              point git at scripts/git-hooks (pre-commit and pre-push)
+  ./c merge <PR>         squash-merge a PR when Greptile passes and the rules hold (the only way into main)
+
+Production ships through Workers Builds on a merge to main. Do not deploy by hand.
+USAGE

@@ -1,13 +1,12 @@
 import * as stylex from '@stylexjs/stylex'
-
-import { navStyles } from '@/features/website/workspace/site-nav.stylex'
 import { buttonStyles } from '@/features/website/workspace/button.stylex'
 import { LINKS } from '@/features/website/workspace/content'
+import { navStyles } from '@/features/website/workspace/site-nav.stylex'
 
 export function SiteNav() {
   return (
     <header {...stylex.props(navStyles.navbar)}>
-      <svg aria-hidden="true" style={{ display: 'none' }}>
+      <svg aria-hidden="true" {...stylex.props(navStyles.filterDefs)}>
         <filter id="nav-glass-distortion" x="0%" y="0%" width="100%" height="100%">
           <feTurbulence
             type="fractalNoise"
@@ -37,9 +36,7 @@ export function SiteNav() {
               height={32}
               {...stylex.props(navStyles.wordmarkLogo)}
             />
-            <span {...stylex.props(navStyles.wordmarkText)}>
-              The Hack Collective
-            </span>
+            <span {...stylex.props(navStyles.wordmarkText)}>The Hack Collective</span>
           </a>
 
           <div {...stylex.props(navStyles.actions)}>

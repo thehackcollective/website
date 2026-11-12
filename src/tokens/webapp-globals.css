@@ -1,0 +1,227 @@
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0 solid;
+    border-color: var(--thc-color-border-default);
+  }
+
+  html,
+  :host {
+    line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
+    tab-size: 4;
+    font-family: var(--thc-font-sans);
+    font-synthesis: none;
+    font-variant-numeric: tabular-nums;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: var(--thc-color-background-canvas);
+    color: var(--thc-color-text-default);
+    font-family: var(--thc-font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-size: inherit;
+    font-weight: var(--thc-weight-regular);
+    font-family: var(--thc-font-sans);
+    text-wrap: balance;
+  }
+
+  [data-slot="icon"][data-size="step"] {
+    --thc-icon-box: var(--thc-step-glyph);
+  }
+
+  [data-slot="icon"][data-size="sm"] {
+    --thc-icon-box: var(--thc-icon-size-sm);
+  }
+
+  [data-slot="icon"][data-size="md"] {
+    --thc-icon-box: var(--thc-icon-size);
+  }
+
+  [data-slot="icon"][data-size="lg"] {
+    --thc-icon-box: var(--thc-icon-size-lg);
+  }
+
+  [data-slot="icon"] svg :is(path, circle, ellipse, line, polyline, polygon, rect) {
+    vector-effect: non-scaling-stroke;
+    stroke-width: clamp(1.25px, var(--thc-icon-box) / 10, 3px);
+  }
+
+  sup,
+  sub {
+    position: relative;
+    font-size: 0.75em;
+    line-height: 0;
+    vertical-align: baseline;
+  }
+
+  sup {
+    top: -0.5em;
+  }
+
+  sub {
+    bottom: -0.25em;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: inherit;
+  }
+
+  code,
+  pre,
+  kbd,
+  samp {
+    font-family: var(--thc-font-mono);
+    font-size: 1em;
+  }
+
+  table {
+    text-indent: 0;
+    border-color: inherit;
+    border-collapse: collapse;
+  }
+
+  ol,
+  ul,
+  menu {
+    list-style: none;
+  }
+
+  img,
+  svg,
+  video,
+  canvas,
+  audio,
+  iframe,
+  embed,
+  object {
+    display: block;
+    vertical-align: middle;
+  }
+
+  img,
+  video {
+    max-width: 100%;
+    height: auto;
+  }
+
+  button,
+  input,
+  select,
+  optgroup,
+  textarea,
+  ::file-selector-button {
+    font: inherit;
+    font-feature-settings: inherit;
+    font-variation-settings: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+    border-radius: 0;
+    background-color: transparent;
+    opacity: 1;
+  }
+
+  button,
+  input:where([type="button"], [type="reset"], [type="submit"]),
+  ::file-selector-button {
+    appearance: button;
+  }
+
+  ::placeholder {
+    opacity: 1;
+    color: var(--thc-color-text-subtlest);
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  ::-webkit-search-decoration {
+    -webkit-appearance: none;
+  }
+
+  :-moz-ui-invalid {
+    box-shadow: none;
+  }
+
+  :where(
+    a,
+    button,
+    summary,
+    label,
+    select,
+    [role="button"],
+    [role="tab"],
+    [role="menuitem"],
+    [role="option"]
+  ) {
+    touch-action: manipulation;
+  }
+
+  @media (pointer: coarse) {
+    :where(button, [role="button"], [role="tab"], [role="menuitem"]) {
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+  }
+}
+
+[hidden]:not([hidden="until-found"]) {
+  display: none;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: var(--thc-color-text-default);
+  transition: background-color 9999s ease-out;
+  caret-color: var(--thc-color-text-default);
+}
+
+[data-slot="chart-tooltip"] svg {
+  color: var(--thc-color-text-subtle);
+  height: 10px;
+  width: 10px;
+}
+
+[data-slot="chart-tooltip"] {
+  padding-block: 6px;
+  padding-inline: 10px;
+}
+
+@media (max-width: 599.98px) {
+  [data-sonner-toaster] [data-sonner-toast][data-styled="true"] [data-button] {
+    height: 44px;
+    min-width: 44px;
+  }
+}
+
+:root:has([data-thc-surface="console"]) {
+  overscroll-behavior: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

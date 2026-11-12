@@ -1,0 +1,53 @@
+id: no-hand-made-debounce
+language: Tsx
+severity: error
+message: |
+  This block clears a timer and starts it again to run an async call. That is a hand-made debounce.
+  Use `useDebouncedRequest` from '@/lib/hooks/use-debounced-request'. It waits DEBOUNCE_MS (300 ms) and aborts the request before it.
+    clearTimeout(timer.current)
+    timer.current = setTimeout(() => run(text), 200)   ->  search.later(text)
+rule:
+  kind: statement_block
+  all:
+    - has:
+        any:
+          - kind: expression_statement
+            has:
+              any:
+                - pattern: clearTimeout($TIMER.current)
+                - pattern: window.clearTimeout($TIMER.current)
+          - kind: if_statement
+            has:
+              stopBy: end
+              any:
+                - pattern: clearTimeout($TIMER.current)
+                - pattern: window.clearTimeout($TIMER.current)
+    - has:
+        kind: expression_statement
+        all:
+          - has:
+              any:
+                - pattern: $TIMER.current = setTimeout($$$ARGS)
+                - pattern: $TIMER.current = window.setTimeout($$$ARGS)
+          - has:
+              stopBy: end
+              any:
+                - kind: await_expression
+                - kind: unary_expression
+                  regex: '^void\s'
+files:
+  - "internal/**/*.ts"
+  - "workers/internal/**/*.ts"
+  - "src/components/ui/**/*.ts"
+  - "src/lib/**/*.ts"
+  - "internal/**/*.tsx"
+  - "workers/internal/**/*.tsx"
+  - "src/components/ui/**/*.tsx"
+  - "src/lib/**/*.tsx"
+ignores:
+  - "src/lib/hooks/use-debounced-request.ts"
+  - "**/node_modules/**"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts"
+  - "src/lib/hairline-*"

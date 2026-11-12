@@ -1,0 +1,1 @@
+# web-size-constant-is-token — shrink-only: entries leave, counts fall, nothing joins or grows.

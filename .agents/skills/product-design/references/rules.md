@@ -1,6 +1,6 @@
 # Rules
 
-Stable-ID index. `lint` means `ast-grep scan` (rules in `sg-rules/`) or ESLint/tsc catches it mechanically; `prose` means an agent must check it.
+Stable-ID index for the public site. `lint` means `./c check` catches it mechanically (`sg-rules/`, `base.rules.yaml`, ESLint, tsc); `prose` means an agent must check it. Work rules are in `docs/decisions/2026-11-11-work-design-foundations.md`.
 
 | ID | Rule | Enforced by | Source |
 |---|---|---|---|
@@ -19,10 +19,10 @@ Stable-ID index. `lint` means `ast-grep scan` (rules in `sg-rules/`) or ESLint/t
 | rule/one-sentence | Every paragraph is one sentence. | prose | AGENTS.md, DESIGN.md |
 | rule/facts | Every number and name traces to AGENTS.md or `content.ts`. | prose | AGENTS.md |
 | rule/blue-scope | Blue only on the mark, primary action, hover underline, focus ring. | prose | DESIGN.md |
-| rule/type-roles | Font sizes and weights only from the `text.*` tokens and `page-shell` recipes. | prose | DESIGN.md |
+| rule/type-roles | Font sizes and weights only from the `text.*` tokens of `website-token-consts.stylex.ts`. | prose | DESIGN.md |
 | rule/logo-files | Logo only from `public/brand/`; edit the SVG masters there and regenerate the PNG/WebP twins from them. | prose | DESIGN.md |
 | rule/logo-fills | Approved fills only: blue on light, white on dark or on blue, black for one-colour print. | prose | DESIGN.md |
 | rule/reduced-motion | Every animation collapses to static under `prefers-reduced-motion`. | prose | DESIGN.md |
 | rule/primary-action | One primary action per viewport: follow the Luma calendar; WhatsApp is the secondary. | prose | DESIGN.md |
 
-Run `ast-grep scan` and `bun run lint` before claiming compliance with the lint rows.
+Run `./c check` before claiming compliance with the lint rows. `./c explain <rule-id>` prints a rule and its fix.

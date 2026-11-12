@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if command -v ggshield >/dev/null 2>&1; then
+  ggshield secret scan pre-commit "$@"
+fi
+
+exec "$(git rev-parse --show-toplevel)/c" check --staged

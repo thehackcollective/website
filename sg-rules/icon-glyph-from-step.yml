@@ -1,0 +1,41 @@
+id: icon-glyph-from-step
+language: Tsx
+severity: error
+message: |
+  An Icon inside a control sets its own size. Remove the `size` prop.
+
+    <Button size="sm"><Icon icon={X} size="sm" />Add</Button>  ->  <Button size="sm"><Icon icon={X} />Add</Button>
+
+  The control sets one step of the size ladder (DESIGN.md, "Size ladder").
+  The step gives the height, the padding, the gap, the glyph, the text size, the radius and the inset together.
+  An Icon without `size` takes the glyph of the step, so the icon and the text stay on one inset.
+  To get a smaller icon, give the control a smaller `size`.
+rule:
+  kind: jsx_self_closing_element
+  all:
+    - has:
+        field: name
+        regex: '^Icon$'
+    - has:
+        kind: jsx_attribute
+        has:
+          kind: property_identifier
+          regex: '^size$'
+    - inside:
+        kind: jsx_element
+        has:
+          field: open_tag
+          has:
+            field: name
+            regex: '^(Button|ButtonLink|IconLabel|Badge|MenuItem|MenuRadioItem|MenuCheckboxItem|PopoverTrigger|SelectTrigger)$'
+files:
+  - "internal/**/*.tsx"
+  - "workers/internal/**/*.tsx"
+  - "src/components/ui/**/*.tsx"
+  - "src/lib/**/*.tsx"
+ignores:
+  - "**/node_modules/**"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.tsx"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.ts"
+  - "src/components/ui/{count-up,dia-sweep,dia-text,reveal,stagger-reveal}.stylex.ts"
+  - "src/lib/hairline-*"

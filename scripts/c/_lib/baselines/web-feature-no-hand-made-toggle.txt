@@ -1,0 +1,1 @@
+# web-feature-no-hand-made-toggle — shrink-only: entries leave, counts fall, nothing joins or grows.

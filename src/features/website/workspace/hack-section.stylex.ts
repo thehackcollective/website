@@ -1,101 +1,103 @@
 import * as stylex from '@stylexjs/stylex'
 
-import { color, radius, space, text } from '@/tokens/token-consts.stylex'
+import { breakpoint, color, space, text } from '@/tokens/website-token-consts.stylex'
 
 export const hackStyles = stylex.create({
   section: {
     display: 'flex',
     flexDirection: 'column',
+    gap: space.x2xl,
     paddingBlock: space.x4xl,
     paddingInline: {
       default: space.lg,
       '@media (min-width: 1200px)': space.x4xl,
     },
   },
-  intro: {
-    alignItems: {
-      default: 'stretch',
-      '@media (min-width: 960px)': 'flex-start',
-    },
-    display: 'flex',
-    flexDirection: {
-      default: 'column',
-      '@media (min-width: 960px)': 'row',
-    },
-    gap: {
-      default: space.x2xl,
-      '@media (min-width: 960px)': space.x5xl,
-    },
+  headingFlush: {
+    marginBlock: 0,
   },
-  headingBlock: {
+  list: {
+    borderTopColor: color.hairline,
+    borderTopStyle: 'solid',
+    borderTopWidth: '1px',
+    listStyleType: 'none',
+    marginBlock: 0,
+    paddingInlineStart: 0,
+  },
+  item: {
+    borderBottomColor: color.hairline,
+    borderBottomStyle: 'solid',
+    borderBottomWidth: '1px',
+  },
+  row: {
+    alignItems: 'start',
+    columnGap: space.x2xl,
+    display: 'grid',
+    gridTemplateColumns: {
+      default: '1fr',
+      '@media (min-width: 960px)': '13rem 1fr auto',
+    },
+    paddingBlock: space.xl,
+    rowGap: space.md,
+  },
+  when: {
     display: 'flex',
-    flex: '1',
     flexDirection: 'column',
-    gap: space.md,
+    gap: space.xs,
+  },
+  date: {
+    color: color.ink,
+    fontFamily: text.fontMono,
+    fontSize: text.sizeMicro,
+    letterSpacing: text.trackingAllcaps,
+    marginBlock: 0,
+    textTransform: 'uppercase',
+  },
+  detail: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: space.xs,
     maxWidth: '42rem',
   },
-  heading: {
+  name: {
     color: color.ink,
-    fontFamily: text.fontDisplay,
-    fontSize: {
-      default: text.sizeDisplayMd,
-      '@media (min-width: 960px)': text.sizeDisplayXl,
-    },
-    fontWeight: text.weightSemibold,
-    letterSpacing: {
-      default: text.trackingDisplayMd,
-      '@media (min-width: 960px)': text.trackingDisplayXl,
-    },
-    lineHeight: {
-      default: text.leadingDisplayMd,
-      '@media (min-width: 960px)': text.leadingDisplayXl,
-    },
+    fontSize: text.sizeBodyXl,
+    fontWeight: text.weightMedium,
     marginBlock: 0,
     textWrap: 'balance',
   },
+  namePast: {
+    color: color.body,
+  },
   body: {
     color: color.body,
-    fontSize: text.sizeBodyLg,
-    lineHeight: text.leadingBodyLg,
+    fontSize: text.sizeBodyMd,
+    lineHeight: text.leadingBodyMd,
     marginBlock: 0,
   },
-  bodyStrong: {
-    color: color.primary,
-    fontWeight: text.weightSemibold,
+  meta: {
+    color: color.meta,
+    fontSize: text.sizeBodySm,
+    marginBlock: 0,
   },
-  bodyLink: {
-    color: color.primary,
-    fontWeight: text.weightSemibold,
-    textDecorationLine: {
-      default: 'none',
-      ':hover': 'underline',
+  link: {
+    color: {
+      default: color.ink,
+      ':hover': { [breakpoint.hover]: color.primaryActive },
+      ':active': color.primaryActive,
     },
+    fontSize: text.sizeBodySm,
+    fontWeight: text.weightMedium,
+    justifySelf: 'start',
+    paddingBlock: space.sm,
+    textDecorationColor: {
+      default: color.hairlineStrong,
+      ':hover': { [breakpoint.hover]: color.primaryActive },
+    },
+    textDecorationLine: 'underline',
     textUnderlineOffset: '3px',
-  },
-  actions: {
-    display: 'flex',
-    marginTop: space.md,
-  },
-  posterCol: {
-    alignSelf: {
-      default: 'stretch',
-      '@media (min-width: 960px)': 'flex-start',
-    },
-    flex: {
-      default: 'none',
-      '@media (min-width: 960px)': '0 0 420px',
-    },
-    width: {
-      default: '100%',
-      '@media (min-width: 960px)': 420,
-    },
-  },
-  poster: {
-    aspectRatio: '816 / 810',
-    borderRadius: radius.lg,
-    display: 'block',
-    height: 'auto',
-    objectFit: 'cover',
-    width: '100%',
+    transitionDuration: '150ms',
+    transitionProperty: 'color, text-decoration-color',
+    whiteSpace: 'nowrap',
   },
 })

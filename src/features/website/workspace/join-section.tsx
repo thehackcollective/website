@@ -1,25 +1,25 @@
-import * as stylex from "@stylexjs/stylex";
+import * as stylex from '@stylexjs/stylex'
 
-import { DiaHeading } from "@/components/ui/dia-text";
-import { Reveal } from "@/components/ui/reveal";
-import { joinStyles } from "@/features/website/workspace/join-section.stylex";
-import { AsciiPiece } from "@/features/website/workspace/ascii-piece";
-import { LINKS } from "@/features/website/workspace/content";
+import { DiaHeading } from '@/components/ui/dia-text'
+import { Reveal } from '@/components/ui/reveal'
+import { AsciiPiece } from '@/features/website/workspace/ascii-piece'
+import { LINKS } from '@/features/website/workspace/content'
+import { joinStyles } from '@/features/website/workspace/join-section.stylex'
 
 const JOIN_ROWS = [
-  { label: "WhatsApp", value: "Join the group chat", href: LINKS.whatsapp },
-  { label: "Luma", value: "luma.com/thehackcollective", href: LINKS.luma },
+  { label: 'WhatsApp', value: 'Join the group chat', href: LINKS.whatsapp },
+  { label: 'Luma', value: 'luma.com/thehackcollective', href: LINKS.luma },
   {
-    label: "Submit an event",
-    value: "luma.com/thehackcollective",
+    label: 'Submit an event',
+    value: 'luma.com/thehackcollective',
     href: LINKS.luma,
   },
   {
-    label: "Partner with us",
-    value: "thehackcollective@gmail.com",
+    label: 'Partner with us',
+    value: 'thehackcollective@gmail.com',
     href: LINKS.email,
   },
-];
+]
 
 export function JoinSection() {
   return (
@@ -33,10 +33,8 @@ export function JoinSection() {
 
         <div {...stylex.props(joinStyles.textCol)}>
           <div {...stylex.props(joinStyles.copy)}>
-            <DiaHeading
-              className={stylex.props(joinStyles.heading).className}
-            >
-              {"Let’s build together."}
+            <DiaHeading className={stylex.props(joinStyles.heading).className}>
+              {'Let’s build together.'}
             </DiaHeading>
           </div>
 
@@ -46,27 +44,16 @@ export function JoinSection() {
                 key={row.label}
                 delay={i * 0.06}
                 className={
-                  stylex.props(
-                    joinStyles.contactRow,
-                    i === 0 && joinStyles.contactRowFirst,
-                  ).className
+                  stylex.props(joinStyles.contactRow, i === 0 && joinStyles.contactRowFirst)
+                    .className
                 }
               >
-                <span {...stylex.props(joinStyles.contactLabel)}>
-                  {row.label}
-                </span>
+                <span {...stylex.props(joinStyles.contactLabel)}>{row.label}</span>
                 <a
                   href={row.href}
-                  target={row.href.startsWith("mailto:") ? undefined : "_blank"}
-                  rel={
-                    row.href.startsWith("mailto:")
-                      ? undefined
-                      : "noopener noreferrer"
-                  }
-                  {...stylex.props(
-                    joinStyles.contactValue,
-                    joinStyles.contactLink,
-                  )}
+                  target={row.href.startsWith('mailto:') ? undefined : '_blank'}
+                  rel={row.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
+                  {...stylex.props(joinStyles.contactValue, joinStyles.contactLink)}
                 >
                   {row.value}
                 </a>
@@ -76,9 +63,7 @@ export function JoinSection() {
         </div>
       </div>
 
-      <div {...stylex.props(joinStyles.footer)}>
-        &copy; 2026 The Hack Collective. London.
-      </div>
+      <div {...stylex.props(joinStyles.footer)}>&copy; 2026 The Hack Collective. London.</div>
     </section>
-  );
+  )
 }

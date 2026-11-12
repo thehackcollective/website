@@ -1,30 +1,30 @@
-import { animate, inView } from "motion";
-import { useReducedMotion } from "motion/react";
-import { useRef } from "react";
+import { animate, inView } from 'motion'
+import { useReducedMotion } from 'motion/react'
+import { useRef } from 'react'
 
-import { useMountEffect } from "@/lib/use-mount-effect";
+import { useMountEffect } from '@/lib/use-mount-effect'
 
 export interface CountUpProps {
-  value: string;
-  className?: string;
+  value: string
+  className?: string
 }
 
 export function CountUp({ value, className }: CountUpProps) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const reduceMotion = useReducedMotion();
+  const ref = useRef<HTMLSpanElement>(null)
+  const reduceMotion = useReducedMotion()
 
   useMountEffect(() => {
-    const el = ref.current;
-    if (!el || reduceMotion) return;
+    const el = ref.current
+    if (!el || reduceMotion) return
 
-    const match = value.match(/^(\D*)([\d,]+)(\D*)$/);
-    if (!match) return;
+    const match = value.match(/^(\D*)([\d,]+)(\D*)$/)
+    if (!match) return
 
-    const [, prefix, digits, suffix] = match;
-    const hasComma = digits.includes(",");
-    const target = parseInt(digits.replace(/,/g, ""), 10);
+    const [, prefix, digits, suffix] = match
+    const hasComma = digits.includes(',')
+    const target = parseInt(digits.replace(/,/g, ''), 10)
 
-    let controls: ReturnType<typeof animate> | undefined;
+    let controls: ReturnType<typeof animate> | undefined
 
     const stopInView = inView(
       el,
@@ -35,26 +35,24 @@ export function CountUp({ value, className }: CountUpProps) {
           onUpdate: (n) => {
             el.textContent =
               prefix +
-              (hasComma
-                ? Math.round(n).toLocaleString("en-GB")
-                : String(Math.round(n))) +
-              suffix;
+              (hasComma ? Math.round(n).toLocaleString('en-GB') : String(Math.round(n))) +
+              suffix
           },
-        });
-        stopInView();
+        })
+        stopInView()
       },
       { amount: 0.15 },
-    );
+    )
 
     return () => {
-      stopInView();
-      controls?.stop();
-    };
-  });
+      stopInView()
+      controls?.stop()
+    }
+  })
 
   return (
     <span ref={ref} className={className}>
       {value}
     </span>
-  );
+  )
 }

@@ -1,21 +1,14 @@
-import { Suspense } from "react";
-import {
-  createBrowserRouter,
-  Navigate,
-  type RouteObject,
-} from "react-router";
+import { Suspense } from 'react'
+import { createBrowserRouter, Navigate, type RouteObject } from 'react-router'
 
-import { App } from "@/app/app-root";
-import { NotFound } from "@/app/not-found";
-import {
-  DEFAULT_PATH,
-  FEATURES,
-  type FeatureRouteEntry,
-} from "@/features/catalog";
+import { App } from '@/app/app-root'
+import { NotFound } from '@/app/not-found'
+import { RouteError } from '@/app/route-error'
+import { DEFAULT_PATH, FEATURES, type FeatureRouteEntry } from '@/features/catalog'
 
 function toRoute(route: FeatureRouteEntry): RouteObject {
-  const path = route.path.replace(/^\//, "");
-  const View = route.View;
+  const path = route.path.replace(/^\//, '')
+  const View = route.View
   return {
     path,
     element: (
@@ -23,25 +16,24 @@ function toRoute(route: FeatureRouteEntry): RouteObject {
         <View />
       </Suspense>
     ),
-  };
+  }
 }
 
-const routesFor = (surface: FeatureRouteEntry["surface"]) =>
-  FEATURES.flatMap((f) =>
-    f.routes.flatMap((r) => (r.surface === surface ? [toRoute(r)] : [])),
-  );
+const routesFor = (surface: FeatureRouteEntry['surface']) =>
+  FEATURES.flatMap((f) => f.routes.flatMap((r) => (r.surface === surface ? [toRoute(r)] : [])))
 
 export const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <App />,
+    errorElement: <RouteError />,
     children: [
-      ...routesFor("public"),
-      ...routesFor("app"),
-      ...(DEFAULT_PATH !== undefined && DEFAULT_PATH !== "/"
+      ...routesFor('public'),
+      ...routesFor('app'),
+      ...(DEFAULT_PATH !== undefined && DEFAULT_PATH !== '/'
         ? [{ index: true, element: <Navigate to={DEFAULT_PATH} replace /> }]
         : []),
-      { path: "*", element: <NotFound /> },
+      { path: '*', element: <NotFound /> },
     ],
   },
-]);
+])
