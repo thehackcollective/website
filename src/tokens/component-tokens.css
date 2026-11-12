@@ -22,7 +22,7 @@
   --thc-button-link-text: var(--thc-color-text-brand);
 
   --thc-input-default-background-disabled: var(--thc-color-background-surface-subtle);
-  --thc-input-default-border: var(--thc-color-border-default);
+  --thc-input-default-border: var(--thc-color-border-input);
   --thc-input-default-border-focus: var(--thc-color-border-brand);
   --thc-input-default-border-invalid: var(--thc-color-border-danger);
   --thc-input-default-text: var(--thc-color-text-default);

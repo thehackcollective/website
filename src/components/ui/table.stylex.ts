@@ -269,6 +269,7 @@ export const tableStyles = stylex.create({
       },
     },
     borderRadius: radius.md,
+    boxShadow: { default: null, ':focus-visible': layout.focusRing },
     cursor: cursor.default,
     flexShrink: 0,
     minHeight: layout.rowHeight,

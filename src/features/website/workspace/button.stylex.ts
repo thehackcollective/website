@@ -1,9 +1,15 @@
 import * as stylex from '@stylexjs/stylex'
 
-import { color, radius, space, text } from '@/tokens/website-token-consts.stylex'
+import { breakpoint, color, radius, space, text } from '@/tokens/website-token-consts.stylex'
 
 export const buttonStyles = stylex.create({
   buttonBase: {
+    '::after': {
+      content: '""',
+      insetBlock: 'min(0px, calc((100% - 44px) / 2))',
+      insetInline: 'min(0px, calc((100% - 44px) / 2))',
+      position: 'absolute',
+    },
     borderRadius: radius.pill,
     cursor: 'pointer',
     display: 'inline-block',
@@ -28,14 +34,15 @@ export const buttonStyles = stylex.create({
   buttonPrimary: {
     backgroundColor: {
       default: color.primary,
-      ':hover': color.primaryActive,
+      ':hover': { [breakpoint.hover]: color.primaryActive },
+      ':active': color.primaryActive,
     },
     color: color.onPrimary,
   },
   buttonSecondary: {
     borderColor: {
       default: color.hairlineStrong,
-      ':hover': color.primary,
+      ':hover': { [breakpoint.hover]: color.primary },
     },
     borderStyle: 'solid',
     borderWidth: '1px',

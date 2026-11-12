@@ -45,4 +45,9 @@ export const signInStyles = stylex.create({
     },
     width: '100%',
   },
+  cardSkeleton: {
+    height: layout.signInCardHeight,
+    maxWidth: layout.signInCardWidth,
+    width: '100%',
+  },
 })

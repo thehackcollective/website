@@ -16,6 +16,8 @@
 @layer base {
   html {
     font-family: var(--thc-website-font-sans);
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
@@ -48,9 +50,14 @@
     text-decoration: none;
   }
 
+  a,
+  button {
+    touch-action: manipulation;
+  }
+
   button {
     appearance: none;
-    backgroundcolor: transparent;
+    background-color: transparent;
     border: 0;
     color: inherit;
     font: inherit;

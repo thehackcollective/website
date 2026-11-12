@@ -217,7 +217,8 @@ export const navStyles = stylex.create({
     gap: space.xxs,
     minHeight: layout.controlHeightTouch,
     paddingBlock: space['2xs'],
-    paddingInline: space.xs,
+    paddingInlineEnd: `max(${space.xs}, ${space.safeRight})`,
+    paddingInlineStart: `max(${space.xs}, ${space.safeLeft})`,
   },
   railItem: {
     ...row,
@@ -317,7 +318,8 @@ export const navStyles = stylex.create({
     left: 0,
     minHeight: layout.tabBarHeight,
     paddingBlockEnd: space.safeBottom,
-    paddingInline: space.xs,
+    paddingInlineEnd: `max(${space.xs}, ${space.safeRight})`,
+    paddingInlineStart: `max(${space.xs}, ${space.safeLeft})`,
     position: 'absolute',
     right: 0,
     zIndex: zIndex.shell,
@@ -337,6 +339,7 @@ export const navStyles = stylex.create({
     minHeight: layout.controlHeightTouch,
     minWidth: 0,
     paddingBlock: space.xxs,
+    userSelect: 'none',
   },
   tabItemActive: {
     backgroundColor: color.backgroundSunken,

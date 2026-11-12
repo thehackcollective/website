@@ -19,19 +19,25 @@ const styles = stylex.create({
     fontSize: text.sizeDisplaySm,
   },
   link: {
-    color: color.primary,
+    color: color.primaryActive,
     fontFamily: text.fontSans,
     fontSize: text.sizeBodyLg,
   },
 })
 
-export function StatusPage({ title }: { title: string }) {
+export function StatusPage({ title, reload = false }: { title: string; reload?: boolean }) {
   return (
     <main {...stylex.props(styles.page)}>
       <h1 {...stylex.props(styles.heading)}>{title}</h1>
-      <Link to="/" {...stylex.props(styles.link)}>
-        Back to the homepage
-      </Link>
+      {reload ? (
+        <a href="/" {...stylex.props(styles.link)}>
+          Reload the homepage
+        </a>
+      ) : (
+        <Link to="/" {...stylex.props(styles.link)}>
+          Back to the homepage
+        </Link>
+      )}
     </main>
   )
 }

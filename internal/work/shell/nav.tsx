@@ -139,7 +139,7 @@ function SoundToggle() {
         <Button
           variant="quiet"
           size="iconTouch"
-          aria-label={label}
+          aria-label="Click sounds"
           pressed={sound}
           pressedAppearance="plain"
           data-sidebar-sound-toggle

@@ -30,6 +30,7 @@ export const statsStyles = stylex.create({
     color: color.ink,
     fontFamily: text.fontDisplay,
     fontSize: text.sizeDisplayMd,
+    fontVariantNumeric: 'tabular-nums',
     fontWeight: text.weightMedium,
     letterSpacing: text.trackingDisplayMd,
     lineHeight: text.leadingDisplayMd,

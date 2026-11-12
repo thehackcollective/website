@@ -11,12 +11,14 @@ export function View() {
   return (
     <div {...stylex.props(pageStyles.page)}>
       <SiteNav />
-      <HeroSection />
-      <div {...stylex.props(pageStyles.rail)}>
-        <HackSection />
-        <StatsSection />
-        <JoinSection />
-      </div>
+      <main>
+        <HeroSection />
+        <div {...stylex.props(pageStyles.rail)}>
+          <HackSection />
+          <StatsSection />
+          <JoinSection />
+        </div>
+      </main>
     </div>
   )
 }

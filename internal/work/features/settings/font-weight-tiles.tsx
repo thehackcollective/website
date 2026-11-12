@@ -16,7 +16,13 @@ export function FontWeightTiles() {
   }
   return (
     <div data-coachmark="settings.weight">
-      <RadioGroup layout="cards" name="font-weight" value={weight} onValueChange={choose}>
+      <RadioGroup
+        aria-label="Text weight"
+        layout="cards"
+        name="font-weight"
+        value={weight}
+        onValueChange={choose}
+      >
         {FONT_WEIGHTS.map((option) => (
           <ChoiceCard
             key={option.value}

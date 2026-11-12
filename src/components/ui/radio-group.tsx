@@ -14,7 +14,9 @@ export function RadioGroup({
   disabled,
   layout = 'list',
   children,
+  'aria-label': ariaLabel,
 }: {
+  'aria-label': string
   value: string
   onValueChange?: (value: string) => void
   name?: string
@@ -24,6 +26,7 @@ export function RadioGroup({
 }) {
   return (
     <RadioGroupPrimitive
+      aria-label={ariaLabel}
       disabled={disabled}
       name={name}
       onValueChange={(next) => onValueChange?.(String(next))}

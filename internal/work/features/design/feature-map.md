@@ -20,9 +20,10 @@ Design is the `/design` catalogue of the shared kit in `src/components/ui`. Ever
 
 ## How to get to it (user POV)
 
-1. Sign in to the work app.
-2. Click "Design" in the sidebar, or the second tab of the phone dock.
-3. Scroll the sections from top to bottom.
+1. Run the work app in dev (`./c up work`). The page does not exist in production.
+2. Sign in to the work app.
+3. Click "Design" in the sidebar, or the second tab of the phone dock.
+4. Scroll the sections from top to bottom.
 
 ## Driving it with agent-browser
 
@@ -38,7 +39,8 @@ Design is the `/design` catalogue of the shared kit in `src/components/ui`. Ever
 
 - The data is static samples and the page calls no API.
 - "New version" shows the same toast as a real deploy, and its Reload button reloads the page.
-- The route ships in production builds, so the catalogue is a page members can open.
+- The feature sets `devOnly: true`, so `catalog.tsx` drops its route and nav entry from production builds. Members never see it.
+- The page stays because it keeps the whole kit reachable for knip.
 - This page is what keeps the whole kit live for knip: a kit component that no screen and no showcase renders fails `./c check dead-code`.
 - The calendar samples sit around the local today, so the week view always has events.
 - The Type section renders `Display` and `Title`, which are h1 elements, so the page has more than one h1.

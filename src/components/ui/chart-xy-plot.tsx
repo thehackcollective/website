@@ -1,16 +1,15 @@
 import * as stylex from '@stylexjs/stylex'
-import { area, curveMonotoneX, line } from 'd3-shape'
 import { m, useReducedMotion } from 'motion/react'
 import { useId, useState } from 'react'
 import { spring, stagger } from '@/lib/motion'
 import { ChartXAxis, ChartYAxis } from '@/ui/chart-axes'
 import { ChartCrosshair } from '@/ui/chart-crosshair'
+import { monotoneAreaPath, monotoneLinePath } from '@/ui/chart-curve'
 import { DirectLabels } from '@/ui/chart-direct-labels'
 import { useValueScale } from '@/ui/chart-scales'
 import { seriesStop, seriesStroke } from '@/ui/chart-series.stylex'
 import { chartStyles as styles } from '@/ui/chart-shared.stylex'
 import {
-  type ChartDatum,
   cellValue,
   datumLabel,
   type Margin,
@@ -89,42 +88,34 @@ export function XyPlot({
         ))}
       </defs>
       <g transform={`translate(${margin.left}, ${margin.top})`}>
-        <ChartYAxis format={formatValue} ticks={yScale.ticks(4)} width={innerWidth} y={yScale} />
-        {series.map((s) => (
-          <m.g
-            animate={{ opacity: dimmedKey !== null && dimmedKey !== s.key ? 0.45 : 1 }}
-            clipPath={`url(#${clipId}-${s.role === 'compare' ? 1 : 0})`}
-            initial={false}
-            key={s.key}
-            transition={spring.fast}
-          >
-            {fill === 'area' && s.role !== 'compare' && (
+        <ChartYAxis format={formatValue} ticks={yScale.ticks} width={innerWidth} y={yScale.at} />
+        {series.map((s) => {
+          const points = data.map((d, i) => ({ x: xAt(i), y: yScale.at(cellValue(d, s.key)) }))
+          return (
+            <m.g
+              animate={{ opacity: dimmedKey !== null && dimmedKey !== s.key ? 0.45 : 1 }}
+              clipPath={`url(#${clipId}-${s.role === 'compare' ? 1 : 0})`}
+              initial={false}
+              key={s.key}
+              transition={spring.fast}
+            >
+              {fill === 'area' && s.role !== 'compare' && (
+                <path
+                  d={monotoneAreaPath(points, innerHeight)}
+                  fill={`url(#${gradientId}-${s.key})`}
+                />
+              )}
               <path
-                d={
-                  area<ChartDatum>()
-                    .x((_d, i) => xAt(i))
-                    .y0(innerHeight)
-                    .y1((d) => yScale(cellValue(d, s.key)))
-                    .curve(curveMonotoneX)(data) ?? ''
-                }
-                fill={`url(#${gradientId}-${s.key})`}
+                {...stylex.props(seriesStroke[roleOf(s)])}
+                d={monotoneLinePath(points)}
+                fill="none"
+                strokeDasharray={s.role === 'compare' ? '3 3' : undefined}
+                strokeLinecap="round"
+                strokeWidth={s.role === 'compare' ? 1.25 : 1.75}
               />
-            )}
-            <path
-              {...stylex.props(seriesStroke[roleOf(s)])}
-              d={
-                line<ChartDatum>()
-                  .x((_d, i) => xAt(i))
-                  .y((d) => yScale(cellValue(d, s.key)))
-                  .curve(curveMonotoneX)(data) ?? ''
-              }
-              fill="none"
-              strokeDasharray={s.role === 'compare' ? '3 3' : undefined}
-              strokeLinecap="round"
-              strokeWidth={s.role === 'compare' ? 1.25 : 1.75}
-            />
-          </m.g>
-        ))}
+            </m.g>
+          )
+        })}
         <ChartXAxis
           count={data.length}
           label={(i) => datumLabel(data[i], xKey, formatX)}
@@ -136,7 +127,7 @@ export function XyPlot({
             height={innerHeight}
             points={series.map((s) => ({
               key: s.key,
-              y: yScale(cellValue(activeDatum, s.key)),
+              y: yScale.at(cellValue(activeDatum, s.key)),
               role: roleOf(s),
             }))}
             x={xAt(activeIndex)}
@@ -147,7 +138,7 @@ export function XyPlot({
             labels={series.map((s) => ({
               seriesKey: s.key,
               x: xAt(data.length - 1) + 10,
-              y: yScale(cellValue(last, s.key)),
+              y: yScale.at(cellValue(last, s.key)),
               text: `${s.label} · ${formatValue(cellValue(last, s.key))}`,
               role: roleOf(s),
             }))}

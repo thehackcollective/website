@@ -1,5 +1,12 @@
 import { StatusPage } from '@/app/status-page'
+import { DocumentTitle } from '@/ui/document-title'
 
 export function NotFound() {
-  return <StatusPage title="Page not found" />
+  return (
+    <>
+      <DocumentTitle title="Page not found · The Hack Collective" />
+      <meta name="robots" content="noindex" />
+      <StatusPage title="Page not found" />
+    </>
+  )
 }

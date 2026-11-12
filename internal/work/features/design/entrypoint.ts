@@ -6,6 +6,7 @@ export const feature: WorkFeature = {
   label: 'Design',
   path: 'design',
   surface: 'shell',
+  devOnly: true,
   nav: {
     id: 'design',
     label: 'Design',

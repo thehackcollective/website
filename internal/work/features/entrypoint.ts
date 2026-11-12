@@ -26,4 +26,5 @@ export interface WorkFeature {
   surface: Surface
   kind?: PageKind
   nav?: FeatureNav
+  devOnly?: true
 }

@@ -18,13 +18,15 @@ function fail(message: string): never {
 }
 
 function collect(): readonly CatalogEntry[] {
-  const entries = Object.entries(entrypoints).map(([file, mod]): CatalogEntry => {
-    const folder = file.split('/')[1] ?? ''
-    const feature = mod.feature ?? fail(`${folder}/entrypoint.ts must export 'feature'`)
-    if (feature.id !== folder) fail(`${folder}/entrypoint.ts declares id '${feature.id}'`)
-    const loadPage = pages[`./${folder}/page.tsx`] ?? fail(`${folder} has no page.tsx`)
-    return { feature, loadPage }
-  })
+  const entries = Object.entries(entrypoints)
+    .map(([file, mod]): CatalogEntry => {
+      const folder = file.split('/')[1] ?? ''
+      const feature = mod.feature ?? fail(`${folder}/entrypoint.ts must export 'feature'`)
+      if (feature.id !== folder) fail(`${folder}/entrypoint.ts declares id '${feature.id}'`)
+      const loadPage = pages[`./${folder}/page.tsx`] ?? fail(`${folder} has no page.tsx`)
+      return { feature, loadPage }
+    })
+    .filter(({ feature }) => import.meta.env.DEV || feature.devOnly !== true)
   const paths = entries.map((entry) => entry.feature.path)
   if (new Set(paths).size !== paths.length) fail('two work features declare the same path')
   return entries
@@ -50,6 +52,10 @@ const servesPath = (feature: WorkFeature, pathname: string) =>
 
 export function pageKindAt(pathname: string): PageKind {
   return catalog.find(({ feature }) => servesPath(feature, pathname))?.feature.kind ?? 'fill'
+}
+
+export function pageLabelAt(pathname: string): string | null {
+  return catalog.find(({ feature }) => servesPath(feature, pathname))?.feature.label ?? null
 }
 
 const loadedPages = new Set<string>()

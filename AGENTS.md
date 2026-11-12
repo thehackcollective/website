@@ -112,7 +112,11 @@ Use these facts verbatim. Do not invent a claim.
 - Stats: 1,100+ members; 450+ Luma calendar subscribers; #2 on Google when searching for Hackathons in London; 2026 UCL Campaign of the Year nominee.
 - Partners (kept as fact, not shown on the page): Kickstart Global; Hacker's Unity; HackEurope; FINEDA.
 - Links live in `src/features/website/workspace/content.ts`: WhatsApp chat.whatsapp.com/EWCPnquUzXD9uppsSuQFVk, Luma luma.com/thehackcollective, email thehackcollective@gmail.com.
-- Next event: Grok Bot Community Engineering London Hackathon, Thu 22 Oct 2026, London, 6:00 PM, luma.com/eveur09a. The Hack Collective is a community partner with its own track. Louis co-hosts.
+- Events live in `UPCOMING_EVENTS` and `PAST_EVENTS` in `src/features/website/workspace/content.ts`. Move an event to `PAST_EVENTS` the day after it ends.
+- Upcoming: Imperial BioHack x Anthropic, 28–29 Nov 2026, City & Guilds Building, luma.com/m21rdpv1. Louis co-hosts.
+- Upcoming: ALFRD Hackathon, 5 Dec 2026, Central London with the University of Westminster, luma.com/jl7wx52x. The Hack Collective co-hosts with ALFRD.
+- Private, never on the site: From Spreadsheets to Agents: A Finance Leaders' Hackathon, 11 Dec 2026.
+- Past: Grok Bot Community Engineering London Hackathon, Thu 22 Oct 2026, luma.com/eveur09a. The Hack Collective was a community partner with its own track.
 
 ## 8. Code rules
 

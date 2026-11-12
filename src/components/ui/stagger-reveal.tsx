@@ -115,7 +115,6 @@ function useStaggerReveal(): {
               {
                 ...followerTransition,
                 delay,
-                opacity: { ease: 'easeIn' as const },
               },
             ),
           )

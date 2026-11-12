@@ -1,5 +1,4 @@
-# robots.txt for lenguyenvu.com
-# Last updated: 2026-02-25
+# robots.txt for hackcollective.uk
 
 # Standard search engines
 User-agent: Googlebot

@@ -1,12 +1,11 @@
 import * as stylex from '@stylexjs/stylex'
-import { scaleBand } from 'd3-scale'
 import { m, useReducedMotion } from 'motion/react'
 import { useMemo } from 'react'
 import { formatNumber } from '@/lib/format'
 import { spring, stagger } from '@/lib/motion'
 import { ChartXAxis, ChartYAxis } from '@/ui/chart-axes'
 import { ChartFrame } from '@/ui/chart-frame'
-import { useValueScale } from '@/ui/chart-scales'
+import { bandScale, useValueScale } from '@/ui/chart-scales'
 import { seriesFill } from '@/ui/chart-series.stylex'
 import { chartStyles as styles } from '@/ui/chart-shared.stylex'
 import {
@@ -18,16 +17,11 @@ import {
   type XYChartProps,
 } from '@/ui/chart-types'
 
-const bandPaddingInner = 0.3
-const bandPaddingOuter = 0.15
-const seriesPaddingInner = 0.15
+const groupPadding = { inner: 0.3, outer: 0.15 } as const
+const seriesPadding = { inner: 0.15, outer: 0 } as const
 
-function bandScale(data: ChartDatum[], innerWidth: number) {
-  return scaleBand<number>()
-    .domain(data.map((_, i) => i))
-    .range([0, innerWidth])
-    .paddingInner(bandPaddingInner)
-    .paddingOuter(bandPaddingOuter)
+function groupBands(data: ChartDatum[], innerWidth: number) {
+  return bandScale(data.length, innerWidth, groupPadding)
 }
 
 function innerWidthOf(width: number) {
@@ -54,22 +48,18 @@ function Bars({
   const innerWidth = innerWidthOf(width)
   const innerHeight = Math.max(0, height - margin.top - margin.bottom)
   const yScale = useValueScale(data, series, innerHeight)
-  const xBand = useMemo(() => bandScale(data, innerWidth), [data, innerWidth])
+  const xBand = useMemo(() => groupBands(data, innerWidth), [data, innerWidth])
   const xInner = useMemo(
-    () =>
-      scaleBand<string>()
-        .domain(series.map((s) => s.key))
-        .range([0, xBand.bandwidth()])
-        .paddingInner(seriesPaddingInner),
-    [series, xBand],
+    () => bandScale(series.length, xBand.bandwidth, seriesPadding),
+    [series.length, xBand],
   )
 
   return (
     <svg {...stylex.props(styles.svg)} height={height} width={width} aria-hidden>
       <g transform={`translate(${margin.left}, ${margin.top})`}>
-        <ChartYAxis format={formatValue} ticks={yScale.ticks(4)} width={innerWidth} y={yScale} />
+        <ChartYAxis format={formatValue} ticks={yScale.ticks} width={innerWidth} y={yScale.at} />
         {data.map((datum, index) =>
-          series.map((s) => {
+          series.map((s, seriesIndex) => {
             const value = cellValue(datum, s.key)
             return (
               <m.rect
@@ -78,14 +68,14 @@ function Bars({
                   scaleY: 1,
                   opacity: activeIndex !== null && activeIndex !== index ? 0.45 : 1,
                 }}
-                height={innerHeight - yScale(value)}
+                height={innerHeight - yScale.at(value)}
                 initial={reduce ? false : { scaleY: 0 }}
                 key={`${datumLabel(datum, xKey, undefined)}-${s.key}`}
                 rx={4}
                 transition={reduce ? spring.fast : { ...spring.slow, delay: stagger(index) }}
-                width={xInner.bandwidth()}
-                x={(xBand(index) ?? 0) + (xInner(s.key) ?? 0)}
-                y={yScale(value)}
+                width={xInner.bandwidth}
+                x={xBand.start(index) + xInner.start(seriesIndex)}
+                y={yScale.at(value)}
               />
             )
           }),
@@ -93,7 +83,7 @@ function Bars({
         <ChartXAxis
           count={data.length}
           label={(i) => datumLabel(data[i], xKey, formatX)}
-          x={(i) => (xBand(i) ?? 0) + xBand.bandwidth() / 2}
+          x={(i) => xBand.start(i) + xBand.bandwidth / 2}
           y={innerHeight + 18}
         />
       </g>
@@ -114,8 +104,8 @@ export function BarChart({ formatValue = formatNumber, ...props }: XYChartProps)
         Math.floor(((px - margin.left) / Math.max(innerWidthOf(width), 1)) * data.length)
       }
       tooltipX={(index, width) => {
-        const xBand = bandScale(data, innerWidthOf(width))
-        return margin.left + (xBand(index) ?? 0) + xBand.bandwidth() / 2
+        const xBand = groupBands(data, innerWidthOf(width))
+        return margin.left + xBand.start(index) + xBand.bandwidth / 2
       }}
       plot={({ width, height }, activeIndex) => (
         <Bars

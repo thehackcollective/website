@@ -143,3 +143,7 @@ export const layout = stylex.defineConsts({
   sidePanelMax: 'var(--thc-website-side-panel-max)',
   focusRing: 'var(--thc-website-focus-ring)',
 })
+
+export const breakpoint = stylex.defineConsts({
+  hover: '@media (hover: hover) and (pointer: fine)',
+})

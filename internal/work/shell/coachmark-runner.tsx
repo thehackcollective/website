@@ -80,7 +80,10 @@ function PageCoachmarks({ page, scope }: { page: string; scope: string }) {
   return (
     <Coachmark
       targets={targets}
-      onClose={() => setClosed(true)}
+      onClose={() => {
+        writeStored('coachmarkSeen', '1', scope)
+        setClosed(true)
+      }}
       onDone={() => writeStored('coachmarkSeen', '1', scope)}
     />
   )

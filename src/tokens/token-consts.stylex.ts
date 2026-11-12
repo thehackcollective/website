@@ -154,6 +154,8 @@ export const space = stylex.defineConsts({
   railInsetTight: 'var(--thc-space-rail-inset-tight)',
   safeTop: 'var(--thc-safe-top)',
   safeBottom: 'var(--thc-safe-bottom)',
+  safeLeft: 'var(--thc-safe-left)',
+  safeRight: 'var(--thc-safe-right)',
 })
 
 export const radius = stylex.defineConsts({

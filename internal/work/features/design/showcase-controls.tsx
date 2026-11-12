@@ -116,7 +116,7 @@ export function ShowcaseControls() {
         />
       </Section>
       <Section span={6} heading="Radio group">
-        <RadioGroup value={plan} onValueChange={setPlan} name="plan">
+        <RadioGroup aria-label="Plan" value={plan} onValueChange={setPlan} name="plan">
           <RadioRow value="solo" title="Hack solo" />
           <RadioRow
             value="team"
