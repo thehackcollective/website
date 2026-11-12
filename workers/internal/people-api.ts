@@ -54,6 +54,7 @@ interface LinkRow {
 }
 
 interface TieRow {
+  id: number
   kind: string
   detail: string
   source: string
@@ -73,7 +74,7 @@ export async function personById(env: Env, id: string) {
       .bind(id)
       .all<LinkRow>(),
     env.DB.prepare(
-      `SELECT t.kind, t.detail, t.source, t.source_url, t.observed_at,
+      `SELECT t.id, t.kind, t.detail, t.source, t.source_url, t.observed_at,
               e.name AS event_name, e.url AS event_url
        FROM ties t LEFT JOIN events e ON e.id = t.event_id
        WHERE t.person_id = ?
@@ -86,6 +87,7 @@ export async function personById(env: Env, id: string) {
     ...personOf(person),
     links: links.results,
     evidence: ties.results.map((tie) => ({
+      id: tie.id,
       kind: tie.kind,
       detail: tie.detail,
       source: tie.source,

@@ -83,7 +83,7 @@ function peopleTable(people: readonly Person[]): TableConfig<Person> {
         width: 220,
         tier: 2,
         render: reachOf,
-        sortValue: (person) => person.lumaAttended ?? 0,
+        sortValue: (person) => (person.lumaAttended ?? 0) + person.builderGroups,
       },
       {
         id: 'identity',

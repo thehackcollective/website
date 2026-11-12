@@ -24,5 +24,5 @@ Person is the detail page of one person at `/people/<id>`, from `GET /api/people
 
 ## Gotchas
 
-- An unknown id shows the error state with "Try again", because the API answers 404.
+- An unknown or malformed id shows "This person is not in the CRM." with no retry, because the API answers 404.
 - The page has no nav entry, so the sidebar marks nothing while it is open.

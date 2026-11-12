@@ -41,16 +41,38 @@ const linkLabel: Record<string, string> = {
   website: 'Website',
 }
 
-const hrefOf = (value: string) => (value.startsWith('http') ? value : `https://${value}`)
+function hrefOf(value: string): string | null {
+  if (/^https?:\/\//.test(value)) return value
+  return /^[\w-]+(\.[\w-]+)+(\/\S*)?$/.test(value) ? `https://${value}` : null
+}
 
 function evidenceDetail(evidence: Evidence) {
   return [
     evidence.kind,
+    evidence.event?.name ?? '',
     sourceLabel[evidence.source] ?? evidence.source,
     evidence.observedAt?.slice(0, 10) ?? '',
   ]
     .filter(Boolean)
     .join(' · ')
+}
+
+function EvidenceLinks({ evidence }: { evidence: Evidence }) {
+  if (evidence.event === null && evidence.sourceUrl === null) return null
+  return (
+    <>
+      {evidence.event !== null && (
+        <ExternalLink href={evidence.event.url} variant="ghost" size="sm">
+          Event
+        </ExternalLink>
+      )}
+      {evidence.sourceUrl !== null && (
+        <ExternalLink href={evidence.sourceUrl} variant="ghost" size="sm">
+          Source
+        </ExternalLink>
+      )}
+    </>
+  )
 }
 
 function EvidenceCard({ evidence }: { evidence: readonly Evidence[] }) {
@@ -59,16 +81,10 @@ function EvidenceCard({ evidence }: { evidence: readonly Evidence[] }) {
       <RowList>
         {evidence.map((item) => (
           <RowListItem
-            key={`${item.kind}-${item.detail}`}
+            key={item.id}
             title={item.detail}
             detail={evidenceDetail(item)}
-            actions={
-              item.sourceUrl === null ? undefined : (
-                <ExternalLink href={item.sourceUrl} variant="ghost" size="sm">
-                  Source
-                </ExternalLink>
-              )
-            }
+            actions={<EvidenceLinks evidence={item} />}
           />
         ))}
       </RowList>
@@ -78,20 +94,21 @@ function EvidenceCard({ evidence }: { evidence: readonly Evidence[] }) {
 
 function HeaderActions({ person }: { person: PersonDetail | null }) {
   const navigate = useNavigate()
-  const profiles = person?.links.filter((link) => linkLabel[link.kind] !== undefined) ?? []
+  const profiles = (person?.links ?? []).flatMap((link) => {
+    const href = hrefOf(link.value)
+    const label = linkLabel[link.kind]
+    return href === null || label === undefined
+      ? []
+      : [{ key: `${link.kind}-${link.value}`, href, label }]
+  })
   return (
     <div {...stylex.props(styles.chips)}>
       <Button variant="ghost" size="sm" onClick={() => navigate('/people')}>
         All people
       </Button>
       {profiles.map((link) => (
-        <ExternalLink
-          key={`${link.kind}-${link.value}`}
-          href={hrefOf(link.value)}
-          variant="secondary"
-          size="sm"
-        >
-          {linkLabel[link.kind]}
+        <ExternalLink key={link.key} href={link.href} variant="secondary" size="sm">
+          {link.label}
         </ExternalLink>
       ))}
     </div>
@@ -148,8 +165,7 @@ function PersonBody({ person }: { person: PersonDetail }) {
   )
 }
 
-export function Page() {
-  const { id = '' } = useParams()
+function PersonPage({ id }: { id: string }) {
   const [person, setPerson] = useState<PersonDetail | null>(null)
   const load = useCallback(() => fetchPerson(id), [id])
   const resource = useApiResource(load, setPerson, 'Could not load this person.')
@@ -166,4 +182,9 @@ export function Page() {
       </AsyncContent>
     </PageFrame>
   )
+}
+
+export function Page() {
+  const { id = '' } = useParams()
+  return <PersonPage key={id} id={id} />
 }

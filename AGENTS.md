@@ -12,7 +12,7 @@ This repo has two surfaces of The Hack Collective (THC), a London hackathon comm
 | Work, the THC CRM | work.hackcollective.uk | `internal/`, `workers/internal/` | `docs/decisions/2026-11-11-work-design-foundations.md` |
 
 1. The public site is an assets-only Cloudflare Worker. Its `cf` project is the repo root: `cloudflare.config.ts` and `vite.config.ts`.
-2. Work is a second Worker. Its `cf` project is `internal/`: `internal/cloudflare.config.ts` and `internal/vite.config.ts`, with the Worker code in `workers/internal/`. Each build goes to `.cloudflare/output/v0/` next to its config, which git ignores. Work has its shell and the auth, home, settings, changelog and design features. The CRM modules are not built yet. Their plan is `docs/work-platform/map.md`.
+2. Work is a second Worker. Its `cf` project is `internal/`: `internal/cloudflare.config.ts` and `internal/vite.config.ts`, with the Worker code in `workers/internal/`. Each build goes to `.cloudflare/output/v0/` next to its config, which git ignores. Work has its shell and the auth, home, settings, changelog, design, people and person features. People and Person are the first CRM modules, on D1. The plan for the rest is `docs/work-platform/map.md`.
 3. The cf0 port plan is `docs/plans/2026-11-11-cf0-port.md`. The decision records are in `docs/decisions/`. Their index is `docs/decisions/README.md`.
 
 ## 2. Stack

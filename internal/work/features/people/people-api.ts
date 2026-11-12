@@ -1,4 +1,3 @@
-import { SIGN_IN_PATH } from '@internal/work/features/auth'
 import { ApiError } from '@/lib/api-error'
 import { isRecord, isStringArray } from '@/lib/guards'
 
@@ -31,6 +30,7 @@ interface PersonLink {
 }
 
 export interface Evidence {
+  id: number
   kind: string
   detail: string
   source: string
@@ -93,6 +93,7 @@ function evidenceOf(value: unknown): Evidence[] {
   if (!isRecord(value)) return []
   return [
     {
+      id: typeof value.id === 'number' ? value.id : 0,
       kind: text(value.kind),
       detail: text(value.detail),
       source: text(value.source),
@@ -103,28 +104,18 @@ function evidenceOf(value: unknown): Evidence[] {
   ]
 }
 
-function sendToSignIn() {
-  const back = encodeURIComponent(`${window.location.pathname}${window.location.search}`)
-  window.location.assign(`${SIGN_IN_PATH}?redirect_url=${back}`)
-}
-
-async function readJson(path: string, failure: string, missing: string): Promise<unknown> {
+async function readJson(path: string, failure: string, missing: string | null): Promise<unknown> {
   const response = await fetch(path, { headers: { accept: 'application/json' } })
   if (response.status === 401) {
-    sendToSignIn()
-    throw new PeopleApiError('Your session ended. Sign in again.', false)
+    throw new PeopleApiError('Your session ended. Reload the page to sign in again.', false)
   }
-  if (response.status === 404) throw new PeopleApiError(missing, false)
+  if (response.status === 404 && missing !== null) throw new PeopleApiError(missing, false)
   if (!response.ok) throw new PeopleApiError(failure)
   return response.json()
 }
 
 export async function fetchPeople(): Promise<readonly Person[]> {
-  const body = await readJson(
-    '/api/people',
-    'Could not load the people.',
-    'Could not load the people.',
-  )
+  const body = await readJson('/api/people', 'Could not load the people.', null)
   if (!Array.isArray(body)) throw new PeopleApiError('The server sent no list of people.')
   return body.map(personOf)
 }

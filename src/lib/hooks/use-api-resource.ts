@@ -8,7 +8,6 @@ export function useApiResource<T>(
   failMessage: string,
 ) {
   const [isLoading, setIsLoading] = useState(true)
-  const [hasData, setHasData] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [retryable, setRetryable] = useState(true)
 
@@ -17,7 +16,6 @@ export function useApiResource<T>(
     setError(null)
     try {
       apply(await fetcher())
-      setHasData(true)
     } catch (err) {
       setError(err instanceof ApiError ? err.message : failMessage)
       setRetryable(!(err instanceof ApiError) || err.retryable)
@@ -30,5 +28,5 @@ export function useApiResource<T>(
     void load()
   })
 
-  return { isLoading: isLoading && !hasData, error, retryable, reload: load }
+  return { isLoading, error, retryable, reload: load }
 }
