@@ -6,6 +6,7 @@ import { commandStyles as styles } from '@/ui/command.stylex'
 import { Icon } from '@/ui/icon'
 import { icons } from '@/ui/icons'
 import { Pressable } from '@/ui/pressable'
+import { primitiveStyles } from '@/ui/primitive-styles.stylex'
 import { SearchField } from '@/ui/search-field'
 import { type AxisDirection, SharedAxis } from '@/ui/shared-axis'
 
@@ -109,7 +110,16 @@ export function Command({
             <span {...stylex.props(styles.headerTitle)}>{shown.title}</span>
           </div>
         )}
-        {groups.length === 0 && <p {...stylex.props(styles.empty)}>Nothing matches “{query}”</p>}
+        {groups.length === 0 && (
+          <p aria-hidden={live} {...stylex.props(styles.empty)}>
+            Nothing matches “{query}”
+          </p>
+        )}
+        {live && (
+          <p role="status" {...stylex.props(primitiveStyles.srOnly)}>
+            {groups.length === 0 ? `Nothing matches “${query}”` : ''}
+          </p>
+        )}
         {groups.map((group) => (
           <div
             key={group.label ?? group.items[0]?.key ?? 'empty'}

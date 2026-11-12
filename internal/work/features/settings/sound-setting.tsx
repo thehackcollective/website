@@ -10,10 +10,12 @@ export function SoundSetting() {
         label="Click sounds"
         htmlFor="setting-sound"
         description="A soft click plays when you press a button or a link."
+        descriptionId="setting-sound-description"
         orientation="horizontal"
       >
         <Switch
           id="setting-sound"
+          aria-describedby="setting-sound-description"
           checked={sound}
           onCheckedChange={(next) => {
             setSoundOn(next)
