@@ -50,7 +50,7 @@ Run all project commands through `./c`. `./c help` shows the list.
 4. `bun run build` builds the site. `cd internal && bunx vite build` builds Work. Neither runs the check.
 5. Production ships through Workers Builds on a merge to main, with `cf deploy --prebuilt --mode production`. Do not deploy by hand.
 6. Use the `cf` CLI (`node_modules/.bin/cf`), never Wrangler. The record is `docs/decisions/2026-11-12-cf-cli.md`.
-7. Work's D1 migrations live in the migrations folder of `workers/internal/`. Apply them from `internal/` with `cf d1 migrations apply <id> --dir ../workers/internal/migrations`. Add `--local --persist-to <dir>` for local data. `cf` defaults to the remote database.
+7. Work's D1 migrations live in `workers/internal/migrations`. Apply them from `internal/` with `cf d1 migrations apply <id> --dir ../workers/internal/migrations`. Add `--local --persist-to <dir>` for local data. `cf` defaults to the remote database.
 
 ## 4. Structure
 
