@@ -67,7 +67,7 @@ export function SkeletonRows({ rows = 4 }: { rows?: number }) {
       {...stylex.props(styles.rows)}
     >
       {Array.from({ length: rows }, (_, index) => (
-        <Skeleton key={index} styles={styles.row} />
+        <Skeleton key={`row-${index}`} styles={styles.row} />
       ))}
     </div>
   )
