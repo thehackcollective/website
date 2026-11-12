@@ -23,8 +23,8 @@ cat <<'USAGE'
   ./c explain <rule-id>  the message, reason, files and fix of one rule
   ./c align [path…]      measure alignment, spacing and hit areas of a running page
   ./c hooks              point git at scripts/git-hooks (pre-commit and pre-push)
-  ./c review <PR>        adversarial Opus review of a PR head, posted with its P1 count
-  ./c merge <PR>         squash-merge a PR when ./c review found no P1 and the rules hold (the only way into main)
+  ./c review <PR>        one Claude code-review session of a PR head, posted on the PR
+  ./c merge <PR>         squash-merge a PR when ./c review reviewed its head and the rules hold (the only way into main)
 
 Production ships through Workers Builds on a merge to main. Do not deploy by hand.
 USAGE

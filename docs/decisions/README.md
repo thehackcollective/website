@@ -43,6 +43,6 @@ Open decisions:
 | `docs/decisions/2026-11-11-two-token-tiers.md` | `--thc-website-*` for the landing, `--thc-*` for Work |
 | `docs/decisions/2026-11-11-gate-placement.md` | Where `./c check` runs, and how a change reaches main |
 | `docs/decisions/2026-11-12-cf-cli.md` | Both Workers on the `cf` CLI and the Vite plugin 2.0 beta |
-| `docs/decisions/2026-11-12-claude-review-replaces-greptile.md` | `./c review` is the review gate that `./c merge` reads; Greptile is gone |
+| `docs/decisions/2026-11-12-claude-review-replaces-greptile.md` | One `./c review` (Claude's code-review skill) is the review that `./c merge` reads; Greptile is gone |
 
 The port plan that produced these records is `docs/plans/2026-11-11-cf0-port.md`.
