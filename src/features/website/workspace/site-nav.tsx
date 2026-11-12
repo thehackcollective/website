@@ -6,7 +6,7 @@ import { navStyles } from '@/features/website/workspace/site-nav.stylex'
 export function SiteNav() {
   return (
     <header {...stylex.props(navStyles.navbar)}>
-      <svg aria-hidden="true" style={{ display: 'none' }}>
+      <svg aria-hidden="true" {...stylex.props(navStyles.filterDefs)}>
         <filter id="nav-glass-distortion" x="0%" y="0%" width="100%" height="100%">
           <feTurbulence
             type="fractalNoise"
