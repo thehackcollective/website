@@ -1,4 +1,4 @@
-# work.hackcollective.uk: PRD
+# app.hackcollective.uk: PRD
 
 Status: Next. A skeleton, not built. The open questions are in `docs/work-platform/map.md`.
 Scope: `internal/` (the client) and `workers/internal/` (the Worker).

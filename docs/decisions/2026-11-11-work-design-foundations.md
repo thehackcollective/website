@@ -2,7 +2,7 @@
 
 Status: accepted
 Date: 2026-11-11
-Scope: every Work screen (`internal/`, `workers/internal/`, work.hackcollective.uk) and the shared kit in `src/components/ui/` and `src/lib/`. The public site (`src/features/website/`, hackcollective.uk) keeps its own `--thc-website-*` foundation in `DESIGN.md` and is out of scope (`docs/decisions/2026-11-11-two-token-tiers.md`).
+Scope: every Work screen (`internal/`, `workers/internal/`, app.hackcollective.uk) and the shared kit in `src/components/ui/` and `src/lib/`. The public site (`src/features/website/`, hackcollective.uk) keeps its own `--thc-website-*` foundation in `DESIGN.md` and is out of scope (`docs/decisions/2026-11-11-two-token-tiers.md`).
 Decision: Work takes cf0.ai's design foundations (`cf0.ai/docs/decisions/2026-11-01-design-foundations.md`) as its own. This record is the index of what is true. The detail records hold the values and the reasons: `docs/decisions/2026-11-11-work-type-ladder.md`, `docs/decisions/2026-11-11-work-neutral-theme.md`, `docs/decisions/2026-11-11-work-control-ladder.md`, `docs/decisions/2026-11-11-work-shell.md` and `docs/decisions/2026-11-11-work-font-weight-preference.md`. The rule numbers match cf0's, so a rule number means the same thing in both repos. Rules 1 to 21, 24 to 39 and 41 to 45 are in force. Rules 22 and 23 do not apply to Work. Rule 40 is decided and not built yet. A change to one of them needs a new record that supersedes this one. The checks keep cf0's `web-*` ids. A check named here that is not in `base.rules.yaml` yet is a review item until it lands.
 
 Type

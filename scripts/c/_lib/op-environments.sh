@@ -1,7 +1,8 @@
 THC_OP_DEV_PLACEHOLDER="fill-in-the-thc-dev-1password-environment-id"
 THC_OP_PROD_PLACEHOLDER="fill-in-the-thc-prod-1password-environment-id"
-THC_OP_DEV="${OP_THC_ENVIRONMENT_ID:-$THC_OP_DEV_PLACEHOLDER}"
-THC_OP_PROD="${OP_THC_PROD_ENVIRONMENT_ID:-$THC_OP_PROD_PLACEHOLDER}"
+THC_OP_ENVIRONMENT="escb5g6qj6obx3ozvjtixcczkq"
+THC_OP_DEV="${OP_THC_ENVIRONMENT_ID:-$THC_OP_ENVIRONMENT}"
+THC_OP_PROD="${OP_THC_PROD_ENVIRONMENT_ID:-$THC_OP_ENVIRONMENT}"
 
 require_op_environment() {
   local id="$1" placeholder="$2" name="$3"
@@ -18,7 +19,8 @@ run_under_op_dev() {
     echo "✗ The 1Password CLI (op) is not installed. Install it, then run ./c $(basename "$1") again." >&2
     exit 1
   fi
-  THC_OP_RUN=1 CLOUDFLARE_INCLUDE_PROCESS_ENV=true exec op run --environment "$THC_OP_DEV" -- "$@"
+  THC_OP_RUN=1 CLOUDFLARE_INCLUDE_PROCESS_ENV=true exec op run --environment "$THC_OP_DEV" -- \
+    "$THC_ROOT/scripts/c/_lib/with-dev-clerk-keys.sh" "$@"
 }
 
 refuse_env_files() {

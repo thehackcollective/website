@@ -1,4 +1,4 @@
-# Map: work.hackcollective.uk
+# Map: app.hackcollective.uk
 
 Status: People is a prototype. The other CRM modules are not built.
 
@@ -8,7 +8,7 @@ A PRD (`docs/work-platform/prd.md`) with every product decision made, so Work ca
 
 ## What is settled
 
-- Work is THC's CRM at work.hackcollective.uk, in `internal/` and `workers/internal/` of this repo.
+- Work is THC's CRM at app.hackcollective.uk, in `internal/` and `workers/internal/` of this repo.
 - Work runs cf0's design foundations with THC blue (`docs/decisions/2026-11-11-work-design-foundations.md`).
 - Sign-in is Clerk, invite only.
 - The gate and the merge path are the same as for the site (`docs/decisions/2026-11-11-gate-placement.md`).

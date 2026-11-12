@@ -13,7 +13,7 @@ usage() {
   cat <<'HELP'
 Usage: ./c up                     start site and work
        ./c up site                hackcollective.uk on :5173
-       ./c up work                work.hackcollective.uk (client and Worker) on :5281
+       ./c up work                app.hackcollective.uk (client and Worker) on :5281
        ./c up work mock-data:empty|mock-data:full
                                   reset the local work data first
 

@@ -4,7 +4,7 @@
 set -euo pipefail
 
 cat <<'USAGE'
-./c — The Hack Collective commands (hackcollective.uk and work.hackcollective.uk)
+./c — The Hack Collective commands (hackcollective.uk and app.hackcollective.uk)
 
   ./c up [site|work] [mock-data:empty|mock-data:full]
                          start the dev servers in the background: site on :5173, work on :5281.
