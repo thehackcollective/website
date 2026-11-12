@@ -24,7 +24,7 @@ STEPS=(
   "clones;hook;^(src|internal)/|^\.jscpd\.json$;jscpd: clones, lines and tokens under the jscpd limits in base.rules.yaml"
   "dead-code;hook;^(src|internal|workers|scripts)/|^knip\.json$|^package\.json$;knip: no unused file, export or dependency"
   "health;hook;^(src|internal)/|^doctor\.config\.json$;react-doctor score at or above health-score-min in base.rules.yaml"
-  "schema;hook;^workers/internal/migrations/|^wrangler\.internal\.jsonc$;the work migrations apply to a fresh D1, and a second apply has nothing left to apply"
+  "schema;hook;^workers/internal/migrations/|^internal/cloudflare\.config\.ts$;the work migrations apply to a fresh D1, and a second apply has nothing left to apply"
 )
 
 usage() {
@@ -261,12 +261,12 @@ step_schema() {
     echo "  workers/internal/migrations is not there. The work app has no migrations yet."
     return 0
   fi
-  [[ -f wrangler.internal.jsonc ]] || { echo "✗ workers/internal/migrations is there, but wrangler.internal.jsonc is not. The migrations need the D1 binding."; return 1; }
-  db="$(sed -nE 's/.*"database_name"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/p' wrangler.internal.jsonc | head -1)"
-  [[ -n "$db" ]] || { echo "✗ wrangler.internal.jsonc has no d1_databases database_name."; return 1; }
+  [[ -f internal/cloudflare.config.ts ]] || { echo "✗ workers/internal/migrations is there, but internal/cloudflare.config.ts is not. The migrations need the D1 binding."; return 1; }
+  db="$(sed -nE "s/.*id: '([0-9a-f-]{36})'.*/\1/p" internal/cloudflare.config.ts | head -1)"
+  [[ -n "$db" ]] || { echo "✗ internal/cloudflare.config.ts has no D1 id."; return 1; }
   d1="$(mktemp -d)"
-  CI=1 bunx wrangler d1 migrations apply "$db" --config wrangler.internal.jsonc --local --persist-to "$d1" >/dev/null \
-    && CI=1 bunx wrangler d1 migrations list "$db" --config wrangler.internal.jsonc --local --persist-to "$d1" | grep -q 'No migrations to apply' || rc=1
+  (cd internal && CI=1 ../node_modules/.bin/cf d1 migrations apply "$db" --dir ../workers/internal/migrations --local --persist-to "$d1" >/dev/null \
+    && [[ "$(CI=1 ../node_modules/.bin/cf d1 migrations list "$db" --dir ../workers/internal/migrations --local --persist-to "$d1" | tr -d '[:space:]')" == "[]" ]]) || rc=1
   rm -rf "$d1"
   return $rc
 }

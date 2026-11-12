@@ -1,3 +1,4 @@
+import { cloudflare } from "@cloudflare/vite-plugin";
 import stylex from "@stylexjs/unplugin";
 import react from "@vitejs/plugin-react";
 import path from "path";
@@ -8,6 +9,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig(({ mode }) => ({
   plugins: [
+    cloudflare({ inspectorPort: false }),
     react(),
     stylex.vite({
       dev: mode === "development",

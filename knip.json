@@ -4,7 +4,9 @@
     "scripts/align-*.ts",
     "internal/main.tsx",
     "workers/internal/index.ts",
-    "vite.work.config.ts"
+    "cloudflare.config.ts",
+    "internal/cloudflare.config.ts",
+    "internal/vite.config.ts"
   ],
   "project": [
     "src/**/*.{ts,tsx}",

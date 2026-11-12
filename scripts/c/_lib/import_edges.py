@@ -6,6 +6,7 @@ import sys
 
 CANONICAL_CONFIG = {
     "root": True,
+    "vcs": {"enabled": True, "clientKind": "git", "useIgnoreFile": True},
     "files": {"includes": ["src/**", "internal/**", "workers/**"]},
     "formatter": {"enabled": False},
     "assist": {"enabled": False},

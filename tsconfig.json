@@ -43,7 +43,7 @@
     "internal/**/*.ts",
     "internal/**/*.tsx",
     "vite.config.ts",
-    "vite.work.config.ts",
+    "cloudflare.config.ts",
     "**/*.mts"
   ],
   "exclude": [

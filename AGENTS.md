@@ -11,8 +11,8 @@ This repo has two surfaces of The Hack Collective (THC), a London hackathon comm
 | The public site | hackcollective.uk | `src/features/website/`, `src/app/` | `DESIGN.md` |
 | Work, the THC CRM | work.hackcollective.uk | `internal/`, `workers/internal/` | `docs/decisions/2026-11-11-work-design-foundations.md` |
 
-1. The public site is an assets-only Cloudflare Worker (`wrangler.jsonc`).
-2. Work is a second Worker with its own Vite config, `vite.work.config.ts`. Its build goes to `dist-work/`, which git ignores. Work has its shell and the auth, home, settings, changelog and design features. The CRM modules are not built yet. Their plan is `docs/work-platform/map.md`.
+1. The public site is an assets-only Cloudflare Worker. Its `cf` project is the repo root: `cloudflare.config.ts` and `vite.config.ts`.
+2. Work is a second Worker. Its `cf` project is `internal/`: `internal/cloudflare.config.ts` and `internal/vite.config.ts`, with the Worker code in `workers/internal/`. Each build goes to `.cloudflare/output/v0/` next to its config, which git ignores. Work has its shell and the auth, home, settings, changelog and design features. The CRM modules are not built yet. Their plan is `docs/work-platform/map.md`.
 3. The cf0 port plan is `docs/plans/2026-11-11-cf0-port.md`. The decision records are in `docs/decisions/`. Their index is `docs/decisions/README.md`.
 
 ## 2. Stack
@@ -46,8 +46,10 @@ Run all project commands through `./c`. `./c help` shows the list.
 1. `./c up` runs under `op run --environment` with the 1Password dev Environment (`scripts/c/_lib/op-environments.sh`).
 2. With no Clerk keys in that Environment, the work app opens signed in as the dev member.
 3. Logs and pids go to `.c-runtime/`. Copy a log before you read it, because the next run writes over it.
-4. `bun run build` runs `vite build` only. It does not run the check.
-5. Production ships through Workers Builds on a merge to main. Do not deploy by hand.
+4. `bun run build` builds the site. `cd internal && bunx vite build` builds Work. Neither runs the check.
+5. Production ships through Workers Builds on a merge to main, with `cf deploy --prebuilt --mode production`. Do not deploy by hand.
+6. Use the `cf` CLI (`node_modules/.bin/cf`), never Wrangler. The record is `docs/decisions/2026-11-12-cf-cli.md`.
+7. Work's D1 migrations live in the migrations folder of `workers/internal/`. Apply them from `internal/` with `cf d1 migrations apply <id> --dir ../workers/internal/migrations`. Add `--local --persist-to <dir>` for local data. `cf` defaults to the remote database.
 
 ## 4. Structure
 

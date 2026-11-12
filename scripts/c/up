@@ -48,7 +48,11 @@ mkdir -p "$RUNTIME_DIR/logs" "$RUNTIME_DIR/pids"
 start_command() {
   case "$1" in
     site) echo "cd '$THC_ROOT' && exec bunx vite --port $SITE_PORT --strictPort" ;;
-    work) echo "cd '$THC_ROOT' && exec bunx vite --config vite.work.config.ts --port $WORK_PORT --strictPort"
+    work)
+      local db
+      db="$(sed -nE "s/.*id: '([0-9a-f-]{36})'.*/\\1/p" "$THC_ROOT/internal/cloudflare.config.ts" | head -1)"
+      [[ -n "$db" ]] || { echo "✗ internal/cloudflare.config.ts has no D1 id." >&2; return 1; }
+      echo "cd '$THC_ROOT/internal' && CI=1 ../node_modules/.bin/cf d1 migrations apply $db --dir ../workers/internal/migrations --local --persist-to .cloudflare/state && exec bunx vite --port $WORK_PORT --strictPort"
       ;;
   esac
 }

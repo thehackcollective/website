@@ -121,7 +121,7 @@ rules:
   check: regex
   pattern: ^export\s+default\b
   scope: [src/**, internal/**, workers/**]
-  exempt: [workers/internal/index.ts]
+  exempt: [workers/internal/index.ts, internal/cloudflare.config.ts, internal/vite.config.ts]
   baseline: none
   examples:
     bad: ['export default function View() {}']
@@ -132,7 +132,7 @@ rules:
   catalog: 59
   check: path
   universe: tracked
-  pattern: ^(?!(?:\.agents|\.claude|docs|internal|public|scripts|sg-rule-tests|sg-rules|src|workers)/|(?:\.gitignore|\.jscpd\.json|\.syncpackrc\.json|AGENTS\.md|CLAUDE\.md|DESIGN\.md|README\.md|base\.rules\.yaml|biome\.json|bun\.lock|bunfig\.toml|c|doctor\.config\.json|eslint\.config\.mjs|eslint\.prop-limits\.json|import-cycles\.biome\.json|index\.html|knip\.json|package\.json|sgconfig\.yml|skills-lock\.json|tsconfig\.json|vite\.config\.ts|vite\.work\.config\.ts|wrangler\.internal\.jsonc|wrangler\.jsonc)$)
+  pattern: ^(?!(?:\.agents|\.claude|docs|internal|public|scripts|sg-rule-tests|sg-rules|src|workers)/|(?:\.gitignore|\.jscpd\.json|\.node-version|cloudflare\.config\.ts|\.syncpackrc\.json|AGENTS\.md|CLAUDE\.md|DESIGN\.md|README\.md|base\.rules\.yaml|biome\.json|bun\.lock|bunfig\.toml|c|doctor\.config\.json|eslint\.config\.mjs|eslint\.prop-limits\.json|import-cycles\.biome\.json|index\.html|knip\.json|package\.json|sgconfig\.yml|skills-lock\.json|tsconfig\.json|vite\.config\.ts)$)
   baseline: none
   examples:
     bad: [.greptile/config.json, notes.md]

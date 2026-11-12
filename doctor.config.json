@@ -5,7 +5,8 @@
   },
   "ignore": {
     "files": [
-      "dist-work/**",
+      ".cloudflare/**",
+      "internal/.cloudflare/**",
       "scripts/**",
       "workers/**",
       "src/components/ui/sankey-chart.tsx",

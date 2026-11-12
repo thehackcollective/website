@@ -10,8 +10,7 @@ yarn-error.log*
 .env*
 *.tsbuildinfo
 dist/
-.wrangler/
+.cloudflare/
 
 /local
 /.c-runtime
-/dist-work
