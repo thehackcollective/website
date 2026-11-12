@@ -402,8 +402,7 @@ export function CalendarGrid({
     end: toWallClock(event.end, timeZone),
   }))
   const originals = new Map(events.map((event) => [event.id, event]))
-  const wallDetails: Details = (event, close) =>
-    details(originals.get(event.id) ?? event, close)
+  const wallDetails: Details = (event, close) => details(originals.get(event.id) ?? event, close)
   const today = dayNumber(now)
   const [picked, setPicked] = useState<CalendarView | null>(null)
   const [anchor, setAnchor] = useState(today)
