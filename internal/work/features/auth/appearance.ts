@@ -2,6 +2,7 @@ import type { ClerkProviderProps } from '@clerk/react'
 import { button, color, input, radius, text } from '@/tokens/token-consts.stylex'
 
 const pill = { borderRadius: radius.pill }
+const fieldText = { fontSize: `max(${text.sizeField}, ${text.sizeStep})` }
 const inputEdge = {
   outlineColor: color.borderInput,
   outlineStyle: 'solid',
@@ -14,8 +15,8 @@ export const authAppearance: NonNullable<ClerkProviderProps['appearance']> = {
     rootBox: { maxWidth: '100%' },
     cardBox: { maxWidth: '100%', boxShadow: 'none' },
     formButtonPrimary: pill,
-    formFieldInput: { '&[data-variant="default"]': inputEdge },
-    otpCodeFieldInput: { '&[data-variant="default"]': inputEdge },
+    formFieldInput: { ...fieldText, '&[data-variant="default"]': inputEdge },
+    otpCodeFieldInput: { ...fieldText, '&[data-variant="default"]': inputEdge },
     formInputGroup: inputEdge,
     socialButtonsBlockButton: pill,
     alternativeMethodsBlockButton: pill,
