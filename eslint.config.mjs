@@ -82,7 +82,7 @@ const stylexLanguage = {
 
 export default defineConfig(
   {
-    ignores: ['**/node_modules/**', '**/dist/**', '**/.cloudflare/**', '.agents/**', 'src/lib/hairline-*.js'],
+    ignores: ['**/node_modules/**', '**/dist/**', '.cloudflare/**', 'internal/.cloudflare/**', '.agents/**', 'src/lib/hairline-*.js'],
   },
   {
     files: ['**/*.{ts,tsx,mjs,js}'],
