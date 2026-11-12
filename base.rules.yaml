@@ -137,7 +137,7 @@ rules:
     bad: [.greptile/config.json, notes.md]
     good: [src/main.tsx, base.rules.yaml]
   message: >
-    The repo root holds only the entries that this rule lists, dot entries included. Do not add a config file for a tool so that it skips files. vendored in base.rules.yaml is the one list of exceptions. A new root entry changes this rule, so it needs the rules-approved label.
+    The repo root holds only the entries that this rule lists, dot entries included. Do not add a config file for a tool so that it skips files. vendored in base.rules.yaml is the one list of exceptions. A new root entry changes this rule, so it needs the rules-approved commit status on the head.
 - id: no-nested-biome-config
   catalog: 59
   check: path

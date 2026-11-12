@@ -174,10 +174,10 @@ To get a loosening approved:
 2. In the PR description, list each loosened rule and its reason.
 3. Run `./c review <PR>` on the last head.
 4. After the last push, an Opus review sub-agent reads the loosening and approves it or refuses it.
-5. If the review approves it, the orchestrator adds the `rules-approved` label. If the label is already there, the orchestrator removes it and adds it again.
+5. If the review approves it, the orchestrator sets the `rules-approved` commit status on the reviewed head: `gh api -X POST repos/{owner}/{repo}/statuses/<head> -f state=success -f context=rules-approved`. The status belongs to that commit, so a later push needs a new review and a new status.
 6. Run `./c merge <PR>`.
 
-A builder agent does not add the label. No agent sets `BASE_RULES_LOOSEN`.
+A builder agent does not set the status. No agent sets `BASE_RULES_LOOSEN`.
 
 ## 12. Hard rules
 

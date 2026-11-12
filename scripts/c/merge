@@ -12,7 +12,7 @@ case "${1:-}" in
   ""|-h|--help)
     echo "Usage: ./c merge <PR>"
     echo "  1. If the head does not have the current main, it merges main into the branch."
-    echo "  2. It runs ./c check structure on that head. A loosened rule, or a change to c, scripts/c, the hooks or a guarded config, needs the rules-approved label, added after the head commit."
+    echo "  2. It runs ./c check structure on that head. A loosened rule, or a change to c, scripts/c, the hooks or a guarded config, needs a rules-approved commit status on that head, or on the head before clean merges of main."
     echo "  3. It squash-merges, pinned to that head, so a push in between stops the merge."
     [[ -n "${1:-}" ]] && exit 0
     exit 2
@@ -59,12 +59,19 @@ git fetch -q origin main
 fetch_head
 git merge-base --is-ancestor origin/main "$HEAD_SHA" || fail "main moved, so PR #$PR does not have the current main. Run ./c merge $PR again."
 
-HEAD_AT="$(gh api "repos/{owner}/{repo}/commits/$HEAD_SHA" -q .commit.committer.date)" \
-  || fail "gh could not read the head commit of PR #$PR. Check the network, then run ./c merge $PR again."
-
 TARGET=main
-LAST_LABEL="$(gh api "repos/{owner}/{repo}/issues/$PR/events" --paginate -q '.[] | select(.label.name == "rules-approved") | "\(.event) \(.created_at)"' | tail -n 1)"
-[[ "$LAST_LABEL" == "labeled "* && "${LAST_LABEL#labeled }" > "$HEAD_AT" ]] && TARGET=pr
+APPROVED_SHA="$HEAD_SHA"
+while :; do
+  STATE="$(gh api "repos/{owner}/{repo}/commits/$APPROVED_SHA/statuses" -q '[.[] | select(.context == "rules-approved")] | first | .state // ""')" \
+    || fail "gh could not read the statuses of ${APPROVED_SHA:0:9}. Check the network, then run ./c merge $PR again."
+  [[ "$STATE" == success ]] && { TARGET=pr; break; }
+  parents=($(git rev-list --parents -n 1 "$APPROVED_SHA"))
+  (( ${#parents[@]} == 3 )) \
+    && git merge-base --is-ancestor "${parents[2]}" origin/main \
+    && [[ "$(git merge-tree --write-tree "${parents[1]}" "${parents[2]}" 2>/dev/null)" == "$(git rev-parse "$APPROVED_SHA^{tree}")" ]] \
+    || break
+  APPROVED_SHA="${parents[1]}"
+done
 
 CHECK_DIR="$(mktemp -d)"
 CHECK_BRANCH="merge-check-$PR-$$-$RANDOM"
@@ -91,7 +98,7 @@ while IFS= read -r path; do RUN_CODE+=("$path"); done < <(
 )
 CHANGED_CODE="$(GIT_LITERAL_PATHSPECS=1 git diff --name-only origin/main "$HEAD_SHA" -- "${RUN_CODE[@]}" | grep -vE '^scripts/c/_lib/baselines/[^/]+\.txt$' || true)"
 if [[ -n "$CHANGED_CODE" && "$TARGET" != pr ]]; then
-  fail "PR #$PR changes code that ./c merge runs: $(tr '\n' ' ' <<<"$CHANGED_CODE")An Opus review reads it after the last push, and the orchestrator adds the rules-approved label. Then run ./c merge $PR again."
+  fail "PR #$PR changes code that ./c merge runs: $(tr '\n' ' ' <<<"$CHANGED_CODE")An Opus review reads it after the last push, and the orchestrator sets the rules-approved commit status on the head. Then run ./c merge $PR again."
 fi
 main_still_in_head() {
   git fetch -q origin main
@@ -103,7 +110,7 @@ CHECK_BRANCH_MADE=1
 ln -s "$THC_ROOT/node_modules" "$CHECK_DIR/head/node_modules"
 say "./c check structure on ${HEAD_SHA:0:9}"
 (cd "$CHECK_DIR/head" && BASE_RULES_AGAINST=origin/main BASE_RULES_TARGET="$TARGET" ./c check structure) \
-  || fail "The structure check failed on ${HEAD_SHA:0:9}. Fix it on the branch. For a loosened rule, an Opus review approves it after the last push, and the orchestrator adds the rules-approved label. Then run ./c merge $PR again."
+  || fail "The structure check failed on ${HEAD_SHA:0:9}. Fix it on the branch. For a loosened rule, an Opus review approves it after the last push, and the orchestrator sets the rules-approved commit status on the head. Then run ./c merge $PR again."
 cleanup
 trap - EXIT
 
